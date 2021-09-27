@@ -36,6 +36,7 @@ using System.Runtime.Intrinsics.X86;
 using System.Text;
 using Aaru.CommonTypes.Interfaces;
 using Aaru.Helpers;
+using Aaru6.Checksums.CRC32;
 
 namespace Aaru6.Checksums
 {
@@ -332,6 +333,7 @@ namespace Aaru6.Checksums
 
         readonly uint     _finalSeed;
         readonly uint[][] _table;
+        readonly bool     _useIso;
         uint              _hashInt;
 
         /// <summary>Initializes the CRC32 table and seed as CRC32-ISO</summary>
@@ -339,8 +341,8 @@ namespace Aaru6.Checksums
         {
             _hashInt   = CRC32_ISO_SEED;
             _finalSeed = CRC32_ISO_SEED;
-
-            _table = _isoCrc32Table;
+            _table     = _isoCrc32Table;
+            _useIso    = true;
         }
 
         /// <summary>Initializes the CRC32 table with a custom polynomial and seed</summary>
@@ -348,74 +350,16 @@ namespace Aaru6.Checksums
         {
             _hashInt   = seed;
             _finalSeed = seed;
-            /*
-                        _table = new uint[256];
-            
-                        for(int i = 0; i < 256; i++)
-                        {
-                            uint entry = (uint)i;
-            
-                            for(int j = 0; j < 8; j++)
-                                if((entry & 1) == 1)
-                                    entry = (entry >> 1) ^ polynomial;
-                                else
-                                    entry >>= 1;
-            
-                            _table[i] = entry;
-                        }*/
+            _useIso    = polynomial == CRC32_ISO_POLY && seed == CRC32_ISO_SEED;
+
+            _table = GenerateTable(polynomial);
         }
 
         /// <inheritdoc />
         /// <summary>Updates the hash with data.</summary>
         /// <param name="data">Data buffer.</param>
         /// <param name="len">Length of buffer to hash.</param>
-        public void Update(byte[] data, uint len)
-        {
-            if(Pclmulqdq.IsSupported &&
-               Sse41.IsSupported     &&
-               Ssse3.IsSupported     &&
-               Sse2.IsSupported)
-            {
-                _hashInt = ~CRC32CLMUL.crc32_clmul(data, len, ~_hashInt);
-
-                return;
-            }
-
-            // Unroll according to Intel slicing by uint8_t
-            // http://www.intel.com/technology/comms/perfnet/download/CRC_generators.pdf
-            // http://sourceforge.net/projects/slicing-by-8/
-
-            uint      crc;
-            int       current_pos   = 0;
-            const int unroll        = 4;
-            const int bytes_at_once = 8 * unroll;
-
-            crc = _hashInt;
-
-            while(len >= bytes_at_once)
-            {
-                int unrolling;
-
-                for(unrolling = 0; unrolling < unroll; unrolling++)
-                {
-                    uint one = BitConverter.ToUInt32(data, current_pos) ^ crc;
-                    current_pos += 4;
-                    uint two = BitConverter.ToUInt32(data, current_pos);
-                    current_pos += 4;
-
-                    crc = _table[0][(two >> 24) & 0xFF] ^ _table[1][(two >> 16) & 0xFF] ^ _table[2][(two >> 8) & 0xFF] ^
-                          _table[3][two & 0xFF] ^ _table[4][(one >> 24) & 0xFF] ^ _table[5][(one >> 16) & 0xFF] ^
-                          _table[6][(one >> 8) & 0xFF] ^ _table[7][one & 0xFF];
-                }
-
-                len -= bytes_at_once;
-            }
-
-            while(len-- != 0)
-                crc = (crc >> 8) ^ _table[0][(crc & 0xFF) ^ data[current_pos++]];
-
-            _hashInt = crc;
-        }
+        public void Update(byte[] data, uint len) => Step(ref _hashInt, _table, data, len, _useIso);
 
         /// <inheritdoc />
         /// <summary>Updates the hash with data.</summary>
@@ -436,6 +380,79 @@ namespace Aaru6.Checksums
                 crc32Output.Append(BigEndianBitConverter.GetBytes(_hashInt ^ _finalSeed)[i].ToString("x2"));
 
             return crc32Output.ToString();
+        }
+
+        static uint[][] GenerateTable(uint polynomial)
+        {
+            uint[][] table = new uint[8][];
+
+            for(int i = 0; i < 8; i++)
+                table[i] = new uint[256];
+
+            for(int i = 0; i < 256; i++)
+            {
+                uint entry = (uint)i;
+
+                for(int j = 0; j < 8; j++)
+                    if((entry & 1) == 1)
+                        entry = (entry >> 1) ^ polynomial;
+                    else
+                        entry >>= 1;
+
+                table[0][i] = entry;
+            }
+
+            for(int slice = 1; slice < 8; slice++)
+                for(int i = 0; i < 256; i++)
+                    table[slice][i] = (table[slice - 1][i] >> 8) ^ table[0][table[slice - 1][i] & 0xFF];
+
+            return table;
+        }
+
+        static void Step(ref uint previousCrc, uint[][] table, byte[] data, uint len, bool useIso)
+        {
+            if(useIso                &&
+               Pclmulqdq.IsSupported &&
+               Sse41.IsSupported     &&
+               Ssse3.IsSupported     &&
+               Sse2.IsSupported)
+            {
+                previousCrc = ~Clmul.Step(data, len, ~previousCrc);
+
+                return;
+            }
+
+            // Unroll according to Intel slicing by uint8_t
+            // http://www.intel.com/technology/comms/perfnet/download/CRC_generators.pdf
+            // http://sourceforge.net/projects/slicing-by-8/
+            int       currentPos  = 0;
+            const int unroll      = 4;
+            const int bytesAtOnce = 8 * unroll;
+            uint      crc         = previousCrc;
+
+            while(len >= bytesAtOnce)
+            {
+                int unrolling;
+
+                for(unrolling = 0; unrolling < unroll; unrolling++)
+                {
+                    uint one = BitConverter.ToUInt32(data, currentPos) ^ crc;
+                    currentPos += 4;
+                    uint two = BitConverter.ToUInt32(data, currentPos);
+                    currentPos += 4;
+
+                    crc = table[0][(two >> 24) & 0xFF] ^ table[1][(two >> 16) & 0xFF] ^ table[2][(two >> 8)  & 0xFF] ^
+                          table[3][two         & 0xFF] ^ table[4][(one >> 24) & 0xFF] ^ table[5][(one >> 16) & 0xFF] ^
+                          table[6][(one                                >> 8)  & 0xFF] ^ table[7][one         & 0xFF];
+                }
+
+                len -= bytesAtOnce;
+            }
+
+            while(len-- != 0)
+                crc = (crc >> 8) ^ table[0][(crc & 0xFF) ^ data[currentPos++]];
+
+            previousCrc = crc;
         }
 
         /// <summary>Gets the hash of a file</summary>
@@ -464,23 +481,18 @@ namespace Aaru6.Checksums
 
             uint localHashInt = seed;
 
-            uint[] localTable = new uint[256];
+            uint[][] localTable = GenerateTable(polynomial);
 
-            for(int i = 0; i < 256; i++)
+            byte[] buffer = new byte[65536];
+            int    read   = fileStream.Read(buffer, 0, 65536);
+
+            while(read > 0)
             {
-                uint entry = (uint)i;
+                Step(ref localHashInt, localTable, buffer, (uint)read,
+                     polynomial == CRC32_ISO_POLY && seed == CRC32_ISO_SEED);
 
-                for(int j = 0; j < 8; j++)
-                    if((entry & 1) == 1)
-                        entry = (entry >> 1) ^ polynomial;
-                    else
-                        entry >>= 1;
-
-                localTable[i] = entry;
+                read = fileStream.Read(buffer, 0, 65536);
             }
-
-            for(int i = 0; i < fileStream.Length; i++)
-                localHashInt = (localHashInt >> 8) ^ localTable[fileStream.ReadByte() ^ (localHashInt & 0xff)];
 
             localHashInt ^= seed;
             hash         =  BigEndianBitConverter.GetBytes(localHashInt);
@@ -512,23 +524,9 @@ namespace Aaru6.Checksums
         {
             uint localHashInt = seed;
 
-            uint[] localTable = new uint[256];
+            uint[][] localTable = GenerateTable(polynomial);
 
-            for(int i = 0; i < 256; i++)
-            {
-                uint entry = (uint)i;
-
-                for(int j = 0; j < 8; j++)
-                    if((entry & 1) == 1)
-                        entry = (entry >> 1) ^ polynomial;
-                    else
-                        entry >>= 1;
-
-                localTable[i] = entry;
-            }
-
-            for(int i = 0; i < len; i++)
-                localHashInt = (localHashInt >> 8) ^ localTable[data[i] ^ (localHashInt & 0xff)];
+            Step(ref localHashInt, localTable, data, len, polynomial == CRC32_ISO_POLY && seed == CRC32_ISO_SEED);
 
             localHashInt ^= seed;
             hash         =  BigEndianBitConverter.GetBytes(localHashInt);

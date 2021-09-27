@@ -57,10 +57,39 @@ namespace Aaru6.Checksums
         /// <summary>Updates the hash with data.</summary>
         /// <param name="data">Data buffer.</param>
         /// <param name="len">Length of buffer to hash.</param>
-        public void Update(byte[] data, uint len)
+        public void Update(byte[] data, uint len) => Step(ref _sum1, ref _sum2, data, len);
+
+        /// <inheritdoc />
+        /// <summary>Updates the hash with data.</summary>
+        /// <param name="data">Data buffer.</param>
+        public void Update(byte[] data) => Update(data, (uint)data.Length);
+
+        /// <inheritdoc />
+        /// <summary>Returns a byte array of the hash value.</summary>
+        public byte[] Final()
         {
-            uint sum1 = _sum1;
-            uint sum2 = _sum2;
+            uint finalSum = (uint)((_sum2 << 16) | _sum1);
+
+            return BigEndianBitConverter.GetBytes(finalSum);
+        }
+
+        /// <inheritdoc />
+        /// <summary>Returns a hexadecimal representation of the hash value.</summary>
+        public string End()
+        {
+            uint finalSum       = (uint)((_sum2 << 16) | _sum1);
+            var  fletcherOutput = new StringBuilder();
+
+            for(int i = 0; i < BigEndianBitConverter.GetBytes(finalSum).Length; i++)
+                fletcherOutput.Append(BigEndianBitConverter.GetBytes(finalSum)[i].ToString("x2"));
+
+            return fletcherOutput.ToString();
+        }
+
+        static void Step(ref ushort previousSum1, ref ushort previousSum2, byte[] data, uint len)
+        {
+            uint sum1 = previousSum1;
+            uint sum2 = previousSum2;
             uint n;
             int  dataOff = 0;
 
@@ -77,8 +106,8 @@ namespace Aaru6.Checksums
                 if(sum2 >= FLETCHER_MODULE)
                     sum2 -= FLETCHER_MODULE;
 
-                _sum1 = (ushort)(sum1 & 0xFFFF);
-                _sum2 = (ushort)(sum2 & 0xFFFF);
+                previousSum1 = (ushort)(sum1 & 0xFFFF);
+                previousSum2 = (ushort)(sum2 & 0xFFFF);
 
                 return;
             }
@@ -95,9 +124,9 @@ namespace Aaru6.Checksums
                 if(sum1 >= FLETCHER_MODULE)
                     sum1 -= FLETCHER_MODULE;
 
-                sum2  %= FLETCHER_MODULE; /* only added so many FLETCHER_MODULE's */
-                _sum1 =  (ushort)(sum1 & 0xFFFF);
-                _sum2 =  (ushort)(sum2 & 0xFFFF);
+                sum2         %= FLETCHER_MODULE; /* only added so many FLETCHER_MODULE's */
+                previousSum1 =  (ushort)(sum1 & 0xFFFF);
+                previousSum2 =  (ushort)(sum2 & 0xFFFF);
 
                 return;
             }
@@ -204,35 +233,8 @@ namespace Aaru6.Checksums
                 sum2 %= FLETCHER_MODULE;
             }
 
-            _sum1 = (ushort)(sum1 & 0xFFFF);
-            _sum2 = (ushort)(sum2 & 0xFFFF);
-        }
-
-        /// <inheritdoc />
-        /// <summary>Updates the hash with data.</summary>
-        /// <param name="data">Data buffer.</param>
-        public void Update(byte[] data) => Update(data, (uint)data.Length);
-
-        /// <inheritdoc />
-        /// <summary>Returns a byte array of the hash value.</summary>
-        public byte[] Final()
-        {
-            uint finalSum = (uint)((_sum2 << 16) | _sum1);
-
-            return BigEndianBitConverter.GetBytes(finalSum);
-        }
-
-        /// <inheritdoc />
-        /// <summary>Returns a hexadecimal representation of the hash value.</summary>
-        public string End()
-        {
-            uint finalSum       = (uint)((_sum2 << 16) | _sum1);
-            var  fletcherOutput = new StringBuilder();
-
-            for(int i = 0; i < BigEndianBitConverter.GetBytes(finalSum).Length; i++)
-                fletcherOutput.Append(BigEndianBitConverter.GetBytes(finalSum)[i].ToString("x2"));
-
-            return fletcherOutput.ToString();
+            previousSum1 = (ushort)(sum1 & 0xFFFF);
+            previousSum2 = (ushort)(sum2 & 0xFFFF);
         }
 
         /// <summary>Gets the hash of a file</summary>
@@ -254,10 +256,14 @@ namespace Aaru6.Checksums
             ushort localSum1 = 0xFFFF;
             ushort localSum2 = 0xFFFF;
 
-            for(int i = 0; i < fileStream.Length; i++)
+            byte[] buffer = new byte[65536];
+            int    read   = fileStream.Read(buffer, 0, 65536);
+
+            while(read > 0)
             {
-                localSum1 = (ushort)((localSum1 + fileStream.ReadByte()) % FLETCHER_MODULE);
-                localSum2 = (ushort)((localSum2 + localSum1)             % FLETCHER_MODULE);
+                Step(ref localSum1, ref localSum2, buffer, (uint)read);
+
+                read = fileStream.Read(buffer, 0, 65536);
             }
 
             uint finalSum = (uint)((localSum2 << 16) | localSum1);
@@ -283,11 +289,7 @@ namespace Aaru6.Checksums
             ushort localSum1 = 0xFFFF;
             ushort localSum2 = 0xFFFF;
 
-            for(int i = 0; i < len; i++)
-            {
-                localSum1 = (ushort)((localSum1 + data[i])   % FLETCHER_MODULE);
-                localSum2 = (ushort)((localSum2 + localSum1) % FLETCHER_MODULE);
-            }
+            Step(ref localSum1, ref localSum2, data, len);
 
             uint finalSum = (uint)((localSum2 << 16) | localSum1);
 
@@ -326,10 +328,39 @@ namespace Aaru6.Checksums
         /// <summary>Updates the hash with data.</summary>
         /// <param name="data">Data buffer.</param>
         /// <param name="len">Length of buffer to hash.</param>
-        public void Update(byte[] data, uint len)
+        public void Update(byte[] data, uint len) => Step(ref _sum1, ref _sum2, data, len);
+
+        /// <inheritdoc />
+        /// <summary>Updates the hash with data.</summary>
+        /// <param name="data">Data buffer.</param>
+        public void Update(byte[] data) => Update(data, (uint)data.Length);
+
+        /// <inheritdoc />
+        /// <summary>Returns a byte array of the hash value.</summary>
+        public byte[] Final()
         {
-            uint sum1 = _sum1;
-            uint sum2 = _sum2;
+            ushort finalSum = (ushort)((_sum2 << 8) | _sum1);
+
+            return BigEndianBitConverter.GetBytes(finalSum);
+        }
+
+        /// <inheritdoc />
+        /// <summary>Returns a hexadecimal representation of the hash value.</summary>
+        public string End()
+        {
+            ushort finalSum       = (ushort)((_sum2 << 8) | _sum1);
+            var    fletcherOutput = new StringBuilder();
+
+            for(int i = 0; i < BigEndianBitConverter.GetBytes(finalSum).Length; i++)
+                fletcherOutput.Append(BigEndianBitConverter.GetBytes(finalSum)[i].ToString("x2"));
+
+            return fletcherOutput.ToString();
+        }
+
+        static void Step(ref byte previousSum1, ref byte previousSum2, byte[] data, uint len)
+        {
+            uint sum1 = previousSum1;
+            uint sum2 = previousSum2;
             uint n;
             int  dataOff = 0;
 
@@ -346,8 +377,8 @@ namespace Aaru6.Checksums
                 if(sum2 >= FLETCHER_MODULE)
                     sum2 -= FLETCHER_MODULE;
 
-                _sum1 = (byte)(sum1 & 0xFF);
-                _sum2 = (byte)(sum2 & 0xFF);
+                previousSum1 = (byte)(sum1 & 0xFF);
+                previousSum2 = (byte)(sum2 & 0xFF);
 
                 return;
             }
@@ -364,9 +395,9 @@ namespace Aaru6.Checksums
                 if(sum1 >= FLETCHER_MODULE)
                     sum1 -= FLETCHER_MODULE;
 
-                sum2  %= FLETCHER_MODULE; /* only added so many FLETCHER_MODULE's */
-                _sum1 =  (byte)(sum1 & 0xFF);
-                _sum2 =  (byte)(sum2 & 0xFF);
+                sum2         %= FLETCHER_MODULE; /* only added so many FLETCHER_MODULE's */
+                previousSum1 =  (byte)(sum1 & 0xFF);
+                previousSum2 =  (byte)(sum2 & 0xFF);
 
                 return;
             }
@@ -453,35 +484,8 @@ namespace Aaru6.Checksums
                 sum2 %= FLETCHER_MODULE;
             }
 
-            _sum1 = (byte)(sum1 & 0xFF);
-            _sum2 = (byte)(sum2 & 0xFF);
-        }
-
-        /// <inheritdoc />
-        /// <summary>Updates the hash with data.</summary>
-        /// <param name="data">Data buffer.</param>
-        public void Update(byte[] data) => Update(data, (uint)data.Length);
-
-        /// <inheritdoc />
-        /// <summary>Returns a byte array of the hash value.</summary>
-        public byte[] Final()
-        {
-            ushort finalSum = (ushort)((_sum2 << 8) | _sum1);
-
-            return BigEndianBitConverter.GetBytes(finalSum);
-        }
-
-        /// <inheritdoc />
-        /// <summary>Returns a hexadecimal representation of the hash value.</summary>
-        public string End()
-        {
-            ushort finalSum       = (ushort)((_sum2 << 8) | _sum1);
-            var    fletcherOutput = new StringBuilder();
-
-            for(int i = 0; i < BigEndianBitConverter.GetBytes(finalSum).Length; i++)
-                fletcherOutput.Append(BigEndianBitConverter.GetBytes(finalSum)[i].ToString("x2"));
-
-            return fletcherOutput.ToString();
+            previousSum1 = (byte)(sum1 & 0xFF);
+            previousSum2 = (byte)(sum2 & 0xFF);
         }
 
         /// <summary>Gets the hash of a file</summary>
@@ -503,10 +507,14 @@ namespace Aaru6.Checksums
             byte localSum1 = 0xFF;
             byte localSum2 = 0xFF;
 
-            for(int i = 0; i < fileStream.Length; i++)
+            byte[] buffer = new byte[65536];
+            int    read   = fileStream.Read(buffer, 0, 65536);
+
+            while(read > 0)
             {
-                localSum1 = (byte)((localSum1 + fileStream.ReadByte()) % FLETCHER_MODULE);
-                localSum2 = (byte)((localSum2 + localSum1)             % FLETCHER_MODULE);
+                Step(ref localSum1, ref localSum2, buffer, (uint)read);
+
+                read = fileStream.Read(buffer, 0, 65536);
             }
 
             ushort finalSum = (ushort)((localSum2 << 8) | localSum1);
@@ -532,11 +540,7 @@ namespace Aaru6.Checksums
             byte localSum1 = 0xFF;
             byte localSum2 = 0xFF;
 
-            for(int i = 0; i < len; i++)
-            {
-                localSum1 = (byte)((localSum1 + data[i])   % FLETCHER_MODULE);
-                localSum2 = (byte)((localSum2 + localSum1) % FLETCHER_MODULE);
-            }
+            Step(ref localSum1, ref localSum2, data, len);
 
             ushort finalSum = (ushort)((localSum2 << 8) | localSum1);
 

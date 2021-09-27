@@ -55,8 +55,8 @@
   <ItemGroup>
     <Compile Include="CRC16CCITTContext.cs"/>
     <Compile Include="CRC16IBMContext.cs"/>
-    <Compile Include="CRC32CLMUL.cs"/>
-    <Compile Include="CRC64CLMUL.cs"/>
+    <Compile Include="CRC32\clmul.cs"/>
+    <Compile Include="CRC64\clmul.cs"/>
     <Compile Include="SpamSumContext.cs"/>
     <Compile Include="Adler32Context.cs"/>
     <Compile Include="CRC16Context.cs"/>

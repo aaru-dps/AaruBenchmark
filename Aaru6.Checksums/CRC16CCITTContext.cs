@@ -30,22 +30,17 @@
 // Copyright © 2011-2021 Natalia Portillo
 // ****************************************************************************/
 
-using System;
-using Aaru.CommonTypes.Interfaces;
-using Aaru.Helpers;
-
 namespace Aaru6.Checksums
 {
     /// <inheritdoc />
     /// <summary>Implements the CRC16 algorithm with CCITT polynomial and seed</summary>
-    public sealed class CRC16CCITTContext : IChecksum
+    public sealed class CRC16CCITTContext : Crc16Context
     {
         /// <summary>CCITT CRC16 polynomial</summary>
         public const ushort CRC16_CCITT_POLY = 0x8408;
         /// <summary>CCITT CRC16 seed</summary>
         public const ushort CRC16_CCITT_SEED = 0x0000;
-
-        static readonly ushort[][] crc16_ccitt_table =
+        static readonly ushort[][] _ccittCrc16Table =
         {
             new ushort[]
             {
@@ -232,61 +227,10 @@ namespace Aaru6.Checksums
                 0x8A95, 0x5357, 0x1484, 0xDCF1, 0x9B22, 0x5C3A, 0x1BE9, 0xD39C, 0x944F
             }
         };
-        ushort _crc;
 
-        /// <summary>Initializes an instance of the CRC16 with IBM polynomial and seed.</summary>
+        /// <summary>Initializes an instance of the CRC16 with CCITT polynomial and seed.</summary>
         /// <inheritdoc />
-        public CRC16CCITTContext() => _crc = 0;
-
-        /// <inheritdoc />
-        public void Update(byte[] data, uint len)
-        {
-            // Unroll according to Intel slicing by uint8_t
-            // http://www.intel.com/technology/comms/perfnet/download/CRC_generators.pdf
-            // http://sourceforge.net/projects/slicing-by-8/
-
-            ushort    crc;
-            int       current_pos   = 0;
-            const int unroll        = 4;
-            const int bytes_at_once = 8 * unroll;
-
-            crc = _crc;
-
-            while(len >= bytes_at_once)
-            {
-                int unrolling;
-
-                for(unrolling = 0; unrolling < unroll; unrolling++)
-                {
-                    crc = (ushort)(crc16_ccitt_table[7][data[current_pos + 0] ^ (crc >> 8)]   ^
-                                   crc16_ccitt_table[6][data[current_pos + 1] ^ (crc & 0xFF)] ^
-                                   crc16_ccitt_table[5][data[current_pos + 2]]                ^
-                                   crc16_ccitt_table[4][data[current_pos + 3]]                ^
-                                   crc16_ccitt_table[3][data[current_pos + 4]]                ^
-                                   crc16_ccitt_table[2][data[current_pos + 5]]                ^
-                                   crc16_ccitt_table[1][data[current_pos + 6]]                ^
-                                   crc16_ccitt_table[0][data[current_pos + 7]]);
-
-                    current_pos += 8;
-                }
-
-                len -= bytes_at_once;
-            }
-
-            while(len-- != 0)
-                crc = (ushort)((crc << 8) ^ crc16_ccitt_table[0][(crc >> 8) ^ data[current_pos++]]);
-
-            _crc = crc;
-        }
-
-        /// <inheritdoc />
-        public void Update(byte[] data) => Update(data, (uint)data.Length);
-
-        /// <inheritdoc />
-        public byte[] Final() => BigEndianBitConverter.GetBytes(_crc);
-
-        /// <inheritdoc />
-        public string End() => throw new NotImplementedException();
+        public CRC16CCITTContext() : base(CRC16_CCITT_POLY, CRC16_CCITT_SEED, _ccittCrc16Table, true) {}
 
         /// <summary>Gets the hash of a file</summary>
         /// <param name="filename">File path.</param>
@@ -300,21 +244,24 @@ namespace Aaru6.Checksums
         /// <summary>Gets the hash of a file in hexadecimal and as a byte array.</summary>
         /// <param name="filename">File path.</param>
         /// <param name="hash">Byte array of the hash value.</param>
-        public static string File(string filename, out byte[] hash) => throw new NotImplementedException();
+        public static string File(string filename, out byte[] hash) =>
+            File(filename, out hash, CRC16_CCITT_POLY, CRC16_CCITT_SEED, _ccittCrc16Table, true);
 
         /// <summary>Gets the hash of the specified data buffer.</summary>
         /// <param name="data">Data buffer.</param>
         /// <param name="len">Length of the data buffer to hash.</param>
         /// <param name="hash">Byte array of the hash value.</param>
-        public static string Data(byte[] data, uint len, out byte[] hash) => throw new NotImplementedException();
+        public static string Data(byte[] data, uint len, out byte[] hash) =>
+            Data(data, len, out hash, CRC16_CCITT_POLY, CRC16_CCITT_SEED, _ccittCrc16Table, true);
 
         /// <summary>Gets the hash of the specified data buffer.</summary>
         /// <param name="data">Data buffer.</param>
         /// <param name="hash">Byte array of the hash value.</param>
         public static string Data(byte[] data, out byte[] hash) => Data(data, (uint)data.Length, out hash);
 
-        /// <summary>Calculates the IBM CRC16 of the specified buffer with the specified parameters</summary>
+        /// <summary>Calculates the CCITT CRC16 of the specified buffer with the specified parameters</summary>
         /// <param name="buffer">Buffer</param>
-        public static ushort Calculate(byte[] buffer) => throw new NotImplementedException();
+        public static ushort Calculate(byte[] buffer) =>
+            Calculate(buffer, CRC16_CCITT_POLY, CRC16_CCITT_SEED, _ccittCrc16Table, true);
     }
 }

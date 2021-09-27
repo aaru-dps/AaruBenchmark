@@ -30,20 +30,16 @@
 // Copyright © 2011-2021 Natalia Portillo
 // ****************************************************************************/
 
-using System;
-using Aaru.CommonTypes.Interfaces;
-using Aaru.Helpers;
-
 namespace Aaru6.Checksums
 {
     /// <inheritdoc />
     /// <summary>Implements the CRC16 algorithm with IBM polynomial and seed</summary>
-    public sealed class CRC16IBMContext : IChecksum
+    public sealed class CRC16IBMContext : Crc16Context
     {
         const ushort CRC16_IBM_POLY = 0xA001;
         const ushort CRC16_IBM_SEED = 0x0000;
 
-        static readonly ushort[][] crc16_table =
+        static readonly ushort[][] _ibmCrc16Table =
         {
             new ushort[]
             {
@@ -230,60 +226,10 @@ namespace Aaru6.Checksums
                 0xA24E, 0xE20E, 0x2ECF, 0x3B8F, 0xF74E, 0x110F, 0xDDCE, 0xC88E, 0x044F
             }
         };
-        ushort _crc;
 
         /// <summary>Initializes an instance of the CRC16 with IBM polynomial and seed.</summary>
         /// <inheritdoc />
-        public CRC16IBMContext() => _crc = 0;
-
-        /// <inheritdoc />
-        public void Update(byte[] data, uint len)
-        {
-            // Unroll according to Intel slicing by uint8_t
-            // http://www.intel.com/technology/comms/perfnet/download/CRC_generators.pdf
-            // http://sourceforge.net/projects/slicing-by-8/
-
-            ushort    crc;
-            int       current_pos   = 0;
-            const int unroll        = 4;
-            const int bytes_at_once = 8 * unroll;
-
-            crc = _crc;
-
-            while(len >= bytes_at_once)
-            {
-                int unrolling;
-
-                for(unrolling = 0; unrolling < unroll; unrolling++)
-                {
-                    uint one = BitConverter.ToUInt32(data, current_pos) ^ crc;
-                    current_pos += 4;
-                    uint two = BitConverter.ToUInt32(data, current_pos);
-                    current_pos += 4;
-
-                    crc = (ushort)(crc16_table[0][(two >> 24) & 0xFF] ^ crc16_table[1][(two >> 16) & 0xFF] ^
-                                   crc16_table[2][(two >> 8)  & 0xFF] ^ crc16_table[3][two         & 0xFF] ^
-                                   crc16_table[4][(one >> 24) & 0xFF] ^ crc16_table[5][(one >> 16) & 0xFF] ^
-                                   crc16_table[6][(one >> 8)  & 0xFF] ^ crc16_table[7][one         & 0xFF]);
-                }
-
-                len -= bytes_at_once;
-            }
-
-            while(len-- != 0)
-                crc = (ushort)((crc >> 8) ^ crc16_table[0][(crc & 0xFF) ^ data[current_pos++]]);
-
-            _crc = crc;
-        }
-
-        /// <inheritdoc />
-        public void Update(byte[] data) => Update(data, (uint)data.Length);
-
-        /// <inheritdoc />
-        public byte[] Final() => BigEndianBitConverter.GetBytes(_crc);
-
-        /// <inheritdoc />
-        public string End() => throw new NotImplementedException();
+        public CRC16IBMContext() : base(CRC16_IBM_POLY, CRC16_IBM_SEED, _ibmCrc16Table, false) {}
 
         /// <summary>Gets the hash of a file</summary>
         /// <param name="filename">File path.</param>
@@ -297,21 +243,19 @@ namespace Aaru6.Checksums
         /// <summary>Gets the hash of a file in hexadecimal and as a byte array.</summary>
         /// <param name="filename">File path.</param>
         /// <param name="hash">Byte array of the hash value.</param>
-        public static string File(string filename, out byte[] hash) => throw new NotImplementedException();
+        public static string File(string filename, out byte[] hash) =>
+            File(filename, out hash, CRC16_IBM_POLY, CRC16_IBM_SEED, _ibmCrc16Table, false);
 
         /// <summary>Gets the hash of the specified data buffer.</summary>
         /// <param name="data">Data buffer.</param>
         /// <param name="len">Length of the data buffer to hash.</param>
         /// <param name="hash">Byte array of the hash value.</param>
-        public static string Data(byte[] data, uint len, out byte[] hash) => throw new NotImplementedException();
+        public static string Data(byte[] data, uint len, out byte[] hash) =>
+            Data(data, len, out hash, CRC16_IBM_POLY, CRC16_IBM_SEED, _ibmCrc16Table, false);
 
         /// <summary>Gets the hash of the specified data buffer.</summary>
         /// <param name="data">Data buffer.</param>
         /// <param name="hash">Byte array of the hash value.</param>
         public static string Data(byte[] data, out byte[] hash) => Data(data, (uint)data.Length, out hash);
-
-        /// <summary>Calculates the IBM CRC16 of the specified buffer with the specified parameters</summary>
-        /// <param name="buffer">Buffer</param>
-        public static ushort Calculate(byte[] buffer) => throw new NotImplementedException();
     }
 }

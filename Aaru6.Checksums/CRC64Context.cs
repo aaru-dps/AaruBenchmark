@@ -32,9 +32,11 @@
 
 using System;
 using System.IO;
+using System.Runtime.Intrinsics.X86;
 using System.Text;
 using Aaru.CommonTypes.Interfaces;
 using Aaru.Helpers;
+using Aaru6.Checksums.CRC64;
 
 namespace Aaru6.Checksums
 {
@@ -273,80 +275,32 @@ namespace Aaru6.Checksums
 
         readonly ulong     _finalSeed;
         readonly ulong[][] _table;
+        readonly bool      _useEcma;
         ulong              _hashInt;
 
         /// <summary>Initializes the CRC64 table and seed as CRC64-ECMA</summary>
         public Crc64Context()
         {
-            _hashInt = CRC64_ECMA_SEED;
-
-            _table = _ecmaCrc64Table;
-
+            _hashInt   = CRC64_ECMA_SEED;
+            _table     = _ecmaCrc64Table;
             _finalSeed = CRC64_ECMA_SEED;
+            _useEcma   = true;
         }
 
         /// <summary>Initializes the CRC16 table with a custom polynomial and seed</summary>
         public Crc64Context(ulong polynomial, ulong seed)
         {
-            _hashInt = seed;
-            /*
-                        _table = new ulong[256];
-
-                        for(int i = 0; i < 256; i++)
-                        {
-                            ulong entry = (ulong)i;
-
-                            for(int j = 0; j < 8; j++)
-                                if((entry & 1) == 1)
-                                    entry = (entry >> 1) ^ polynomial;
-                                else
-                                    entry >>= 1;
-
-                            _table[i] = entry;
-                        }
-            */
+            _hashInt   = seed;
+            _table     = GenerateTable(polynomial);
             _finalSeed = seed;
+            _useEcma   = polynomial == CRC64_ECMA_POLY && seed == CRC64_ECMA_SEED;
         }
 
         /// <inheritdoc />
         /// <summary>Updates the hash with data.</summary>
         /// <param name="data">Data buffer.</param>
         /// <param name="len">Length of buffer to hash.</param>
-        public void Update(byte[] data, uint len)
-        {
-            _hashInt = ~CRC64CLMUL.crc64_clmul(~_hashInt, data, len);
-
-            return;
-
-            // Unroll according to Intel slicing by uint8_t
-            // http://www.intel.com/technology/comms/perfnet/download/CRC_generators.pdf
-            // http://sourceforge.net/projects/slicing-by-8/
-
-            ulong crc     = _hashInt;
-            int   dataOff = 0;
-
-            if(len > 4)
-            {
-                long limit;
-
-                limit =  dataOff + (len & ~(uint)3);
-                len   &= 3;
-
-                while(dataOff < limit)
-                {
-                    uint tmp = (uint)(crc ^ BitConverter.ToUInt32(data, dataOff));
-                    dataOff += 4;
-
-                    crc = _table[3][tmp & 0xFF] ^ _table[2][(tmp >> 8)  & 0xFF] ^ (crc >> 32) ^
-                          _table[1][(tmp                         >> 16) & 0xFF] ^ _table[0][tmp >> 24];
-                }
-            }
-
-            while(len-- != 0)
-                crc = _table[0][data[dataOff++] ^ (crc & 0xFF)] ^ (crc >> 8);
-
-            _hashInt = crc;
-        }
+        public void Update(byte[] data, uint len) => Step(ref _hashInt, _table, data, len, _useEcma);
 
         /// <inheritdoc />
         /// <summary>Updates the hash with data.</summary>
@@ -367,6 +321,74 @@ namespace Aaru6.Checksums
                 crc64Output.Append(BigEndianBitConverter.GetBytes(_hashInt ^= _finalSeed)[i].ToString("x2"));
 
             return crc64Output.ToString();
+        }
+
+        static ulong[][] GenerateTable(ulong polynomial)
+        {
+            ulong[][] table = new ulong[8][];
+
+            for(int i = 0; i < 8; i++)
+                table[i] = new ulong[256];
+
+            for(int i = 0; i < 256; i++)
+            {
+                ulong entry = (ulong)i;
+
+                for(int j = 0; j < 8; j++)
+                    if((entry & 1) == 1)
+                        entry = (entry >> 1) ^ polynomial;
+                    else
+                        entry >>= 1;
+
+                table[0][i] = entry;
+            }
+
+            for(int slice = 1; slice < 4; slice++)
+                for(int i = 0; i < 256; i++)
+                    table[slice][i] = (table[slice - 1][i] >> 8) ^ table[0][table[slice - 1][i] & 0xFF];
+
+            return table;
+        }
+
+        static void Step(ref ulong previousCrc, ulong[][] table, byte[] data, uint len, bool useEcma)
+        {
+            if(useEcma               &&
+               Pclmulqdq.IsSupported &&
+               Sse41.IsSupported     &&
+               Ssse3.IsSupported     &&
+               Sse2.IsSupported)
+            {
+                previousCrc = ~Clmul.Step(~previousCrc, data, len);
+
+                return;
+            }
+
+            // Unroll according to Intel slicing by uint8_t
+            // http://www.intel.com/technology/comms/perfnet/download/CRC_generators.pdf
+            // http://sourceforge.net/projects/slicing-by-8/
+
+            ulong crc     = previousCrc;
+            int   dataOff = 0;
+
+            if(len > 4)
+            {
+                long limit = dataOff + (len & ~(uint)3);
+                len &= 3;
+
+                while(dataOff < limit)
+                {
+                    uint tmp = (uint)(crc ^ BitConverter.ToUInt32(data, dataOff));
+                    dataOff += 4;
+
+                    crc = table[3][tmp & 0xFF] ^ table[2][(tmp >> 8)  & 0xFF] ^ (crc >> 32) ^
+                          table[1][(tmp                        >> 16) & 0xFF] ^ table[0][tmp >> 24];
+                }
+            }
+
+            while(len-- != 0)
+                crc = table[0][data[dataOff++] ^ (crc & 0xFF)] ^ (crc >> 8);
+
+            previousCrc = crc;
         }
 
         /// <summary>Gets the hash of a file</summary>
@@ -395,23 +417,18 @@ namespace Aaru6.Checksums
 
             ulong localHashInt = seed;
 
-            ulong[] localTable = new ulong[256];
+            ulong[][] localTable = GenerateTable(polynomial);
 
-            for(int i = 0; i < 256; i++)
+            byte[] buffer = new byte[65536];
+            int    read   = fileStream.Read(buffer, 0, 65536);
+
+            while(read > 0)
             {
-                ulong entry = (ulong)i;
+                Step(ref localHashInt, localTable, buffer, (uint)read,
+                     polynomial == CRC64_ECMA_POLY && seed == CRC64_ECMA_SEED);
 
-                for(int j = 0; j < 8; j++)
-                    if((entry & 1) == 1)
-                        entry = (entry >> 1) ^ polynomial;
-                    else
-                        entry >>= 1;
-
-                localTable[i] = entry;
+                read = fileStream.Read(buffer, 0, 65536);
             }
-
-            for(int i = 0; i < fileStream.Length; i++)
-                localHashInt = (localHashInt >> 8) ^ localTable[(ulong)fileStream.ReadByte() ^ (localHashInt & 0xffL)];
 
             localHashInt ^= seed;
             hash         =  BigEndianBitConverter.GetBytes(localHashInt);
@@ -443,23 +460,9 @@ namespace Aaru6.Checksums
         {
             ulong localHashInt = seed;
 
-            ulong[] localTable = new ulong[256];
+            ulong[][] localTable = GenerateTable(polynomial);
 
-            for(int i = 0; i < 256; i++)
-            {
-                ulong entry = (ulong)i;
-
-                for(int j = 0; j < 8; j++)
-                    if((entry & 1) == 1)
-                        entry = (entry >> 1) ^ polynomial;
-                    else
-                        entry >>= 1;
-
-                localTable[i] = entry;
-            }
-
-            for(int i = 0; i < len; i++)
-                localHashInt = (localHashInt >> 8) ^ localTable[data[i] ^ (localHashInt & 0xff)];
+            Step(ref localHashInt, localTable, data, len, polynomial == CRC64_ECMA_POLY && seed == CRC64_ECMA_SEED);
 
             localHashInt ^= seed;
             hash         =  BigEndianBitConverter.GetBytes(localHashInt);

@@ -41,9 +41,9 @@ namespace Aaru6.Checksums
     /// <summary>Implements the Adler-32 algorithm</summary>
     public sealed class Adler32Context : IChecksum
     {
-        const uint ADLER_MODULE = 65521;
-        const uint NMAX         = 5552;
-        ushort     _sum1, _sum2;
+        const ushort ADLER_MODULE = 65521;
+        const uint   NMAX         = 5552;
+        ushort       _sum1, _sum2;
 
         /// <summary>Initializes the Adler-32 sums</summary>
         public Adler32Context()
@@ -56,10 +56,39 @@ namespace Aaru6.Checksums
         /// <summary>Updates the hash with data.</summary>
         /// <param name="data">Data buffer.</param>
         /// <param name="len">Length of buffer to hash.</param>
-        public void Update(byte[] data, uint len)
+        public void Update(byte[] data, uint len) => Step(ref _sum1, ref _sum2, data, len);
+
+        /// <inheritdoc />
+        /// <summary>Updates the hash with data.</summary>
+        /// <param name="data">Data buffer.</param>
+        public void Update(byte[] data) => Update(data, (uint)data.Length);
+
+        /// <inheritdoc />
+        /// <summary>Returns a byte array of the hash value.</summary>
+        public byte[] Final()
         {
-            uint sum1 = _sum1;
-            uint sum2 = _sum2;
+            uint finalSum = (uint)((_sum2 << 16) | _sum1);
+
+            return BigEndianBitConverter.GetBytes(finalSum);
+        }
+
+        /// <inheritdoc />
+        /// <summary>Returns a hexadecimal representation of the hash value.</summary>
+        public string End()
+        {
+            uint finalSum    = (uint)((_sum2 << 16) | _sum1);
+            var  adlerOutput = new StringBuilder();
+
+            for(int i = 0; i < BigEndianBitConverter.GetBytes(finalSum).Length; i++)
+                adlerOutput.Append(BigEndianBitConverter.GetBytes(finalSum)[i].ToString("x2"));
+
+            return adlerOutput.ToString();
+        }
+
+        static void Step(ref ushort preSum1, ref ushort preSum2, byte[] data, uint len)
+        {
+            uint sum1 = preSum1;
+            uint sum2 = preSum2;
             uint n;
             int  dataOff = 0;
 
@@ -76,8 +105,8 @@ namespace Aaru6.Checksums
                 if(sum2 >= ADLER_MODULE)
                     sum2 -= ADLER_MODULE;
 
-                _sum1 = (ushort)(sum1 & 0xFFFF);
-                _sum2 = (ushort)(sum2 & 0xFFFF);
+                preSum1 = (ushort)(sum1 & 0xFFFF);
+                preSum2 = (ushort)(sum2 & 0xFFFF);
 
                 return;
             }
@@ -94,9 +123,9 @@ namespace Aaru6.Checksums
                 if(sum1 >= ADLER_MODULE)
                     sum1 -= ADLER_MODULE;
 
-                sum2  %= ADLER_MODULE; /* only added so many ADLER_MODULE's */
-                _sum1 =  (ushort)(sum1 & 0xFFFF);
-                _sum2 =  (ushort)(sum2 & 0xFFFF);
+                sum2    %= ADLER_MODULE; /* only added so many ADLER_MODULE's */
+                preSum1 =  (ushort)(sum1 & 0xFFFF);
+                preSum2 =  (ushort)(sum2 & 0xFFFF);
 
                 return;
             }
@@ -203,35 +232,8 @@ namespace Aaru6.Checksums
                 sum2 %= ADLER_MODULE;
             }
 
-            _sum1 = (ushort)(sum1 & 0xFFFF);
-            _sum2 = (ushort)(sum2 & 0xFFFF);
-        }
-
-        /// <inheritdoc />
-        /// <summary>Updates the hash with data.</summary>
-        /// <param name="data">Data buffer.</param>
-        public void Update(byte[] data) => Update(data, (uint)data.Length);
-
-        /// <inheritdoc />
-        /// <summary>Returns a byte array of the hash value.</summary>
-        public byte[] Final()
-        {
-            uint finalSum = (uint)((_sum2 << 16) | _sum1);
-
-            return BigEndianBitConverter.GetBytes(finalSum);
-        }
-
-        /// <inheritdoc />
-        /// <summary>Returns a hexadecimal representation of the hash value.</summary>
-        public string End()
-        {
-            uint finalSum    = (uint)((_sum2 << 16) | _sum1);
-            var  adlerOutput = new StringBuilder();
-
-            for(int i = 0; i < BigEndianBitConverter.GetBytes(finalSum).Length; i++)
-                adlerOutput.Append(BigEndianBitConverter.GetBytes(finalSum)[i].ToString("x2"));
-
-            return adlerOutput.ToString();
+            preSum1 = (ushort)(sum1 & 0xFFFF);
+            preSum2 = (ushort)(sum2 & 0xFFFF);
         }
 
         /// <summary>Gets the hash of a file</summary>
@@ -253,10 +255,13 @@ namespace Aaru6.Checksums
             ushort localSum1 = 1;
             ushort localSum2 = 0;
 
-            for(int i = 0; i < fileStream.Length; i++)
+            byte[] buffer = new byte[65536];
+            int    read   = fileStream.Read(buffer, 0, 65536);
+
+            while(read > 0)
             {
-                localSum1 = (ushort)((localSum1 + fileStream.ReadByte()) % ADLER_MODULE);
-                localSum2 = (ushort)((localSum2 + localSum1)             % ADLER_MODULE);
+                Step(ref localSum1, ref localSum2, buffer, (uint)read);
+                read = fileStream.Read(buffer, 0, 65536);
             }
 
             uint finalSum = (uint)((localSum2 << 16) | localSum1);
@@ -282,11 +287,7 @@ namespace Aaru6.Checksums
             ushort localSum1 = 1;
             ushort localSum2 = 0;
 
-            for(int i = 0; i < len; i++)
-            {
-                localSum1 = (ushort)((localSum1 + data[i])   % ADLER_MODULE);
-                localSum2 = (ushort)((localSum2 + localSum1) % ADLER_MODULE);
-            }
+            Step(ref localSum1, ref localSum2, data, len);
 
             uint finalSum = (uint)((localSum2 << 16) | localSum1);
 
