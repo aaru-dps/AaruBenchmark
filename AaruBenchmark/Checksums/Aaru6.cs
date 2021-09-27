@@ -1,13 +1,12 @@
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using Aaru.Checksums;
 using Aaru.CommonTypes.Interfaces;
+using Aaru6.Checksums;
 
 namespace AaruBenchmark.Checksums
 {
-    public class Aaru
+    public class Aaru6
     {
         static readonly byte[] _expectedRandomAdler32 =
         {
@@ -220,139 +219,6 @@ namespace AaruBenchmark.Checksums
                 throw new Exception("Invalid hash length");
 
             if(result.Where((t, i) => t != _expectedRandomCrc64[i]).Any())
-                throw new Exception("Invalid hash value");
-        }
-
-        public static void Md5()
-        {
-            byte[] data = new byte[1048576];
-
-            var fs = new FileStream(Path.Combine("/mnt/DiscImageChef", "Checksum test files", "random"), FileMode.Open,
-                                    FileAccess.Read);
-
-            fs.Read(data, 0, 1048576);
-            fs.Close();
-            fs.Dispose();
-            IChecksum ctx = new Md5Context();
-            ctx.Update(data);
-            byte[] result = ctx.Final();
-
-            if(result?.Length != _expectedRandomMd5.Length)
-                throw new Exception("Invalid hash length");
-
-            if(result.Where((t, i) => t != _expectedRandomMd5[i]).Any())
-                throw new Exception("Invalid hash value");
-        }
-
-        public static void SpamSum()
-        {
-            byte[] data = new byte[1048576];
-
-            var fs = new FileStream(Path.Combine("/mnt/DiscImageChef", "Checksum test files", "random"), FileMode.Open,
-                                    FileAccess.Read);
-
-            fs.Read(data, 0, 1048576);
-            fs.Close();
-            fs.Dispose();
-            IChecksum ctx = new SpamSumContext();
-            ctx.Update(data);
-            string result = ctx.End();
-        }
-
-        public static void CliSpamSum()
-        {
-            var proc = new Process();
-            proc.StartInfo.UseShellExecute = false;
-            proc.StartInfo.FileName        = "/usr/bin/ssdeep";
-            proc.StartInfo.CreateNoWindow  = true;
-            proc.StartInfo.ArgumentList.Add("/mnt/DiscImageChef/Checksum test files/random");
-            proc.StartInfo.RedirectStandardOutput = true;
-            proc.Start();
-            proc.StandardOutput.ReadToEnd();
-            proc.WaitForExit();
-        }
-
-        public static void Sha1()
-        {
-            byte[] data = new byte[1048576];
-
-            var fs = new FileStream(Path.Combine("/mnt/DiscImageChef", "Checksum test files", "random"), FileMode.Open,
-                                    FileAccess.Read);
-
-            fs.Read(data, 0, 1048576);
-            fs.Close();
-            fs.Dispose();
-            IChecksum ctx = new Sha1Context();
-            ctx.Update(data);
-            byte[] result = ctx.Final();
-
-            if(result?.Length != _expectedRandomSha1.Length)
-                throw new Exception("Invalid hash length");
-
-            if(result.Where((t, i) => t != _expectedRandomSha1[i]).Any())
-                throw new Exception("Invalid hash value");
-        }
-
-        public static void Sha256()
-        {
-            byte[] data = new byte[1048576];
-
-            var fs = new FileStream(Path.Combine("/mnt/DiscImageChef", "Checksum test files", "random"), FileMode.Open,
-                                    FileAccess.Read);
-
-            fs.Read(data, 0, 1048576);
-            fs.Close();
-            fs.Dispose();
-            IChecksum ctx = new Sha256Context();
-            ctx.Update(data);
-            byte[] result = ctx.Final();
-
-            if(result?.Length != _expectedRandomSha256.Length)
-                throw new Exception("Invalid hash length");
-
-            if(result.Where((t, i) => t != _expectedRandomSha256[i]).Any())
-                throw new Exception("Invalid hash value");
-        }
-
-        public static void Sha384()
-        {
-            byte[] data = new byte[1048576];
-
-            var fs = new FileStream(Path.Combine("/mnt/DiscImageChef", "Checksum test files", "random"), FileMode.Open,
-                                    FileAccess.Read);
-
-            fs.Read(data, 0, 1048576);
-            fs.Close();
-            fs.Dispose();
-            IChecksum ctx = new Sha384Context();
-            ctx.Update(data);
-            byte[] result = ctx.Final();
-
-            if(result?.Length != _expectedRandomSha384.Length)
-                throw new Exception("Invalid hash length");
-
-            if(result.Where((t, i) => t != _expectedRandomSha384[i]).Any())
-                throw new Exception("Invalid hash value");
-        }
-
-        public static void Sha512()
-        {
-            byte[] data = new byte[1048576];
-
-            var fs = new FileStream(Path.Combine("/mnt/DiscImageChef", "Checksum test files", "random"), FileMode.Open,
-                                    FileAccess.Read);
-
-            fs.Read(data, 0, 1048576);
-            fs.Close();
-            fs.Dispose();
-            IChecksum ctx = new Sha512Context();
-            ctx.Update(data);
-            byte[] result = ctx.Final();
-
-            if(result?.Length != _expectedRandomSha512.Length)
-                throw new Exception("Invalid hash length");
-
-            if(result.Where((t, i) => t != _expectedRandomSha512[i]).Any())
                 throw new Exception("Invalid hash value");
         }
     }

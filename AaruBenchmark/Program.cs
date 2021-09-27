@@ -1,7 +1,4 @@
-﻿using BenchmarkDotNet.Configs;
-using BenchmarkDotNet.Reports;
-using BenchmarkDotNet.Running;
-using AaruBenchmark.Checksums;
+﻿using BenchmarkDotNet.Running;
 
 namespace AaruBenchmark
 {
@@ -9,25 +6,21 @@ namespace AaruBenchmark
     {
         static void Main(string[] args)
         {
-
-                    var summary = BenchmarkRunner.Run<GzipBenchs>(ManualConfig.Create(DefaultConfig.Instance).WithOptions(ConfigOptions.DisableOptimizationsValidator));
-                     //   var summary = BenchmarkRunner.Run<Bzip2Benchs>(ManualConfig.Create(DefaultConfig.Instance).WithOptions(ConfigOptions.DisableOptimizationsValidator));
-            //var foo = new BenchmarkRunner();
-            //Checksums.Aaru.Crc64();
-
-        //Summary summary = BenchmarkRunner.Run<Adler32Benchs>(ManualConfig.Create(DefaultConfig.Instance).WithOptions(ConfigOptions.DisableOptimizationsValidator));
-        //Summary summary = BenchmarkRunner.Run<Crc16CcittBenchs>(ManualConfig.Create(DefaultConfig.Instance).WithOptions(ConfigOptions.DisableOptimizationsValidator));
-        //Summary summary = BenchmarkRunner.Run<Crc16Benchs>(ManualConfig.Create(DefaultConfig.Instance).WithOptions(ConfigOptions.DisableOptimizationsValidator));
-       // Summary summary = BenchmarkRunner.Run<Crc32Benchs>(ManualConfig.Create(DefaultConfig.Instance).WithOptions(ConfigOptions.DisableOptimizationsValidator));
-        //Summary summary = BenchmarkRunner.Run<Crc64Benchs>(ManualConfig.Create(DefaultConfig.Instance).WithOptions(ConfigOptions.DisableOptimizationsValidator));
-        //Summary summary = BenchmarkRunner.Run<Fletcher16Benchs>(ManualConfig.Create(DefaultConfig.Instance).WithOptions(ConfigOptions.DisableOptimizationsValidator));
-        //Summary summary = BenchmarkRunner.Run<Fletcher32Benchs>(ManualConfig.Create(DefaultConfig.Instance).WithOptions(ConfigOptions.DisableOptimizationsValidator));
-        //var summary = BenchmarkRunner.Run<Md5Benchs>(ManualConfig.Create(DefaultConfig.Instance).WithOptions(ConfigOptions.DisableOptimizationsValidator));
-        //var summary = BenchmarkRunner.Run<Sha1Benchs>(ManualConfig.Create(DefaultConfig.Instance).WithOptions(ConfigOptions.DisableOptimizationsValidator));
-        //var summary = BenchmarkRunner.Run<Sha256Benchs>(ManualConfig.Create(DefaultConfig.Instance).WithOptions(ConfigOptions.DisableOptimizationsValidator));
-        //var summary = BenchmarkRunner.Run<Sha384Benchs>(ManualConfig.Create(DefaultConfig.Instance).WithOptions(ConfigOptions.DisableOptimizationsValidator));
-        //var summary = BenchmarkRunner.Run<Sha512Benchs>(ManualConfig.Create(DefaultConfig.Instance).WithOptions(ConfigOptions.DisableOptimizationsValidator));
-        //var summary = BenchmarkRunner.Run<SpamSumBenchs>(ManualConfig.Create(DefaultConfig.Instance).WithOptions(ConfigOptions.DisableOptimizationsValidator));
+            BenchmarkRunner.Run<GzipBenchs>();
+            BenchmarkRunner.Run<Bzip2Benchs>();
+            BenchmarkRunner.Run<Adler32Benchs>();
+            BenchmarkRunner.Run<Crc16CcittBenchs>();
+            BenchmarkRunner.Run<Crc16Benchs>();
+            BenchmarkRunner.Run<Crc32Benchs>();
+            BenchmarkRunner.Run<Crc64Benchs>();
+            BenchmarkRunner.Run<Fletcher16Benchs>();
+            BenchmarkRunner.Run<Fletcher32Benchs>();
+            BenchmarkRunner.Run<Md5Benchs>();
+            BenchmarkRunner.Run<Sha1Benchs>();
+            BenchmarkRunner.Run<Sha256Benchs>();
+            BenchmarkRunner.Run<Sha384Benchs>();
+            BenchmarkRunner.Run<Sha512Benchs>();
+            BenchmarkRunner.Run<SpamSumBenchs>();
         }
     }
 }

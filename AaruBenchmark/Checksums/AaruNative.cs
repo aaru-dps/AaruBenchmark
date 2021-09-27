@@ -12,6 +12,16 @@ namespace AaruBenchmark.Checksums
             0x37, 0x28, 0xd1, 0x86
         };
 
+        static readonly byte[] _expectedRandomFletcher16 =
+        {
+            0x33, 0x57
+        };
+
+        static readonly byte[] _expectedRandomFletcher32 =
+        {
+            0x21, 0x12, 0x61, 0xF5
+        };
+
         static readonly byte[] _expectedRandomCrc16Ccitt =
         {
             0x36, 0x40
@@ -189,6 +199,13 @@ namespace AaruBenchmark.Checksums
                 throw new Exception("Could not finalize hash");
 
             fletcher16_free(ctx);
+
+            fletcher16 = (ushort)((fletcher16 << 8) | (fletcher16 >> 8));
+
+            hash = BitConverter.GetBytes(fletcher16);
+
+            if(hash.Where((t, i) => t != _expectedRandomFletcher16[i]).Any())
+                throw new Exception("Invalid hash value");
         }
 
         public static void Fletcher32()
@@ -220,6 +237,14 @@ namespace AaruBenchmark.Checksums
                 throw new Exception("Could not finalize hash");
 
             fletcher32_free(ctx);
+
+            fletcher32 = ((fletcher32 << 8) & 0xFF00FF00) | ((fletcher32 >> 8) & 0xFF00FF);
+            fletcher32 = (fletcher32 << 16)               | (fletcher32 >> 16);
+
+            hash = BitConverter.GetBytes(fletcher32);
+
+            if(hash.Where((t, i) => t != _expectedRandomFletcher32[i]).Any())
+                throw new Exception("Invalid hash value");
         }
 
         public static void Adler32()
