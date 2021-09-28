@@ -7,12 +7,12 @@ namespace AaruBenchmark
     {
         public static void Gzip()
         {
-            var    _dataStream = new FileStream("/mnt/DiscImageChef/Filters/gzip.gz", FileMode.Open, FileAccess.Read);
-            Stream str         = new GZipStream(_dataStream, CompressionMode.Decompress, true);
-            byte[] compressed  = new byte[1048576];
-            int    pos         = 0;
-            int    left        = 1048576;
-            bool   oneZero     = false;
+            var _dataStream = new FileStream(Path.Combine(Program.Folder, "gzip.gz"), FileMode.Open, FileAccess.Read);
+            Stream str = new GZipStream(_dataStream, CompressionMode.Decompress, true);
+            byte[] compressed = new byte[1048576];
+            int pos = 0;
+            int left = 1048576;
+            bool oneZero = false;
 
             while(left > 0)
             {

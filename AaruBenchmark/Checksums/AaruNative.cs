@@ -176,8 +176,7 @@ namespace AaruBenchmark.Checksums
             ushort fletcher16 = 0;
             byte[] hash;
 
-            var fs = new FileStream(Path.Combine("/mnt/DiscImageChef", "Checksum test files", "random"), FileMode.Open,
-                                    FileAccess.Read);
+            var fs = new FileStream(Path.Combine(Program.Folder, "random"), FileMode.Open, FileAccess.Read);
 
             fs.Read(data, 0, 1048576);
             fs.Close();
@@ -214,8 +213,7 @@ namespace AaruBenchmark.Checksums
             uint   fletcher32 = 0;
             byte[] hash;
 
-            var fs = new FileStream(Path.Combine("/mnt/DiscImageChef", "Checksum test files", "random"), FileMode.Open,
-                                    FileAccess.Read);
+            var fs = new FileStream(Path.Combine(Program.Folder, "random"), FileMode.Open, FileAccess.Read);
 
             fs.Read(data, 0, 1048576);
             fs.Close();
@@ -253,8 +251,7 @@ namespace AaruBenchmark.Checksums
             uint   adler32 = 0;
             byte[] hash;
 
-            var fs = new FileStream(Path.Combine("/mnt/DiscImageChef", "Checksum test files", "random"), FileMode.Open,
-                                    FileAccess.Read);
+            var fs = new FileStream(Path.Combine(Program.Folder, "random"), FileMode.Open, FileAccess.Read);
 
             fs.Read(data, 0, 1048576);
             fs.Close();
@@ -292,8 +289,7 @@ namespace AaruBenchmark.Checksums
             ushort crc  = 0;
             byte[] hash;
 
-            var fs = new FileStream(Path.Combine("/mnt/DiscImageChef", "Checksum test files", "random"), FileMode.Open,
-                                    FileAccess.Read);
+            var fs = new FileStream(Path.Combine(Program.Folder, "random"), FileMode.Open, FileAccess.Read);
 
             fs.Read(data, 0, 1048576);
             fs.Close();
@@ -330,8 +326,7 @@ namespace AaruBenchmark.Checksums
             ushort crc  = 0;
             byte[] hash;
 
-            var fs = new FileStream(Path.Combine("/mnt/DiscImageChef", "Checksum test files", "random"), FileMode.Open,
-                                    FileAccess.Read);
+            var fs = new FileStream(Path.Combine(Program.Folder, "random"), FileMode.Open, FileAccess.Read);
 
             fs.Read(data, 0, 1048576);
             fs.Close();
@@ -368,8 +363,7 @@ namespace AaruBenchmark.Checksums
             uint   crc32 = 0;
             byte[] hash;
 
-            var fs = new FileStream(Path.Combine("/mnt/DiscImageChef", "Checksum test files", "random"), FileMode.Open,
-                                    FileAccess.Read);
+            var fs = new FileStream(Path.Combine(Program.Folder, "random"), FileMode.Open, FileAccess.Read);
 
             fs.Read(data, 0, 1048576);
             fs.Close();
@@ -407,8 +401,7 @@ namespace AaruBenchmark.Checksums
             ulong  crc64 = 0;
             byte[] hash;
 
-            var fs = new FileStream(Path.Combine("/mnt/DiscImageChef", "Checksum test files", "random"), FileMode.Open,
-                                    FileAccess.Read);
+            var fs = new FileStream(Path.Combine(Program.Folder, "random"), FileMode.Open, FileAccess.Read);
 
             fs.Read(data, 0, 1048576);
             fs.Close();
@@ -446,8 +439,7 @@ namespace AaruBenchmark.Checksums
             byte[] data = new byte[1048576];
             byte[] hash = new byte[256];
 
-            var fs = new FileStream(Path.Combine("/mnt/DiscImageChef", "Checksum test files", "random"), FileMode.Open,
-                                    FileAccess.Read);
+            var fs = new FileStream(Path.Combine(Program.Folder, "random"), FileMode.Open, FileAccess.Read);
 
             fs.Read(data, 0, 1048576);
             fs.Close();

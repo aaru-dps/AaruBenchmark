@@ -1,10 +1,14 @@
-﻿using BenchmarkDotNet.Configs;
+﻿using System;
+using System.IO;
+using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Running;
 
 namespace AaruBenchmark
 {
-    internal class Program
+    internal static class Program
     {
+        internal static string Folder => Path.Combine(Environment.CurrentDirectory, "data");
+
         static void Main(string[] args)
         {
             ManualConfig config = ManualConfig.Create(DefaultConfig.Instance).
