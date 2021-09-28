@@ -1,4 +1,5 @@
-﻿using BenchmarkDotNet.Running;
+﻿using BenchmarkDotNet.Configs;
+using BenchmarkDotNet.Running;
 
 namespace AaruBenchmark
 {
@@ -6,21 +7,24 @@ namespace AaruBenchmark
     {
         static void Main(string[] args)
         {
-            BenchmarkRunner.Run<GzipBenchs>();
-            BenchmarkRunner.Run<Bzip2Benchs>();
-            BenchmarkRunner.Run<Adler32Benchs>();
-            BenchmarkRunner.Run<Crc16CcittBenchs>();
-            BenchmarkRunner.Run<Crc16Benchs>();
-            BenchmarkRunner.Run<Crc32Benchs>();
-            BenchmarkRunner.Run<Crc64Benchs>();
-            BenchmarkRunner.Run<Fletcher16Benchs>();
-            BenchmarkRunner.Run<Fletcher32Benchs>();
-            BenchmarkRunner.Run<Md5Benchs>();
-            BenchmarkRunner.Run<Sha1Benchs>();
-            BenchmarkRunner.Run<Sha256Benchs>();
-            BenchmarkRunner.Run<Sha384Benchs>();
-            BenchmarkRunner.Run<Sha512Benchs>();
-            BenchmarkRunner.Run<SpamSumBenchs>();
+            ManualConfig config = ManualConfig.Create(DefaultConfig.Instance).
+                                               WithOptions(ConfigOptions.DisableOptimizationsValidator);
+
+            BenchmarkRunner.Run<GzipBenchs>(config);
+            BenchmarkRunner.Run<Bzip2Benchs>(config);
+            BenchmarkRunner.Run<Adler32Benchs>(config);
+            BenchmarkRunner.Run<Crc16CcittBenchs>(config);
+            BenchmarkRunner.Run<Crc16Benchs>(config);
+            BenchmarkRunner.Run<Crc32Benchs>(config);
+            BenchmarkRunner.Run<Crc64Benchs>(config);
+            BenchmarkRunner.Run<Fletcher16Benchs>(config);
+            BenchmarkRunner.Run<Fletcher32Benchs>(config);
+            BenchmarkRunner.Run<Md5Benchs>(config);
+            BenchmarkRunner.Run<Sha1Benchs>(config);
+            BenchmarkRunner.Run<Sha256Benchs>(config);
+            BenchmarkRunner.Run<Sha384Benchs>(config);
+            BenchmarkRunner.Run<Sha512Benchs>(config);
+            BenchmarkRunner.Run<SpamSumBenchs>(config);
         }
     }
 }
