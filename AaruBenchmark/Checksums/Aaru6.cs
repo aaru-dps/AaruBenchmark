@@ -221,5 +221,20 @@ namespace AaruBenchmark.Checksums
             if(result.Where((t, i) => t != _expectedRandomCrc64[i]).Any())
                 throw new Exception("Invalid hash value");
         }
+
+        public static void SpamSum()
+        {
+            byte[] data = new byte[1048576];
+
+            var fs = new FileStream(Path.Combine("/mnt/DiscImageChef", "Checksum test files", "random"), FileMode.Open,
+                                    FileAccess.Read);
+
+            fs.Read(data, 0, 1048576);
+            fs.Close();
+            fs.Dispose();
+            IChecksum ctx = new SpamSumContext();
+            ctx.Update(data);
+            string result = ctx.End();
+        }
     }
 }

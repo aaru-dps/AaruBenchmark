@@ -34,6 +34,9 @@ namespace AaruBenchmark
         public void Aaru() => Checksums.Aaru.Adler32();
 
         [Benchmark]
+        public void Aaru6() => Checksums.Aaru6.Adler32();
+
+        [Benchmark]
         public void AaruNative() => Checksums.AaruNative.Adler32();
     }
 
@@ -42,6 +45,9 @@ namespace AaruBenchmark
     {
         [Benchmark(Baseline = true)]
         public void Aaru() => Checksums.Aaru.Fletcher16();
+
+        [Benchmark]
+        public void Aaru6() => Checksums.Aaru6.Fletcher16();
 
         [Benchmark]
         public void AaruNative() => Checksums.AaruNative.Fletcher16();
@@ -54,6 +60,9 @@ namespace AaruBenchmark
         public void Aaru() => Checksums.Aaru.Fletcher32();
 
         [Benchmark]
+        public void Aaru6() => Checksums.Aaru6.Fletcher32();
+
+        [Benchmark]
         public void AaruNative() => Checksums.AaruNative.Fletcher32();
     }
 
@@ -62,6 +71,9 @@ namespace AaruBenchmark
     {
         [Benchmark(Baseline = true)]
         public void Aaru() => Checksums.Aaru.Crc16Ccitt();
+
+        [Benchmark]
+        public void Aaru6() => Checksums.Aaru6.Crc16Ccitt();
 
         [Benchmark]
         public void AaruNative() => Checksums.AaruNative.Crc16Ccitt();
@@ -74,6 +86,9 @@ namespace AaruBenchmark
         public void Aaru() => Checksums.Aaru.Crc16();
 
         [Benchmark]
+        public void Aaru6() => Checksums.Aaru6.Crc16();
+
+        [Benchmark]
         public void AaruNative() => Checksums.AaruNative.Crc16();
     }
 
@@ -82,6 +97,9 @@ namespace AaruBenchmark
     {
         [Benchmark(Baseline = true)]
         public void Aaru() => Checksums.Aaru.Crc32();
+
+        [Benchmark]
+        public void Aaru6() => Checksums.Aaru6.Crc32();
 
         [Benchmark]
         public void AaruNative() => Checksums.AaruNative.Crc32();
@@ -95,6 +113,9 @@ namespace AaruBenchmark
     {
         [Benchmark(Baseline = true)]
         public void Aaru() => Checksums.Aaru.Crc64();
+
+        [Benchmark]
+        public void Aaru6() => Checksums.Aaru6.Crc64();
 
         [Benchmark]
         public void AaruNative() => Checksums.AaruNative.Crc64();
@@ -170,6 +191,9 @@ namespace AaruBenchmark
     {
         [Benchmark(Baseline = true)]
         public void Aaru() => Checksums.Aaru.SpamSum();
+
+        [Benchmark]
+        public void Aaru6() => Checksums.Aaru6.SpamSum();
 
         [Benchmark]
         public void AaruNative() => Checksums.AaruNative.SpamSum();
