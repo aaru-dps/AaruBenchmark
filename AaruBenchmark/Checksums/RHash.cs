@@ -68,7 +68,6 @@ namespace AaruBenchmark.Checksums
         public static void Crc32()
         {
             byte[] data = new byte[1048576];
-            uint   s    = 0;
             byte[] hash = new byte[4];
 
             var fs = new FileStream(Path.Combine(Program.Folder, "random"), FileMode.Open, FileAccess.Read);
@@ -102,7 +101,6 @@ namespace AaruBenchmark.Checksums
         public static void Md5()
         {
             byte[] data = new byte[1048576];
-            uint   s    = 0;
             byte[] hash = new byte[16];
 
             var fs = new FileStream(Path.Combine(Program.Folder, "random"), FileMode.Open, FileAccess.Read);
@@ -136,7 +134,6 @@ namespace AaruBenchmark.Checksums
         public static void Sha1()
         {
             byte[] data = new byte[1048576];
-            uint   s    = 0;
             byte[] hash = new byte[20];
 
             var fs = new FileStream(Path.Combine(Program.Folder, "random"), FileMode.Open, FileAccess.Read);
@@ -170,7 +167,6 @@ namespace AaruBenchmark.Checksums
         public static void Sha256()
         {
             byte[] data = new byte[1048576];
-            uint   s    = 0;
             byte[] hash = new byte[32];
 
             var fs = new FileStream(Path.Combine(Program.Folder, "random"), FileMode.Open, FileAccess.Read);
@@ -204,7 +200,6 @@ namespace AaruBenchmark.Checksums
         public static void Sha384()
         {
             byte[] data = new byte[1048576];
-            uint   s    = 0;
             byte[] hash = new byte[48];
 
             var fs = new FileStream(Path.Combine(Program.Folder, "random"), FileMode.Open, FileAccess.Read);
@@ -238,7 +233,6 @@ namespace AaruBenchmark.Checksums
         public static void Sha512()
         {
             byte[] data = new byte[1048576];
-            uint   s    = 0;
             byte[] hash = new byte[64];
 
             var fs = new FileStream(Path.Combine(Program.Folder, "random"), FileMode.Open, FileAccess.Read);

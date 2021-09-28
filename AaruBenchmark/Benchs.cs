@@ -1,4 +1,5 @@
 using AaruBenchmark.Checksums;
+using AaruBenchmark.Compression;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Jobs;
 
@@ -8,23 +9,23 @@ namespace AaruBenchmark
     public class GzipBenchs
     {
         [Benchmark]
-        public void SharpCompress() => AaruBenchmark.SharpCompress.Gzip();
+        public void SharpCompress() => Compression.SharpCompress.Gzip();
 
         [Benchmark(Baseline = true)]
         public void DotNetRuntime() => NetRuntime.Gzip();
 
         [Benchmark]
-        public void DotNetZip() => AaruBenchmark.DotNetZip.Gzip();
+        public void DotNetZip() => Compression.DotNetZip.Gzip();
     }
 
     [SimpleJob(RuntimeMoniker.Net60)]
     public class Bzip2Benchs
     {
         [Benchmark(Baseline = true)]
-        public void SharpCompress() => AaruBenchmark.SharpCompress.Bzip2();
+        public void SharpCompress() => Compression.SharpCompress.Bzip2();
 
         [Benchmark]
-        public void DotNetZip() => AaruBenchmark.DotNetZip.Bzip2();
+        public void DotNetZip() => Compression.DotNetZip.Bzip2();
     }
 
     [SimpleJob(RuntimeMoniker.Net60)]

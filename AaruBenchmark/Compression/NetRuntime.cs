@@ -1,7 +1,7 @@
 using System.IO;
 using System.IO.Compression;
 
-namespace AaruBenchmark
+namespace AaruBenchmark.Compression
 {
     public static class NetRuntime
     {

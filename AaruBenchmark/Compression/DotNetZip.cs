@@ -1,16 +1,15 @@
 using System.IO;
-using SharpCompress.Compressors;
-using SharpCompress.Compressors.BZip2;
-using SharpCompress.Compressors.Deflate;
+using Ionic.BZip2;
+using Ionic.Zlib;
 
-namespace AaruBenchmark
+namespace AaruBenchmark.Compression
 {
-    public static class SharpCompress
+    public static class DotNetZip
     {
         public static void Gzip()
         {
             var _dataStream = new FileStream(Path.Combine(Program.Folder, "gzip.gz"), FileMode.Open, FileAccess.Read);
-            Stream str = new GZipStream(_dataStream, CompressionMode.Decompress);
+            Stream str = new GZipStream(_dataStream, CompressionMode.Decompress, true);
             byte[] compressed = new byte[1048576];
             int pos = 0;
             int left = 1048576;
@@ -39,7 +38,7 @@ namespace AaruBenchmark
         public static void Bzip2()
         {
             var _dataStream = new FileStream(Path.Combine(Program.Folder, "bzip2.bz2"), FileMode.Open, FileAccess.Read);
-            Stream str = new BZip2Stream(_dataStream, CompressionMode.Decompress, true);
+            Stream str = new BZip2InputStream(_dataStream, true);
             byte[] compressed = new byte[1048576];
             int pos = 0;
             int left = 1048576;
