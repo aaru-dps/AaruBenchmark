@@ -31,6 +31,7 @@
 // ****************************************************************************/
 
 using System.IO;
+using System.Runtime.Intrinsics.Arm;
 using System.Runtime.Intrinsics.X86;
 using System.Text;
 using Aaru.CommonTypes.Interfaces;
@@ -92,6 +93,13 @@ namespace Aaru6.Checksums
             if(Ssse3.IsSupported)
             {
                 ssse3.Step(ref preSum1, ref preSum2, data, len);
+
+                return;
+            }
+
+            if(AdvSimd.IsSupported)
+            {
+                neon.Step(ref preSum1, ref preSum2, data, len);
 
                 return;
             }
