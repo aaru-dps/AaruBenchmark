@@ -256,7 +256,7 @@ namespace AaruBenchmark.Checksums
             proc.StartInfo.UseShellExecute = false;
             proc.StartInfo.FileName        = "/usr/bin/ssdeep";
             proc.StartInfo.CreateNoWindow  = true;
-            proc.StartInfo.ArgumentList.Add("/mnt/DiscImageChef/Checksum test files/random");
+            proc.StartInfo.ArgumentList.Add(Path.Combine(Program.Folder, "random"));
             proc.StartInfo.RedirectStandardOutput = true;
             proc.Start();
             proc.StandardOutput.ReadToEnd();
