@@ -11,8 +11,7 @@ namespace AaruBenchmark
 
         static void Main(string[] args)
         {
-            ManualConfig config = ManualConfig.Create(DefaultConfig.Instance).
-                                               WithOptions(ConfigOptions.DisableOptimizationsValidator);
+            var config = ManualConfig.Create(DefaultConfig.Instance);
 
             BenchmarkRunner.Run<GzipBenchs>(config);
             BenchmarkRunner.Run<Bzip2Benchs>(config);
