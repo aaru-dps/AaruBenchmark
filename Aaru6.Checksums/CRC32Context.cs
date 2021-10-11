@@ -35,9 +35,9 @@ using System.IO;
 using System.Runtime.Intrinsics.Arm;
 using System.Runtime.Intrinsics.X86;
 using System.Text;
-using Aaru6.Checksums.CRC32;
 using Aaru.CommonTypes.Interfaces;
 using Aaru.Helpers;
+using Aaru6.Checksums.CRC32;
 
 namespace Aaru6.Checksums
 {
@@ -448,6 +448,23 @@ namespace Aaru6.Checksums
                     previousCrc = ArmSimd.Step32(data, len, previousCrc);
 
                     return;
+                }
+
+                if(AdvSimd.IsSupported)
+                {
+                    // Only works in blocks of 16 bytes
+                    uint blocks = len / 64;
+
+                    if(blocks > 0)
+                    {
+                        previousCrc = ~Vmull.Step(data, blocks * 64, ~previousCrc);
+
+                        currentPos =  (int)(blocks * 64);
+                        len        -= blocks * 64;
+                    }
+
+                    if(len == 0)
+                        return;
                 }
             }
 
