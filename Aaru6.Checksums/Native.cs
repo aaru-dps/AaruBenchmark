@@ -7,10 +7,15 @@ namespace Aaru6.Checksums
         static bool _checked;
         static bool _supported;
 
+        public static bool ForceManaged { get; set; }
+
         public static bool IsSupported
         {
             get
             {
+                if(ForceManaged)
+                    return false;
+
                 if(_checked)
                     return _supported;
 
