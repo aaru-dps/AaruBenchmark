@@ -99,6 +99,8 @@ namespace AaruBenchmark.Checksums
 
         public static void Fletcher32()
         {
+            Native.ForceManaged = true;
+
             byte[] data = new byte[1048576];
 
             var fs = new FileStream(Path.Combine(Program.Folder, "random"), FileMode.Open, FileAccess.Read);

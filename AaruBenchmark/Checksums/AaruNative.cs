@@ -77,18 +77,6 @@ namespace AaruBenchmark.Checksums
         };
 
         [DllImport("libAaru.Checksums.Native", SetLastError = true)]
-        static extern IntPtr fletcher32_init();
-
-        [DllImport("libAaru.Checksums.Native", SetLastError = true)]
-        static extern int fletcher32_update(IntPtr ctx, byte[] data, uint len);
-
-        [DllImport("libAaru.Checksums.Native", SetLastError = true)]
-        static extern int fletcher32_final(IntPtr ctx, ref uint crc);
-
-        [DllImport("libAaru.Checksums.Native", SetLastError = true)]
-        static extern void fletcher32_free(IntPtr ctx);
-
-        [DllImport("libAaru.Checksums.Native", SetLastError = true)]
         static extern IntPtr spamsum_init();
 
         [DllImport("libAaru.Checksums.Native", SetLastError = true)]
@@ -124,39 +112,23 @@ namespace AaruBenchmark.Checksums
 
         public static void Fletcher32()
         {
-            byte[] data       = new byte[1048576];
-            uint   fletcher32 = 0;
-            byte[] hash;
+            Native.ForceManaged = false;
+
+            byte[] data = new byte[1048576];
 
             var fs = new FileStream(Path.Combine(Program.Folder, "random"), FileMode.Open, FileAccess.Read);
 
             fs.Read(data, 0, 1048576);
             fs.Close();
             fs.Dispose();
+            IChecksum ctx = new Fletcher32Context();
+            ctx.Update(data);
+            byte[] result = ctx.Final();
 
-            IntPtr ctx = fletcher32_init();
+            if(result?.Length != _expectedRandomFletcher32.Length)
+                throw new Exception("Invalid hash length");
 
-            if(ctx == IntPtr.Zero)
-                throw new Exception("Could not initialize digest");
-
-            int ret = fletcher32_update(ctx, data, (uint)data.Length);
-
-            if(ret != 0)
-                throw new Exception("Could not digest block");
-
-            ret = fletcher32_final(ctx, ref fletcher32);
-
-            if(ret != 0)
-                throw new Exception("Could not finalize hash");
-
-            fletcher32_free(ctx);
-
-            fletcher32 = ((fletcher32 << 8) & 0xFF00FF00) | ((fletcher32 >> 8) & 0xFF00FF);
-            fletcher32 = (fletcher32 << 16)               | (fletcher32 >> 16);
-
-            hash = BitConverter.GetBytes(fletcher32);
-
-            if(hash.Where((t, i) => t != _expectedRandomFletcher32[i]).Any())
+            if(result.Where((t, i) => t != _expectedRandomFletcher32[i]).Any())
                 throw new Exception("Invalid hash value");
         }
 
