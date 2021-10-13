@@ -36,7 +36,9 @@
 // Copyright (C) Jean-loup Gailly
 // ****************************************************************************/
 
+using System;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Runtime.Intrinsics.Arm;
 using System.Runtime.Intrinsics.X86;
 using System.Text;
@@ -53,19 +55,39 @@ namespace Aaru6.Checksums
         internal const ushort ADLER_MODULE = 65521;
         internal const uint   NMAX         = 5552;
         ushort                _sum1, _sum2;
+        bool                  _useNative;
+        IntPtr                _nativeContext;
+
+        [DllImport("libAaru.Checksums.Native", SetLastError = true)]
+        static extern IntPtr adler32_init();
+
+        [DllImport("libAaru.Checksums.Native", SetLastError = true)]
+        static extern int adler32_update(IntPtr ctx, byte[] data, uint len);
+
+        [DllImport("libAaru.Checksums.Native", SetLastError = true)]
+        static extern int adler32_final(IntPtr ctx, ref uint checksum);
+
+        [DllImport("libAaru.Checksums.Native", SetLastError = true)]
+        static extern void adler32_free(IntPtr ctx);
 
         /// <summary>Initializes the Adler-32 sums</summary>
         public Adler32Context()
         {
             _sum1 = 1;
             _sum2 = 0;
+
+            if(!Native.IsSupported)
+                return;
+
+            _nativeContext = adler32_init();
+            _useNative     = _nativeContext != IntPtr.Zero;
         }
 
         /// <inheritdoc />
         /// <summary>Updates the hash with data.</summary>
         /// <param name="data">Data buffer.</param>
         /// <param name="len">Length of buffer to hash.</param>
-        public void Update(byte[] data, uint len) => Step(ref _sum1, ref _sum2, data, len);
+        public void Update(byte[] data, uint len) => Step(ref _sum1, ref _sum2, data, len, _useNative, _nativeContext);
 
         /// <inheritdoc />
         /// <summary>Updates the hash with data.</summary>
@@ -78,6 +100,12 @@ namespace Aaru6.Checksums
         {
             uint finalSum = (uint)((_sum2 << 16) | _sum1);
 
+            if(!_useNative)
+                return BigEndianBitConverter.GetBytes(finalSum);
+
+            adler32_final(_nativeContext, ref finalSum);
+            adler32_free(_nativeContext);
+
             return BigEndianBitConverter.GetBytes(finalSum);
         }
 
@@ -86,6 +114,13 @@ namespace Aaru6.Checksums
         public string End()
         {
             uint finalSum    = (uint)((_sum2 << 16) | _sum1);
+
+            if(_useNative)
+            {
+                adler32_final(_nativeContext, ref finalSum);
+                adler32_free(_nativeContext);
+            }
+
             var  adlerOutput = new StringBuilder();
 
             for(int i = 0; i < BigEndianBitConverter.GetBytes(finalSum).Length; i++)
@@ -94,8 +129,15 @@ namespace Aaru6.Checksums
             return adlerOutput.ToString();
         }
 
-        static void Step(ref ushort preSum1, ref ushort preSum2, byte[] data, uint len)
+        static void Step(ref ushort preSum1, ref ushort preSum2, byte[] data, uint len, bool useNative, IntPtr nativeContext)
         {
+            if(useNative)
+            {
+                adler32_update(nativeContext, data, len);
+
+                return;
+            }
+
             if(Ssse3.IsSupported)
             {
                 ssse3.Step(ref preSum1, ref preSum2, data, len);
@@ -273,7 +315,18 @@ namespace Aaru6.Checksums
         /// <param name="hash">Byte array of the hash value.</param>
         public static string File(string filename, out byte[] hash)
         {
-            var fileStream = new FileStream(filename, FileMode.Open);
+            bool   useNative     = Native.IsSupported;
+            IntPtr nativeContext = IntPtr.Zero;
+
+            if(useNative)
+            {
+                nativeContext = adler32_init();
+
+                if(nativeContext == IntPtr.Zero)
+                    useNative = false;
+            }
+
+            var  fileStream = new FileStream(filename, FileMode.Open);
 
             ushort localSum1 = 1;
             ushort localSum2 = 0;
@@ -283,11 +336,17 @@ namespace Aaru6.Checksums
 
             while(read > 0)
             {
-                Step(ref localSum1, ref localSum2, buffer, (uint)read);
+                Step(ref localSum1, ref localSum2, buffer, (uint)read, useNative, nativeContext);
                 read = fileStream.Read(buffer, 0, 65536);
             }
 
             uint finalSum = (uint)((localSum2 << 16) | localSum1);
+
+            if(useNative)
+            {
+                adler32_final(nativeContext, ref finalSum);
+                adler32_free(nativeContext);
+            }
 
             hash = BigEndianBitConverter.GetBytes(finalSum);
 
@@ -307,12 +366,29 @@ namespace Aaru6.Checksums
         /// <param name="hash">Byte array of the hash value.</param>
         public static string Data(byte[] data, uint len, out byte[] hash)
         {
+            bool   useNative     = Native.IsSupported;
+            IntPtr nativeContext = IntPtr.Zero;
+
+            if(useNative)
+            {
+                nativeContext = adler32_init();
+
+                if(nativeContext == IntPtr.Zero)
+                    useNative = false;
+            }
+
             ushort localSum1 = 1;
             ushort localSum2 = 0;
 
-            Step(ref localSum1, ref localSum2, data, len);
+            Step(ref localSum1, ref localSum2, data, len, useNative, nativeContext);
 
             uint finalSum = (uint)((localSum2 << 16) | localSum1);
+
+            if(useNative)
+            {
+                adler32_final(nativeContext, ref finalSum);
+                adler32_free(nativeContext);
+            }
 
             hash = BigEndianBitConverter.GetBytes(finalSum);
 

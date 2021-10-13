@@ -2,6 +2,8 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using Aaru.CommonTypes.Interfaces;
+using Aaru6.Checksums;
 
 namespace AaruBenchmark.Checksums
 {
@@ -73,18 +75,6 @@ namespace AaruBenchmark.Checksums
             0x4d, 0xdc, 0xd1, 0x37, 0x48, 0x92, 0x95, 0x51, 0xf9, 0xdd, 0xab, 0x82, 0xf4, 0x8a, 0x85, 0x3f, 0x9a, 0x01,
             0xb5, 0xf2, 0x8c, 0xbb, 0x4a, 0xa5, 0x1b, 0x40, 0x7c, 0xb6
         };
-
-        [DllImport("libAaru.Checksums.Native", SetLastError = true)]
-        static extern IntPtr adler32_init();
-
-        [DllImport("libAaru.Checksums.Native", SetLastError = true)]
-        static extern int adler32_update(IntPtr ctx, byte[] data, uint len);
-
-        [DllImport("libAaru.Checksums.Native", SetLastError = true)]
-        static extern int adler32_final(IntPtr ctx, ref uint crc);
-
-        [DllImport("libAaru.Checksums.Native", SetLastError = true)]
-        static extern void adler32_free(IntPtr ctx);
 
         [DllImport("libAaru.Checksums.Native", SetLastError = true)]
         static extern IntPtr fletcher16_init();
@@ -247,39 +237,23 @@ namespace AaruBenchmark.Checksums
 
         public static void Adler32()
         {
-            byte[] data    = new byte[1048576];
-            uint   adler32 = 0;
-            byte[] hash;
+            Native.ForceManaged = false;
+
+            byte[] data = new byte[1048576];
 
             var fs = new FileStream(Path.Combine(Program.Folder, "random"), FileMode.Open, FileAccess.Read);
 
             fs.Read(data, 0, 1048576);
             fs.Close();
             fs.Dispose();
+            IChecksum ctx = new Adler32Context();
+            ctx.Update(data);
+            byte[] result = ctx.Final();
 
-            IntPtr ctx = adler32_init();
+            if(result?.Length != _expectedRandomAdler32.Length)
+                throw new Exception("Invalid hash length");
 
-            if(ctx == IntPtr.Zero)
-                throw new Exception("Could not initialize digest");
-
-            int ret = adler32_update(ctx, data, (uint)data.Length);
-
-            if(ret != 0)
-                throw new Exception("Could not digest block");
-
-            ret = adler32_final(ctx, ref adler32);
-
-            if(ret != 0)
-                throw new Exception("Could not finalize hash");
-
-            adler32_free(ctx);
-
-            adler32 = ((adler32 << 8) & 0xFF00FF00) | ((adler32 >> 8) & 0xFF00FF);
-            adler32 = (adler32 << 16)               | (adler32 >> 16);
-
-            hash = BitConverter.GetBytes(adler32);
-
-            if(hash.Where((t, i) => t != _expectedRandomAdler32[i]).Any())
+            if(result.Where((t, i) => t != _expectedRandomAdler32[i]).Any())
                 throw new Exception("Invalid hash value");
         }
 
