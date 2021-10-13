@@ -32,7 +32,9 @@
 
 // Disabled because the speed is abnormally slow
 
+using System;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Text;
 using Aaru.CommonTypes.Interfaces;
 using Aaru.Helpers;
@@ -315,20 +317,29 @@ namespace Aaru6.Checksums
     {
         const byte FLETCHER_MODULE = 0xFF;
         const byte NMAX            = 22;
-        byte       _sum1, _sum2;
+
+        readonly IntPtr _nativeContext;
+        byte            _sum1, _sum2;
+        readonly bool   _useNative;
 
         /// <summary>Initializes the Fletcher-16 sums</summary>
         public Fletcher16Context()
         {
             _sum1 = 0xFF;
             _sum2 = 0xFF;
+
+            if(!Native.IsSupported)
+                return;
+
+            _nativeContext = fletcher16_init();
+            _useNative     = _nativeContext != IntPtr.Zero;
         }
 
         /// <inheritdoc />
         /// <summary>Updates the hash with data.</summary>
         /// <param name="data">Data buffer.</param>
         /// <param name="len">Length of buffer to hash.</param>
-        public void Update(byte[] data, uint len) => Step(ref _sum1, ref _sum2, data, len);
+        public void Update(byte[] data, uint len) => Step(ref _sum1, ref _sum2, data, len, _useNative, _nativeContext);
 
         /// <inheritdoc />
         /// <summary>Updates the hash with data.</summary>
@@ -341,6 +352,12 @@ namespace Aaru6.Checksums
         {
             ushort finalSum = (ushort)((_sum2 << 8) | _sum1);
 
+            if(!_useNative)
+                return BigEndianBitConverter.GetBytes(finalSum);
+
+            fletcher16_final(_nativeContext, ref finalSum);
+            fletcher16_free(_nativeContext);
+
             return BigEndianBitConverter.GetBytes(finalSum);
         }
 
@@ -348,8 +365,15 @@ namespace Aaru6.Checksums
         /// <summary>Returns a hexadecimal representation of the hash value.</summary>
         public string End()
         {
-            ushort finalSum       = (ushort)((_sum2 << 8) | _sum1);
-            var    fletcherOutput = new StringBuilder();
+            ushort finalSum = (ushort)((_sum2 << 8) | _sum1);
+
+            if(_useNative)
+            {
+                fletcher16_final(_nativeContext, ref finalSum);
+                fletcher16_free(_nativeContext);
+            }
+
+            var fletcherOutput = new StringBuilder();
 
             for(int i = 0; i < BigEndianBitConverter.GetBytes(finalSum).Length; i++)
                 fletcherOutput.Append(BigEndianBitConverter.GetBytes(finalSum)[i].ToString("x2"));
@@ -357,8 +381,28 @@ namespace Aaru6.Checksums
             return fletcherOutput.ToString();
         }
 
-        static void Step(ref byte previousSum1, ref byte previousSum2, byte[] data, uint len)
+        [DllImport("libAaru.Checksums.Native", SetLastError = true)]
+        static extern IntPtr fletcher16_init();
+
+        [DllImport("libAaru.Checksums.Native", SetLastError = true)]
+        static extern int fletcher16_update(IntPtr ctx, byte[] data, uint len);
+
+        [DllImport("libAaru.Checksums.Native", SetLastError = true)]
+        static extern int fletcher16_final(IntPtr ctx, ref ushort checksum);
+
+        [DllImport("libAaru.Checksums.Native", SetLastError = true)]
+        static extern void fletcher16_free(IntPtr ctx);
+
+        static void Step(ref byte previousSum1, ref byte previousSum2, byte[] data, uint len, bool useNative,
+                         IntPtr nativeContext)
         {
+            if(useNative)
+            {
+                fletcher16_update(nativeContext, data, len);
+
+                return;
+            }
+
             uint sum1 = previousSum1;
             uint sum2 = previousSum2;
             uint n;
@@ -502,6 +546,17 @@ namespace Aaru6.Checksums
         /// <param name="hash">Byte array of the hash value.</param>
         public static string File(string filename, out byte[] hash)
         {
+            bool   useNative     = Native.IsSupported;
+            IntPtr nativeContext = IntPtr.Zero;
+
+            if(useNative)
+            {
+                nativeContext = fletcher16_init();
+
+                if(nativeContext == IntPtr.Zero)
+                    useNative = false;
+            }
+
             var fileStream = new FileStream(filename, FileMode.Open);
 
             byte localSum1 = 0xFF;
@@ -512,12 +567,18 @@ namespace Aaru6.Checksums
 
             while(read > 0)
             {
-                Step(ref localSum1, ref localSum2, buffer, (uint)read);
+                Step(ref localSum1, ref localSum2, buffer, (uint)read, useNative, nativeContext);
 
                 read = fileStream.Read(buffer, 0, 65536);
             }
 
             ushort finalSum = (ushort)((localSum2 << 8) | localSum1);
+
+            if(useNative)
+            {
+                fletcher16_final(nativeContext, ref finalSum);
+                fletcher16_free(nativeContext);
+            }
 
             hash = BigEndianBitConverter.GetBytes(finalSum);
 
@@ -537,12 +598,29 @@ namespace Aaru6.Checksums
         /// <param name="hash">Byte array of the hash value.</param>
         public static string Data(byte[] data, uint len, out byte[] hash)
         {
+            bool   useNative     = Native.IsSupported;
+            IntPtr nativeContext = IntPtr.Zero;
+
+            if(useNative)
+            {
+                nativeContext = fletcher16_init();
+
+                if(nativeContext == IntPtr.Zero)
+                    useNative = false;
+            }
+
             byte localSum1 = 0xFF;
             byte localSum2 = 0xFF;
 
-            Step(ref localSum1, ref localSum2, data, len);
+            Step(ref localSum1, ref localSum2, data, len, useNative, nativeContext);
 
             ushort finalSum = (ushort)((localSum2 << 8) | localSum1);
+
+            if(useNative)
+            {
+                fletcher16_final(nativeContext, ref finalSum);
+                fletcher16_free(nativeContext);
+            }
 
             hash = BigEndianBitConverter.GetBytes(finalSum);
 

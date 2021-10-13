@@ -148,12 +148,12 @@ namespace AaruBenchmark.Checksums
             IChecksum ctx = new CRC16CCITTContext();
             ctx.Update(data);
             byte[] result = ctx.Final();
-            /*
-                        if(result?.Length != _expectedRandomCrc16Ccitt.Length)
-                            throw new Exception("Invalid hash length");
 
-                        if(result.Where((t, i) => t != _expectedRandomCrc16Ccitt[i]).Any())
-                            throw new Exception("Invalid hash value");*/
+            if(result?.Length != _expectedRandomCrc16Ccitt.Length)
+                throw new Exception("Invalid hash length");
+
+            if(result.Where((t, i) => t != _expectedRandomCrc16Ccitt[i]).Any())
+                throw new Exception("Invalid hash value");
         }
 
         public static void Crc16()

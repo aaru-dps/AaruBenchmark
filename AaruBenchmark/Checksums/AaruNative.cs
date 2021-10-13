@@ -77,18 +77,6 @@ namespace AaruBenchmark.Checksums
         };
 
         [DllImport("libAaru.Checksums.Native", SetLastError = true)]
-        static extern IntPtr fletcher16_init();
-
-        [DllImport("libAaru.Checksums.Native", SetLastError = true)]
-        static extern int fletcher16_update(IntPtr ctx, byte[] data, uint len);
-
-        [DllImport("libAaru.Checksums.Native", SetLastError = true)]
-        static extern int fletcher16_final(IntPtr ctx, ref ushort crc);
-
-        [DllImport("libAaru.Checksums.Native", SetLastError = true)]
-        static extern void fletcher16_free(IntPtr ctx);
-
-        [DllImport("libAaru.Checksums.Native", SetLastError = true)]
         static extern IntPtr fletcher32_init();
 
         [DllImport("libAaru.Checksums.Native", SetLastError = true)]
@@ -114,38 +102,23 @@ namespace AaruBenchmark.Checksums
 
         public static void Fletcher16()
         {
-            byte[] data       = new byte[1048576];
-            ushort fletcher16 = 0;
-            byte[] hash;
+            Native.ForceManaged = false;
+
+            byte[] data = new byte[1048576];
 
             var fs = new FileStream(Path.Combine(Program.Folder, "random"), FileMode.Open, FileAccess.Read);
 
             fs.Read(data, 0, 1048576);
             fs.Close();
             fs.Dispose();
+            IChecksum ctx = new Fletcher16Context();
+            ctx.Update(data);
+            byte[] result = ctx.Final();
 
-            IntPtr ctx = fletcher16_init();
+            if(result?.Length != _expectedRandomFletcher16.Length)
+                throw new Exception("Invalid hash length");
 
-            if(ctx == IntPtr.Zero)
-                throw new Exception("Could not initialize digest");
-
-            int ret = fletcher16_update(ctx, data, (uint)data.Length);
-
-            if(ret != 0)
-                throw new Exception("Could not digest block");
-
-            ret = fletcher16_final(ctx, ref fletcher16);
-
-            if(ret != 0)
-                throw new Exception("Could not finalize hash");
-
-            fletcher16_free(ctx);
-
-            fletcher16 = (ushort)((fletcher16 << 8) | (fletcher16 >> 8));
-
-            hash = BitConverter.GetBytes(fletcher16);
-
-            if(hash.Where((t, i) => t != _expectedRandomFletcher16[i]).Any())
+            if(result.Where((t, i) => t != _expectedRandomFletcher16[i]).Any())
                 throw new Exception("Invalid hash value");
         }
 
