@@ -101,18 +101,6 @@ namespace AaruBenchmark.Checksums
         static extern void fletcher32_free(IntPtr ctx);
 
         [DllImport("libAaru.Checksums.Native", SetLastError = true)]
-        static extern IntPtr crc64_init();
-
-        [DllImport("libAaru.Checksums.Native", SetLastError = true)]
-        static extern int crc64_update(IntPtr ctx, byte[] data, uint len);
-
-        [DllImport("libAaru.Checksums.Native", SetLastError = true)]
-        static extern int crc64_final(IntPtr ctx, ref ulong crc);
-
-        [DllImport("libAaru.Checksums.Native", SetLastError = true)]
-        static extern void crc64_free(IntPtr ctx);
-
-        [DllImport("libAaru.Checksums.Native", SetLastError = true)]
         static extern IntPtr spamsum_init();
 
         [DllImport("libAaru.Checksums.Native", SetLastError = true)]
@@ -289,40 +277,23 @@ namespace AaruBenchmark.Checksums
 
         public static void Crc64()
         {
-            byte[] data  = new byte[1048576];
-            ulong  crc64 = 0;
-            byte[] hash;
+            Native.ForceManaged = false;
+
+            byte[] data = new byte[1048576];
 
             var fs = new FileStream(Path.Combine(Program.Folder, "random"), FileMode.Open, FileAccess.Read);
 
             fs.Read(data, 0, 1048576);
             fs.Close();
             fs.Dispose();
+            IChecksum ctx = new Crc64Context();
+            ctx.Update(data);
+            byte[] result = ctx.Final();
 
-            IntPtr ctx = crc64_init();
+            if(result?.Length != _expectedRandomCrc64.Length)
+                throw new Exception("Invalid hash length");
 
-            if(ctx == IntPtr.Zero)
-                throw new Exception("Could not initialize digest");
-
-            int ret = crc64_update(ctx, data, (uint)data.Length);
-
-            if(ret != 0)
-                throw new Exception("Could not digest block");
-
-            ret = crc64_final(ctx, ref crc64);
-
-            if(ret != 0)
-                throw new Exception("Could not finalize hash");
-
-            crc64_free(ctx);
-
-            crc64 = ((crc64 & 0x00000000FFFFFFFF) << 32) | ((crc64 & 0xFFFFFFFF00000000) >> 32);
-            crc64 = ((crc64 & 0x0000FFFF0000FFFF) << 16) | ((crc64 & 0xFFFF0000FFFF0000) >> 16);
-            crc64 = ((crc64 & 0x00FF00FF00FF00FF) << 8)  | ((crc64 & 0xFF00FF00FF00FF00) >> 8);
-
-            hash = BitConverter.GetBytes(crc64);
-
-            if(hash.Where((t, i) => t != _expectedRandomCrc64[i]).Any())
+            if(result.Where((t, i) => t != _expectedRandomCrc64[i]).Any())
                 throw new Exception("Invalid hash value");
         }
 

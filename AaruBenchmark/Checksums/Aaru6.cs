@@ -205,6 +205,8 @@ namespace AaruBenchmark.Checksums
 
         public static void Crc64()
         {
+            Native.ForceManaged = true;
+
             byte[] data = new byte[1048576];
 
             var fs = new FileStream(Path.Combine(Program.Folder, "random"), FileMode.Open, FileAccess.Read);
