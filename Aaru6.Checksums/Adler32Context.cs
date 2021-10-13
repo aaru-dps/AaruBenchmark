@@ -55,8 +55,8 @@ namespace Aaru6.Checksums
         internal const ushort ADLER_MODULE = 65521;
         internal const uint   NMAX         = 5552;
         ushort                _sum1, _sum2;
-        bool                  _useNative;
-        IntPtr                _nativeContext;
+        readonly bool         _useNative;
+        readonly IntPtr       _nativeContext;
 
         [DllImport("libAaru.Checksums.Native", SetLastError = true)]
         static extern IntPtr adler32_init();
