@@ -13,21 +13,21 @@ namespace AaruBenchmark
         {
             var config = ManualConfig.Create(DefaultConfig.Instance);
 
-/*            BenchmarkRunner.Run<GzipBenchs>(config);
+            BenchmarkRunner.Run<GzipBenchs>(config);
             BenchmarkRunner.Run<Bzip2Benchs>(config);
             BenchmarkRunner.Run<Adler32Benchs>(config);
             BenchmarkRunner.Run<Crc16CcittBenchs>(config);
             BenchmarkRunner.Run<Crc16Benchs>(config);
             BenchmarkRunner.Run<Crc32Benchs>(config);
             BenchmarkRunner.Run<Crc64Benchs>(config);
-            BenchmarkRunner.Run<Fletcher16Benchs>(config);*/
+            BenchmarkRunner.Run<Fletcher16Benchs>(config);
             BenchmarkRunner.Run<Fletcher32Benchs>(config);
-/*            BenchmarkRunner.Run<Md5Benchs>(config);
+            BenchmarkRunner.Run<Md5Benchs>(config);
             BenchmarkRunner.Run<Sha1Benchs>(config);
             BenchmarkRunner.Run<Sha256Benchs>(config);
             BenchmarkRunner.Run<Sha384Benchs>(config);
             BenchmarkRunner.Run<Sha512Benchs>(config);
-            BenchmarkRunner.Run<SpamSumBenchs>(config);*/
+            BenchmarkRunner.Run<SpamSumBenchs>(config);
         }
     }
 }

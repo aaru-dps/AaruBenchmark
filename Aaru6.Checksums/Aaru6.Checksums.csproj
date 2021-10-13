@@ -61,6 +61,7 @@
     <Compile Include="CRC32\arm_simd.cs" />
     <Compile Include="CRC32\vmull.cs" />
     <Compile Include="CRC64\clmul.cs" />
+    <Compile Include="Native.cs" />
     <Compile Include="SpamSumContext.cs" />
     <Compile Include="Adler32Context.cs" />
     <Compile Include="CRC16Context.cs" />
@@ -74,6 +75,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Aaru.Checksums.Native" Version="6.0.0-alpha6" />
     <PackageReference Include="Aaru.CommonTypes" Version="5.3.0" />
     <PackageReference Include="Unclassified.NetRevisionTask" Version="0.4.1" PrivateAssets="all" />
   </ItemGroup>
