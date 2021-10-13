@@ -139,6 +139,8 @@ namespace AaruBenchmark.Checksums
 
         public static void Crc16Ccitt()
         {
+            Native.ForceManaged = true;
+
             byte[] data = new byte[1048576];
 
             var fs = new FileStream(Path.Combine(Program.Folder, "random"), FileMode.Open, FileAccess.Read);
@@ -149,16 +151,18 @@ namespace AaruBenchmark.Checksums
             IChecksum ctx = new CRC16CCITTContext();
             ctx.Update(data);
             byte[] result = ctx.Final();
-            /*
-                        if(result?.Length != _expectedRandomCrc16Ccitt.Length)
-                            throw new Exception("Invalid hash length");
 
-                        if(result.Where((t, i) => t != _expectedRandomCrc16Ccitt[i]).Any())
-                            throw new Exception("Invalid hash value");*/
+            if(result?.Length != _expectedRandomCrc16Ccitt.Length)
+                throw new Exception("Invalid hash length");
+
+            if(result.Where((t, i) => t != _expectedRandomCrc16Ccitt[i]).Any())
+                throw new Exception("Invalid hash value");
         }
 
         public static void Crc16()
         {
+            Native.ForceManaged = true;
+
             byte[] data = new byte[1048576];
 
             var fs = new FileStream(Path.Combine(Program.Folder, "random"), FileMode.Open, FileAccess.Read);

@@ -101,30 +101,6 @@ namespace AaruBenchmark.Checksums
         static extern void fletcher32_free(IntPtr ctx);
 
         [DllImport("libAaru.Checksums.Native", SetLastError = true)]
-        static extern IntPtr crc16_ccitt_init();
-
-        [DllImport("libAaru.Checksums.Native", SetLastError = true)]
-        static extern int crc16_ccitt_update(IntPtr ctx, byte[] data, uint len);
-
-        [DllImport("libAaru.Checksums.Native", SetLastError = true)]
-        static extern int crc16_ccitt_final(IntPtr ctx, ref ushort crc);
-
-        [DllImport("libAaru.Checksums.Native", SetLastError = true)]
-        static extern void crc16_ccitt_free(IntPtr ctx);
-
-        [DllImport("libAaru.Checksums.Native", SetLastError = true)]
-        static extern IntPtr crc16_init();
-
-        [DllImport("libAaru.Checksums.Native", SetLastError = true)]
-        static extern int crc16_update(IntPtr ctx, byte[] data, uint len);
-
-        [DllImport("libAaru.Checksums.Native", SetLastError = true)]
-        static extern int crc16_final(IntPtr ctx, ref ushort crc);
-
-        [DllImport("libAaru.Checksums.Native", SetLastError = true)]
-        static extern void crc16_free(IntPtr ctx);
-
-        [DllImport("libAaru.Checksums.Native", SetLastError = true)]
         static extern IntPtr crc32_init();
 
         [DllImport("libAaru.Checksums.Native", SetLastError = true)]
@@ -259,75 +235,45 @@ namespace AaruBenchmark.Checksums
 
         public static void Crc16Ccitt()
         {
+            Native.ForceManaged = true;
+
             byte[] data = new byte[1048576];
-            ushort crc  = 0;
-            byte[] hash;
 
             var fs = new FileStream(Path.Combine(Program.Folder, "random"), FileMode.Open, FileAccess.Read);
 
             fs.Read(data, 0, 1048576);
             fs.Close();
             fs.Dispose();
+            IChecksum ctx = new CRC16CCITTContext();
+            ctx.Update(data);
+            byte[] result = ctx.Final();
 
-            IntPtr ctx = crc16_ccitt_init();
+            if(result?.Length != _expectedRandomCrc16Ccitt.Length)
+                throw new Exception("Invalid hash length");
 
-            if(ctx == IntPtr.Zero)
-                throw new Exception("Could not initialize digest");
-
-            int ret = crc16_ccitt_update(ctx, data, (uint)data.Length);
-
-            if(ret != 0)
-                throw new Exception("Could not digest block");
-
-            ret = crc16_ccitt_final(ctx, ref crc);
-
-            if(ret != 0)
-                throw new Exception("Could not finalize hash");
-
-            crc16_ccitt_free(ctx);
-
-            crc = (ushort)((crc << 8) | (crc >> 8));
-
-            hash = BitConverter.GetBytes(crc);
-
-            if(hash.Where((t, i) => t != _expectedRandomCrc16Ccitt[i]).Any())
+            if(result.Where((t, i) => t != _expectedRandomCrc16Ccitt[i]).Any())
                 throw new Exception("Invalid hash value");
         }
 
         public static void Crc16()
         {
+            Native.ForceManaged = false;
+
             byte[] data = new byte[1048576];
-            ushort crc  = 0;
-            byte[] hash;
 
             var fs = new FileStream(Path.Combine(Program.Folder, "random"), FileMode.Open, FileAccess.Read);
 
             fs.Read(data, 0, 1048576);
             fs.Close();
             fs.Dispose();
+            IChecksum ctx = new CRC16IBMContext();
+            ctx.Update(data);
+            byte[] result = ctx.Final();
 
-            IntPtr ctx = crc16_init();
+            if(result?.Length != _expectedRandomCrc16.Length)
+                throw new Exception("Invalid hash length");
 
-            if(ctx == IntPtr.Zero)
-                throw new Exception("Could not initialize digest");
-
-            int ret = crc16_update(ctx, data, (uint)data.Length);
-
-            if(ret != 0)
-                throw new Exception("Could not digest block");
-
-            ret = crc16_final(ctx, ref crc);
-
-            if(ret != 0)
-                throw new Exception("Could not finalize hash");
-
-            crc16_free(ctx);
-
-            crc = (ushort)((crc << 8) | (crc >> 8));
-
-            hash = BitConverter.GetBytes(crc);
-
-            if(hash.Where((t, i) => t != _expectedRandomCrc16[i]).Any())
+            if(result.Where((t, i) => t != _expectedRandomCrc16[i]).Any())
                 throw new Exception("Invalid hash value");
         }
 
