@@ -13,10 +13,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="libAaru.Checksums.Native.so"/>
-    <Content Include="libAaru.Checksums.Native.so">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <None Remove="data\random"/>
     <Content Include="data\random">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
