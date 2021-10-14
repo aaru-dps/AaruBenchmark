@@ -6,6 +6,16 @@ using BenchmarkDotNet.Jobs;
 namespace AaruBenchmark
 {
     [SimpleJob(RuntimeMoniker.Net60)]
+    public class AppleRleBenchs
+    {
+        [Benchmark(Baseline = true)]
+        public void Aaru() => Compression.Aaru.AppleRle();
+
+        [Benchmark]
+        public void Aaru6() => Compression.Aaru6.AppleRle();
+    }
+
+    [SimpleJob(RuntimeMoniker.Net60)]
     public class GzipBenchs
     {
         [Benchmark]

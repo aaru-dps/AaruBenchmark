@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AaruBenchmark", "AaruBenchm
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aaru6.Checksums", "Aaru6.Checksums\Aaru6.Checksums.csproj", "{CC48B324-A532-4A45-87A6-6F91F7141E8D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Aaru6.Compression", "Aaru6.Compression\Aaru6.Compression.csproj", "{7B9BAFE0-E9D9-4EF4-B009-007F727DAB68}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{CC48B324-A532-4A45-87A6-6F91F7141E8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CC48B324-A532-4A45-87A6-6F91F7141E8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CC48B324-A532-4A45-87A6-6F91F7141E8D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B9BAFE0-E9D9-4EF4-B009-007F727DAB68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B9BAFE0-E9D9-4EF4-B009-007F727DAB68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B9BAFE0-E9D9-4EF4-B009-007F727DAB68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B9BAFE0-E9D9-4EF4-B009-007F727DAB68}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
