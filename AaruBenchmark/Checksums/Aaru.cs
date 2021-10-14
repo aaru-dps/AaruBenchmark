@@ -26,7 +26,7 @@ namespace AaruBenchmark.Checksums
 
         static readonly byte[] _expectedRandomCrc16Ccitt =
         {
-            0x36, 0x40
+            0xC9, 0xBF
         };
 
         static readonly byte[] _expectedRandomCrc16 =
