@@ -17,6 +17,14 @@
     <Content Include="data\random">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Remove="data\gzip.gz"/>
+    <Content Include="data\gzip.gz">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="data\bzip2.bz2"/>
+    <Content Include="data\bzip2.bz2">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
