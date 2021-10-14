@@ -16,6 +16,16 @@ namespace AaruBenchmark
     }
 
     [SimpleJob(RuntimeMoniker.Net60)]
+    public class TeleDiskLzhBenchs
+    {
+        [Benchmark(Baseline = true)]
+        public void Aaru() => Compression.Aaru.TeleDiskLzh();
+
+        [Benchmark]
+        public void Aaru6() => Compression.Aaru6.TeleDiskLzh();
+    }
+
+    [SimpleJob(RuntimeMoniker.Net60)]
     public class GzipBenchs
     {
         [Benchmark]

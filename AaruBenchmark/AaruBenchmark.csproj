@@ -30,6 +30,10 @@
     <Content Include="data\apple_rle.bin">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Remove="data\teledisk_lzh.bin"/>
+    <Content Include="data\teledisk_lzh.bin">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
