@@ -156,7 +156,7 @@ namespace AaruBenchmark.Checksums
 
         public static void Crc16Ccitt()
         {
-            Native.ForceManaged = true;
+            Native.ForceManaged = false;
 
             byte[] data = new byte[1048576];
 
