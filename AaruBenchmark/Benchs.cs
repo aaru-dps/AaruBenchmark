@@ -62,6 +62,9 @@ namespace AaruBenchmark
 
         [Benchmark]
         public void DotNetZip() => Compression.DotNetZip.Bzip2();
+
+        [Benchmark]
+        public void AaruNative() => Compression.AaruNative.Bzip2();
     }
 
     [SimpleJob(RuntimeMoniker.Net60)]
