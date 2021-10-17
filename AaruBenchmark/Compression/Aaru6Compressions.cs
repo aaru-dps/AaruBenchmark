@@ -4,11 +4,11 @@ using Aaru6.Compression;
 
 namespace AaruBenchmark.Compression
 {
-    public class Aaru6
+    public class Aaru6Compressions
     {
         public static void AppleRle()
         {
-            const int bufferSize = 20960;
+            const int bufferSize = 32768;
             byte[]    input      = new byte[1102];
 
             var fs = new FileStream(Path.Combine(Program.Folder, "apple_rle.bin"), FileMode.Open, FileAccess.Read);
@@ -19,12 +19,12 @@ namespace AaruBenchmark.Compression
 
             byte[] output = new byte[bufferSize];
 
-            var rle = new AppleRle(new MemoryStream(input));
+            int realSize = Aaru6.Compression.AppleRle.DecodeBuffer(input, output);
 
-            for(int i = 0; i < bufferSize; i++)
-                output[i] = (byte)rle.ProduceByte();
+            if(realSize != 20960)
+                throw new InvalidDataException("Incorrect decompressed size");
 
-            string crc = Crc32Context.Data(output, out _);
+            string crc = Crc32Context.Data(output, (uint)realSize, out _);
 
             if(crc != "3525ef06")
                 throw new InvalidDataException("Incorrect decompressed checksum");

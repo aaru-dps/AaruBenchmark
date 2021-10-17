@@ -12,7 +12,7 @@ namespace AaruBenchmark
         public void Aaru() => Compression.Aaru.AppleRle();
 
         [Benchmark]
-        public void Aaru6() => Compression.Aaru6.AppleRle();
+        public void Aaru6() => Aaru6Compressions.AppleRle();
     }
 
     [SimpleJob(RuntimeMoniker.Net60)]
@@ -22,7 +22,7 @@ namespace AaruBenchmark
         public void Aaru() => Compression.Aaru.TeleDiskLzh();
 
         [Benchmark]
-        public void Aaru6() => Compression.Aaru6.TeleDiskLzh();
+        public void Aaru6() => Aaru6Compressions.TeleDiskLzh();
     }
 
     [SimpleJob(RuntimeMoniker.Net60)]
