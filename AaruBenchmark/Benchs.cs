@@ -13,6 +13,9 @@ namespace AaruBenchmark
 
         [Benchmark]
         public void Aaru6() => Aaru6Compressions.AppleRle();
+
+        [Benchmark]
+        public void AaruNative() => Compression.AaruNative.AppleRle();
     }
 
     [SimpleJob(RuntimeMoniker.Net60)]
