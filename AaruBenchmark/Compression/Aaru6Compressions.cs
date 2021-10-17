@@ -68,5 +68,29 @@ namespace AaruBenchmark.Compression
             if(crc != "22bd5d44")
                 throw new InvalidDataException("Incorrect decompressed checksum");
         }
+
+        public static void ADC()
+        {
+            const int bufferSize = 262144;
+            byte[]    input      = new byte[34367];
+
+            var fs = new FileStream(Path.Combine(Program.Folder, "adc.bin"), FileMode.Open, FileAccess.Read);
+
+            fs.Read(input, 0, input.Length);
+            fs.Close();
+            fs.Dispose();
+
+            byte[] output = new byte[bufferSize];
+
+            int realSize = Aaru6.Compression.ADC.DecodeBuffer(input, output);
+
+            if(realSize != 262144)
+                throw new InvalidDataException("Incorrect decompressed size");
+
+            string crc = Crc32Context.Data(output, (uint)realSize, out _);
+
+            if(crc != "5a5a7388")
+                throw new InvalidDataException("Incorrect decompressed checksum");
+        }
     }
 }

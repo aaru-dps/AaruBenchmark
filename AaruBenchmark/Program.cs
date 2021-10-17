@@ -13,6 +13,7 @@ namespace AaruBenchmark
         {
             var config = ManualConfig.Create(DefaultConfig.Instance);
 
+            BenchmarkRunner.Run<ADCBenchs>(config);
             BenchmarkRunner.Run<AppleRleBenchs>(config);
             BenchmarkRunner.Run<TeleDiskLzhBenchs>(config);
             BenchmarkRunner.Run<GzipBenchs>(config);

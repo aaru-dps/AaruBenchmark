@@ -29,6 +29,19 @@ namespace AaruBenchmark
     }
 
     [SimpleJob(RuntimeMoniker.Net60)]
+    public class ADCBenchs
+    {
+        [Benchmark(Baseline = true)]
+        public void Aaru() => Compression.SharpCompress.ADC();
+
+        [Benchmark]
+        public void Aaru6() => Aaru6Compressions.ADC();
+
+        [Benchmark]
+        public void AaruNative() => Compression.AaruNative.ADC();
+    }
+
+    [SimpleJob(RuntimeMoniker.Net60)]
     public class GzipBenchs
     {
         [Benchmark]
