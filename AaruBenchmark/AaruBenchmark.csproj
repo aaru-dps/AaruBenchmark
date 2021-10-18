@@ -42,6 +42,10 @@
     <Content Include="libAaru.Compression.Native.so">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Remove="data\lzip.lz"/>
+    <Content Include="data\lzip.lz">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>

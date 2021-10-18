@@ -16,6 +16,9 @@ namespace AaruBenchmark.Compression
         static extern int BZ2_bzBuffToBuffDecompress(byte[] dest, ref uint destLen, byte[] source, uint sourceLen,
                                                      int small, int verbosity);
 
+        [DllImport("libAaru.Compression.Native", SetLastError = true)]
+        static extern int lzip_decode_buffer(byte[] dst_buffer, int dst_size, byte[] src_buffer, int src_size);
+
         public static void AppleRle()
         {
             const int bufferSize = 32768;
@@ -84,6 +87,30 @@ namespace AaruBenchmark.Compression
                 throw new InvalidDataException("Incorrect decompressed size");
 
             string crc = Crc32Context.Data(output, realSize, out _);
+
+            if(crc != "c64059c0")
+                throw new InvalidDataException("Incorrect decompressed checksum");
+        }
+
+        public static void Lzip()
+        {
+            const int bufferSize = 1048576;
+            byte[]    input      = new byte[1062874];
+
+            var fs = new FileStream(Path.Combine(Program.Folder, "lzip.lz"), FileMode.Open, FileAccess.Read);
+
+            fs.Read(input, 0, input.Length);
+            fs.Close();
+            fs.Dispose();
+
+            byte[] output = new byte[bufferSize];
+
+            int realSize = lzip_decode_buffer(output, output.Length, input, input.Length);
+
+            if(realSize != 1048576)
+                throw new InvalidDataException("Incorrect decompressed size");
+
+            string crc = Crc32Context.Data(output, (uint)realSize, out _);
 
             if(crc != "c64059c0")
                 throw new InvalidDataException("Incorrect decompressed checksum");

@@ -4,6 +4,7 @@ using SharpCompress.Compressors;
 using SharpCompress.Compressors.ADC;
 using SharpCompress.Compressors.BZip2;
 using SharpCompress.Compressors.Deflate;
+using SharpCompress.Compressors.LZMA;
 
 namespace AaruBenchmark.Compression
 {
@@ -98,6 +99,40 @@ namespace AaruBenchmark.Compression
             string crc = Crc32Context.Data(compressed, 262144, out _);
 
             if(crc != "5a5a7388")
+                throw new InvalidDataException("Incorrect decompressed checksum");
+        }
+
+        public static void Lzip()
+        {
+            var _dataStream = new FileStream(Path.Combine(Program.Folder, "lzip.lz"), FileMode.Open, FileAccess.Read);
+            Stream str = new LZipStream(_dataStream, CompressionMode.Decompress);
+            byte[] compressed = new byte[1048576];
+            int pos = 0;
+            int left = 1048576;
+            bool oneZero = false;
+
+            while(left > 0)
+            {
+                int done = str.Read(compressed, pos, left);
+
+                if(done == 0)
+                {
+                    if(oneZero)
+                        throw new IOException("Could not read the file!");
+
+                    oneZero = true;
+                }
+
+                left -= done;
+                pos  += done;
+            }
+
+            str.Close();
+            str.Dispose();
+
+            string crc = Crc32Context.Data(compressed, 1048576, out _);
+
+            if(crc != "c64059c0")
                 throw new InvalidDataException("Incorrect decompressed checksum");
         }
     }
