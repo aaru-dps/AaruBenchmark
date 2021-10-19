@@ -76,6 +76,15 @@ namespace AaruBenchmark
         public void AaruNative() => Compression.AaruNative.Lzip();
     }
 
+    public class LzmaBenchs
+    {
+        [Benchmark(Baseline = true)]
+        public void SharpCompress() => Compression.SharpCompress.Lzma();
+
+        [Benchmark]
+        public void AaruNative() => Compression.AaruNative.Lzma();
+    }
+
     [SimpleJob(RuntimeMoniker.Net60)]
     public class Adler32Benchs
     {

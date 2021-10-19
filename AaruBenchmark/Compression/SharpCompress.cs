@@ -135,5 +135,44 @@ namespace AaruBenchmark.Compression
             if(crc != "c64059c0")
                 throw new InvalidDataException("Incorrect decompressed checksum");
         }
+
+        public static void Lzma()
+        {
+            var _dataStream = new FileStream(Path.Combine(Program.Folder, "lzma.bin"), FileMode.Open, FileAccess.Read);
+
+            Stream str = new LzmaStream(new byte[]
+            {
+                0x5D, 0x00, 0x00, 0x00, 0x02
+            }, _dataStream);
+
+            byte[] compressed = new byte[8388608];
+            int    pos        = 0;
+            int    left       = 8388608;
+            bool   oneZero    = false;
+
+            while(left > 0)
+            {
+                int done = str.Read(compressed, pos, left);
+
+                if(done == 0)
+                {
+                    if(oneZero)
+                        throw new IOException("Could not read the file!");
+
+                    oneZero = true;
+                }
+
+                left -= done;
+                pos  += done;
+            }
+
+            str.Close();
+            str.Dispose();
+
+            string crc = Crc32Context.Data(compressed, 8388608, out _);
+
+            if(crc != "954bf76e")
+                throw new InvalidDataException("Incorrect decompressed checksum");
+        }
     }
 }

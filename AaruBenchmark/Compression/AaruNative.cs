@@ -19,6 +19,10 @@ namespace AaruBenchmark.Compression
         [DllImport("libAaru.Compression.Native", SetLastError = true)]
         static extern int lzip_decode_buffer(byte[] dst_buffer, int dst_size, byte[] src_buffer, int src_size);
 
+        [DllImport("libAaru.Compression.Native", SetLastError = true)]
+        static extern int LzmaUncompress(byte[] dest, ref nuint destLen, byte[] src, ref nuint srcLen, byte[] props,
+                                         nuint propsSize);
+
         public static void AppleRle()
         {
             const int bufferSize = 32768;
@@ -113,6 +117,39 @@ namespace AaruBenchmark.Compression
             string crc = Crc32Context.Data(output, (uint)realSize, out _);
 
             if(crc != "c64059c0")
+                throw new InvalidDataException("Incorrect decompressed checksum");
+        }
+
+        public static void Lzma()
+        {
+            const int bufferSize = 8388608;
+            byte[]    input      = new byte[1200275];
+
+            var fs = new FileStream(Path.Combine(Program.Folder, "lzma.bin"), FileMode.Open, FileAccess.Read);
+
+            fs.Read(input, 0, input.Length);
+            fs.Close();
+            fs.Dispose();
+
+            byte[] output = new byte[bufferSize];
+
+            nuint destLen = bufferSize;
+            nuint srcLen  = 1200275;
+
+            int err = LzmaUncompress(output, ref destLen, input, ref srcLen, new byte[]
+            {
+                0x5D, 0x00, 0x00, 0x00, 0x02
+            }, 5);
+
+            if(err != 0)
+                throw new InvalidDataException("Error decompressing");
+
+            if(destLen != 8388608)
+                throw new InvalidDataException("Incorrect decompressed size");
+
+            string crc = Crc32Context.Data(output, (uint)destLen, out _);
+
+            if(crc != "954bf76e")
                 throw new InvalidDataException("Incorrect decompressed checksum");
         }
     }

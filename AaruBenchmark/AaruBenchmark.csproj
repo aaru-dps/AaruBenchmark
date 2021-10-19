@@ -46,6 +46,10 @@
     <Content Include="data\lzip.lz">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Remove="data\lzma.bin"/>
+    <Content Include="data\lzma.bin">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
