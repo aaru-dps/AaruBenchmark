@@ -86,6 +86,16 @@ namespace AaruBenchmark
     }
 
     [SimpleJob(RuntimeMoniker.Net60)]
+    public class FlacBenchs
+    {
+        [Benchmark(Baseline = true)]
+        public void Aaru() => Compression.Aaru.Flac();
+
+        [Benchmark]
+        public void AaruNative() => Compression.AaruNative.Flac();
+    }
+
+    [SimpleJob(RuntimeMoniker.Net60)]
     public class Adler32Benchs
     {
         [Benchmark(Baseline = true)]

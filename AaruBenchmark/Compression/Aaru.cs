@@ -1,6 +1,8 @@
 using System.IO;
 using Aaru.Compression;
 using Aaru6.Checksums;
+using CUETools.Codecs;
+using CUETools.Codecs.Flake;
 
 namespace AaruBenchmark.Compression
 {
@@ -67,6 +69,23 @@ namespace AaruBenchmark.Compression
             string crc = Crc32Context.Data(output, out _);
 
             if(crc != "22bd5d44")
+                throw new InvalidDataException("Incorrect decompressed checksum");
+        }
+
+        public static void Flac()
+        {
+            var    flacMs = new FileStream(Path.Combine(Program.Folder, "flac.flac"), FileMode.Open, FileAccess.Read);
+            var    flakeReader = new AudioDecoder(new DecoderSettings(), "", flacMs);
+            byte[] block = new byte[9633792];
+            int    samples = block.Length / 2352 * 588;
+            var    audioBuffer = new AudioBuffer(AudioPCMConfig.RedBook, block, samples);
+            flakeReader.Read(audioBuffer, samples);
+            flakeReader.Close();
+            flacMs.Close();
+
+            string crc = Crc32Context.Data(block, out _);
+
+            if(crc != "dfbc99bb")
                 throw new InvalidDataException("Incorrect decompressed checksum");
         }
     }

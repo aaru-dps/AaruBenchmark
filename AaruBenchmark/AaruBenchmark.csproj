@@ -50,6 +50,10 @@
     <Content Include="data\lzma.bin">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Remove="data\flac.flac"/>
+    <Content Include="data\flac.flac">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>

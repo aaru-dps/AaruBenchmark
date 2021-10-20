@@ -23,6 +23,10 @@ namespace AaruBenchmark.Compression
         static extern int LzmaUncompress(byte[] dest, ref nuint destLen, byte[] src, ref nuint srcLen, byte[] props,
                                          nuint propsSize);
 
+        [DllImport("libAaru.Compression.Native", SetLastError = true)]
+        static extern nuint flac_decode_redbook_buffer(byte[] dst_buffer, nuint dst_size, byte[] src_buffer,
+                                                       nuint src_size);
+
         public static void AppleRle()
         {
             const int bufferSize = 32768;
@@ -150,6 +154,30 @@ namespace AaruBenchmark.Compression
             string crc = Crc32Context.Data(output, (uint)destLen, out _);
 
             if(crc != "954bf76e")
+                throw new InvalidDataException("Incorrect decompressed checksum");
+        }
+
+        public static void Flac()
+        {
+            const int bufferSize = 9633792;
+            byte[]    input      = new byte[6534197];
+
+            var fs = new FileStream(Path.Combine(Program.Folder, "flac.flac"), FileMode.Open, FileAccess.Read);
+
+            fs.Read(input, 0, input.Length);
+            fs.Close();
+            fs.Dispose();
+
+            byte[] output = new byte[bufferSize];
+
+            ulong realSize = flac_decode_redbook_buffer(output, (nuint)output.Length, input, (nuint)input.Length);
+
+            if(realSize != 9633792)
+                throw new InvalidDataException("Incorrect decompressed size");
+
+            string crc = Crc32Context.Data(output, (uint)realSize, out _);
+
+            if(crc != "dfbc99bb")
                 throw new InvalidDataException("Incorrect decompressed checksum");
         }
     }
