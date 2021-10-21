@@ -88,5 +88,44 @@ namespace AaruBenchmark.Compression
             if(crc != "dfbc99bb")
                 throw new InvalidDataException("Incorrect decompressed checksum");
         }
+
+        public static void CompressFlac()
+        {
+            var dataStream = new FileStream(Path.Combine(Program.Folder, "audio.bin"), FileMode.Open, FileAccess.Read);
+            byte[] decompressed = new byte[9633792];
+            dataStream.Read(decompressed, 0, decompressed.Length);
+            dataStream.Close();
+            byte[] backendBuffer = new byte[9633792];
+
+            var flakeWriterSettings = new EncoderSettings
+            {
+                PCM                = AudioPCMConfig.RedBook,
+                DoMD5              = false,
+                BlockSize          = 4608,
+                MinFixedOrder      = 0,
+                MaxFixedOrder      = 4,
+                MinLPCOrder        = 1,
+                MaxLPCOrder        = 32,
+                MaxPartitionOrder  = 8,
+                StereoMethod       = StereoMethod.Evaluate,
+                PredictionType     = PredictionType.Search,
+                WindowMethod       = WindowMethod.EvaluateN,
+                EstimationDepth    = 5,
+                MinPrecisionSearch = 1,
+                MaxPrecisionSearch = 1,
+                TukeyParts         = 0,
+                TukeyOverlap       = 1.0,
+                TukeyP             = 1.0,
+                AllowNonSubset     = true
+            };
+
+            var flakeWriter = new AudioEncoder(flakeWriterSettings, "", new MemoryStream(backendBuffer))
+            {
+                DoSeekTable = false
+            };
+
+            var audioBuffer = new AudioBuffer(AudioPCMConfig.RedBook, decompressed, 2408448);
+            flakeWriter.Write(audioBuffer);
+        }
     }
 }

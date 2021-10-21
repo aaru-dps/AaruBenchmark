@@ -54,6 +54,14 @@
     <Content Include="data\flac.flac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Remove="data\audio.bin"/>
+    <Content Include="data\audio.bin">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Remove="data\data.bin"/>
+    <Content Include="data\data.bin">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>

@@ -55,6 +55,19 @@ namespace AaruBenchmark
     }
 
     [SimpleJob(RuntimeMoniker.Net60)]
+    public class CompressGzipBenchs
+    {
+        [Benchmark(Baseline = true)]
+        public void Aaru() => Compression.SharpCompress.CompressGzip();
+
+        [Benchmark]
+        public void Aaru6() => NetRuntime.CompressGzip();
+
+        [Benchmark]
+        public void DotNetZip() => Compression.DotNetZip.CompressGzip();
+    }
+
+    [SimpleJob(RuntimeMoniker.Net60)]
     public class Bzip2Benchs
     {
         [Benchmark(Baseline = true)]
@@ -67,6 +80,19 @@ namespace AaruBenchmark
         public void AaruNative() => Compression.AaruNative.Bzip2();
     }
 
+    [SimpleJob(RuntimeMoniker.Net60)]
+    public class CompressBzip2Benchs
+    {
+        [Benchmark(Baseline = true)]
+        public void Aaru() => Compression.SharpCompress.CompressBzip2();
+
+        [Benchmark]
+        public void Aaru6() => DotNetZip.CompressBzip2();
+
+        [Benchmark]
+        public void AaruNative() => Compression.AaruNative.CompressBzip2();
+    }
+
     public class LzipBenchs
     {
         [Benchmark(Baseline = true)]
@@ -74,6 +100,15 @@ namespace AaruBenchmark
 
         [Benchmark]
         public void AaruNative() => Compression.AaruNative.Lzip();
+    }
+
+    public class CompressLzipBenchs
+    {
+        [Benchmark(Baseline = true)]
+        public void SharpCompress() => Compression.SharpCompress.CompressLzip();
+
+        [Benchmark]
+        public void AaruNative() => Compression.AaruNative.CompressLzip();
     }
 
     public class LzmaBenchs
@@ -85,6 +120,15 @@ namespace AaruBenchmark
         public void AaruNative() => Compression.AaruNative.Lzma();
     }
 
+    public class CompressLzmaBenchs
+    {
+        [Benchmark(Baseline = true)]
+        public void SharpCompress() => Compression.SharpCompress.CompressLzma();
+
+        [Benchmark]
+        public void AaruNative() => Compression.AaruNative.CompressLzma();
+    }
+
     [SimpleJob(RuntimeMoniker.Net60)]
     public class FlacBenchs
     {
@@ -93,6 +137,16 @@ namespace AaruBenchmark
 
         [Benchmark]
         public void AaruNative() => Compression.AaruNative.Flac();
+    }
+
+    [SimpleJob(RuntimeMoniker.Net60)]
+    public class CompressFlacBenchs
+    {
+        [Benchmark(Baseline = true)]
+        public void Aaru() => Compression.Aaru.CompressFlac();
+
+        [Benchmark]
+        public void AaruNative() => Compression.AaruNative.CompressFlac();
     }
 
     [SimpleJob(RuntimeMoniker.Net60)]

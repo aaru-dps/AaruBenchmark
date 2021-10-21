@@ -21,6 +21,11 @@ namespace AaruBenchmark
             BenchmarkRunner.Run<LzipBenchs>(config);
             BenchmarkRunner.Run<LzmaBenchs>(config);
             BenchmarkRunner.Run<FlacBenchs>(config);
+            BenchmarkRunner.Run<CompressGzipBenchs>(config);
+            BenchmarkRunner.Run<CompressBzip2Benchs>(config);
+            BenchmarkRunner.Run<CompressLzipBenchs>(config);
+            BenchmarkRunner.Run<CompressLzmaBenchs>(config);
+            BenchmarkRunner.Run<CompressFlacBenchs>(config);
             BenchmarkRunner.Run<Adler32Benchs>(config);
             BenchmarkRunner.Run<Crc16CcittBenchs>(config);
             BenchmarkRunner.Run<Crc16Benchs>(config);
