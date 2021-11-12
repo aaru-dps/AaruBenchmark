@@ -22,8 +22,8 @@ public class AaruNative
     static extern nuint AARU_flac_encode_redbook_buffer(byte[] dst_buffer, nuint dst_size, byte[] src_buffer,
                                                         nuint src_size, uint blocksize, int do_mid_side_stereo,
                                                         int loose_mid_side_stereo, string apodization,
-                                                        uint qlp_coeff_precision, int do_qlp_coeff_prec_search,
-                                                        int do_exhaustive_model_search,
+                                                        uint max_lpc_order, uint qlp_coeff_precision,
+                                                        int do_qlp_coeff_prec_search, int do_exhaustive_model_search,
                                                         uint min_residual_partition_order,
                                                         uint max_residual_partition_order, string application_id,
                                                         uint application_id_len);
@@ -254,7 +254,7 @@ public class AaruNative
         nuint  propsSize     = (uint)props.Length;
 
         AARU_lzma_encode_buffer(backendBuffer, ref cmpSize, decompressed, (nuint)decompressed.Length, props,
-                                ref propsSize, 9, 1048576, 3, 0, 2, 273, 2);
+                                ref propsSize, 9, 1048576, 4, 0, 2, 273, 2);
 
         /* This is just to test integrity, disabled for benchmarking
         byte[] compressed = new byte[decompressed.Length];
@@ -302,7 +302,7 @@ public class AaruNative
         nuint  cmpSize       = (uint)backendBuffer.Length;
 
         AARU_flac_encode_redbook_buffer(backendBuffer, cmpSize, decompressed, (nuint)decompressed.Length, 4608, 1, 0,
-                                        "partial_tukey(0/1.0/1.0)", 0, 1, 0, 0, 8, "Aaru.Compression.Native.Tests",
+                                        "hamming", 12, 15, 1, 0, 0, 8, "Aaru.Compression.Native.Tests",
                                         (uint)"Aaru.Compression.Native.Tests".Length);
     }
 }
