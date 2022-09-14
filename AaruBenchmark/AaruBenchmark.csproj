@@ -2,72 +2,72 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net6</TargetFramework>
+    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Aaru.Checksums" Version="5.3.0"/>
-    <PackageReference Include="Aaru.Compression" Version="5.3.0"/>
-    <PackageReference Include="Aaru.Compression.Native" Version="6.0.0-alpha8"/>
-    <PackageReference Include="BenchmarkDotNet" Version="0.13.1"/>
-    <PackageReference Include="DotNetZip" Version="1.15.0"/>
-    <PackageReference Include="SharpCompress" Version="0.30.0"/>
+    <PackageReference Include="Aaru.Checksums" Version="5.3.0" />
+    <PackageReference Include="Aaru.Compression" Version="5.3.0" />
+    <PackageReference Include="Aaru.Compression.Native" Version="6.0.0-alpha8" />
+    <PackageReference Include="BenchmarkDotNet" Version="0.13.2" />
+    <PackageReference Include="DotNetZip" Version="1.16.0" />
+    <PackageReference Include="SharpCompress" Version="0.32.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="data\random"/>
+    <None Remove="data\random" />
     <Content Include="data\random">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Remove="data\gzip.gz"/>
+    <None Remove="data\gzip.gz" />
     <Content Include="data\gzip.gz">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Remove="data\bzip2.bz2"/>
+    <None Remove="data\bzip2.bz2" />
     <Content Include="data\bzip2.bz2">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Remove="data\apple_rle.bin"/>
+    <None Remove="data\apple_rle.bin" />
     <Content Include="data\apple_rle.bin">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Remove="data\teledisk_lzh.bin"/>
+    <None Remove="data\teledisk_lzh.bin" />
     <Content Include="data\teledisk_lzh.bin">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Remove="data\adc.bin"/>
+    <None Remove="data\adc.bin" />
     <Content Include="data\adc.bin">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Remove="data\lzip.lz"/>
+    <None Remove="data\lzip.lz" />
     <Content Include="data\lzip.lz">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Remove="data\lzma.bin"/>
+    <None Remove="data\lzma.bin" />
     <Content Include="data\lzma.bin">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Remove="data\flac.flac"/>
+    <None Remove="data\flac.flac" />
     <Content Include="data\flac.flac">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Remove="data\audio.bin"/>
+    <None Remove="data\audio.bin" />
     <Content Include="data\audio.bin">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Remove="data\data.bin"/>
+    <None Remove="data\data.bin" />
     <Content Include="data\data.bin">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Aaru6.Checksums\Aaru6.Checksums.csproj"/>
-    <ProjectReference Include="..\Aaru6.Compression\Aaru6.Compression.csproj"/>
+    <ProjectReference Include="..\Aaru6.Checksums\Aaru6.Checksums.csproj" />
+    <ProjectReference Include="..\Aaru6.Compression\Aaru6.Compression.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="data"/>
+    <Folder Include="data" />
   </ItemGroup>
 
 </Project>

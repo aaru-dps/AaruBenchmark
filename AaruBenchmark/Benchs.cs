@@ -6,6 +6,8 @@ using BenchmarkDotNet.Jobs;
 namespace AaruBenchmark
 {
     [SimpleJob(RuntimeMoniker.Net60)]
+    [SimpleJob(RuntimeMoniker.Net70)]
+    [SimpleJob(RuntimeMoniker.NativeAot70)]
     public class AppleRleBenchs
     {
         [Benchmark(Baseline = true)]
@@ -19,6 +21,8 @@ namespace AaruBenchmark
     }
 
     [SimpleJob(RuntimeMoniker.Net60)]
+    [SimpleJob(RuntimeMoniker.Net70)]
+    [SimpleJob(RuntimeMoniker.NativeAot70)]
     public class TeleDiskLzhBenchs
     {
         [Benchmark(Baseline = true)]
@@ -29,6 +33,8 @@ namespace AaruBenchmark
     }
 
     [SimpleJob(RuntimeMoniker.Net60)]
+    [SimpleJob(RuntimeMoniker.Net70)]
+    [SimpleJob(RuntimeMoniker.NativeAot70)]
     public class ADCBenchs
     {
         [Benchmark(Baseline = true)]
@@ -42,6 +48,8 @@ namespace AaruBenchmark
     }
 
     [SimpleJob(RuntimeMoniker.Net60)]
+    [SimpleJob(RuntimeMoniker.Net70)]
+    [SimpleJob(RuntimeMoniker.NativeAot70)]
     public class GzipBenchs
     {
         [Benchmark]
@@ -55,6 +63,8 @@ namespace AaruBenchmark
     }
 
     [SimpleJob(RuntimeMoniker.Net60)]
+    [SimpleJob(RuntimeMoniker.Net70)]
+    [SimpleJob(RuntimeMoniker.NativeAot70)]
     public class CompressGzipBenchs
     {
         [Benchmark(Baseline = true)]
@@ -68,6 +78,8 @@ namespace AaruBenchmark
     }
 
     [SimpleJob(RuntimeMoniker.Net60)]
+    [SimpleJob(RuntimeMoniker.Net70)]
+    [SimpleJob(RuntimeMoniker.NativeAot70)]
     public class Bzip2Benchs
     {
         [Benchmark(Baseline = true)]
@@ -81,6 +93,8 @@ namespace AaruBenchmark
     }
 
     [SimpleJob(RuntimeMoniker.Net60)]
+    [SimpleJob(RuntimeMoniker.Net70)]
+    [SimpleJob(RuntimeMoniker.NativeAot70)]
     public class CompressBzip2Benchs
     {
         [Benchmark(Baseline = true)]
@@ -93,6 +107,9 @@ namespace AaruBenchmark
         public void AaruNative() => Compression.AaruNative.CompressBzip2();
     }
 
+    [SimpleJob(RuntimeMoniker.Net60)]
+    [SimpleJob(RuntimeMoniker.Net70)]
+    [SimpleJob(RuntimeMoniker.NativeAot70)]
     public class LzipBenchs
     {
         [Benchmark(Baseline = true)]
@@ -102,6 +119,9 @@ namespace AaruBenchmark
         public void AaruNative() => Compression.AaruNative.Lzip();
     }
 
+    [SimpleJob(RuntimeMoniker.Net60)]
+    [SimpleJob(RuntimeMoniker.Net70)]
+    [SimpleJob(RuntimeMoniker.NativeAot70)]
     public class CompressLzipBenchs
     {
         [Benchmark(Baseline = true)]
@@ -111,6 +131,9 @@ namespace AaruBenchmark
         public void AaruNative() => Compression.AaruNative.CompressLzip();
     }
 
+    [SimpleJob(RuntimeMoniker.Net60)]
+    [SimpleJob(RuntimeMoniker.Net70)]
+    [SimpleJob(RuntimeMoniker.NativeAot70)]
     public class LzmaBenchs
     {
         [Benchmark(Baseline = true)]
@@ -120,6 +143,9 @@ namespace AaruBenchmark
         public void AaruNative() => Compression.AaruNative.Lzma();
     }
 
+    [SimpleJob(RuntimeMoniker.Net60)]
+    [SimpleJob(RuntimeMoniker.Net70)]
+    [SimpleJob(RuntimeMoniker.NativeAot70)]
     public class CompressLzmaBenchs
     {
         [Benchmark(Baseline = true)]
@@ -130,6 +156,8 @@ namespace AaruBenchmark
     }
 
     [SimpleJob(RuntimeMoniker.Net60)]
+    [SimpleJob(RuntimeMoniker.Net70)]
+    [SimpleJob(RuntimeMoniker.NativeAot70)]
     public class FlacBenchs
     {
         [Benchmark(Baseline = true)]
@@ -140,6 +168,8 @@ namespace AaruBenchmark
     }
 
     [SimpleJob(RuntimeMoniker.Net60)]
+    [SimpleJob(RuntimeMoniker.Net70)]
+    [SimpleJob(RuntimeMoniker.NativeAot70)]
     public class CompressFlacBenchs
     {
         [Benchmark(Baseline = true)]
@@ -150,6 +180,8 @@ namespace AaruBenchmark
     }
 
     [SimpleJob(RuntimeMoniker.Net60)]
+    [SimpleJob(RuntimeMoniker.Net70)]
+    [SimpleJob(RuntimeMoniker.NativeAot70)]
     public class Adler32Benchs
     {
         [Benchmark(Baseline = true)]
@@ -163,6 +195,8 @@ namespace AaruBenchmark
     }
 
     [SimpleJob(RuntimeMoniker.Net60)]
+    [SimpleJob(RuntimeMoniker.Net70)]
+    [SimpleJob(RuntimeMoniker.NativeAot70)]
     public class Fletcher16Benchs
     {
         [Benchmark(Baseline = true)]
@@ -176,6 +210,8 @@ namespace AaruBenchmark
     }
 
     [SimpleJob(RuntimeMoniker.Net60)]
+    [SimpleJob(RuntimeMoniker.Net70)]
+    [SimpleJob(RuntimeMoniker.NativeAot70)]
     public class Fletcher32Benchs
     {
         [Benchmark(Baseline = true)]
@@ -189,6 +225,8 @@ namespace AaruBenchmark
     }
 
     [SimpleJob(RuntimeMoniker.Net60)]
+    [SimpleJob(RuntimeMoniker.Net70)]
+    [SimpleJob(RuntimeMoniker.NativeAot70)]
     public class Crc16CcittBenchs
     {
         [Benchmark(Baseline = true)]
@@ -202,6 +240,8 @@ namespace AaruBenchmark
     }
 
     [SimpleJob(RuntimeMoniker.Net60)]
+    [SimpleJob(RuntimeMoniker.Net70)]
+    [SimpleJob(RuntimeMoniker.NativeAot70)]
     public class Crc16Benchs
     {
         [Benchmark(Baseline = true)]
@@ -215,6 +255,8 @@ namespace AaruBenchmark
     }
 
     [SimpleJob(RuntimeMoniker.Net60)]
+    [SimpleJob(RuntimeMoniker.Net70)]
+    [SimpleJob(RuntimeMoniker.NativeAot70)]
     public class Crc32Benchs
     {
         [Benchmark(Baseline = true)]
@@ -231,6 +273,8 @@ namespace AaruBenchmark
     }
 
     [SimpleJob(RuntimeMoniker.Net60)]
+    [SimpleJob(RuntimeMoniker.Net70)]
+    [SimpleJob(RuntimeMoniker.NativeAot70)]
     public class Crc64Benchs
     {
         [Benchmark(Baseline = true)]
@@ -244,6 +288,8 @@ namespace AaruBenchmark
     }
 
     [SimpleJob(RuntimeMoniker.Net60)]
+    [SimpleJob(RuntimeMoniker.Net70)]
+    [SimpleJob(RuntimeMoniker.NativeAot70)]
     public class Md5Benchs
     {
         [Benchmark(Baseline = true)]
@@ -257,6 +303,8 @@ namespace AaruBenchmark
     }
 
     [SimpleJob(RuntimeMoniker.Net60)]
+    [SimpleJob(RuntimeMoniker.Net70)]
+    [SimpleJob(RuntimeMoniker.NativeAot70)]
     public class Sha1Benchs
     {
         [Benchmark(Baseline = true)]
@@ -270,6 +318,8 @@ namespace AaruBenchmark
     }
 
     [SimpleJob(RuntimeMoniker.Net60)]
+    [SimpleJob(RuntimeMoniker.Net70)]
+    [SimpleJob(RuntimeMoniker.NativeAot70)]
     public class Sha256Benchs
     {
         [Benchmark(Baseline = true)]
@@ -283,6 +333,8 @@ namespace AaruBenchmark
     }
 
     [SimpleJob(RuntimeMoniker.Net60)]
+    [SimpleJob(RuntimeMoniker.Net70)]
+    [SimpleJob(RuntimeMoniker.NativeAot70)]
     public class Sha384Benchs
     {
         [Benchmark(Baseline = true)]
@@ -296,6 +348,8 @@ namespace AaruBenchmark
     }
 
     [SimpleJob(RuntimeMoniker.Net60)]
+    [SimpleJob(RuntimeMoniker.Net70)]
+    [SimpleJob(RuntimeMoniker.NativeAot70)]
     public class Sha512Benchs
     {
         [Benchmark(Baseline = true)]
@@ -309,6 +363,8 @@ namespace AaruBenchmark
     }
 
     [SimpleJob(RuntimeMoniker.Net60)]
+    [SimpleJob(RuntimeMoniker.Net70)]
+    [SimpleJob(RuntimeMoniker.NativeAot70)]
     public class SpamSumBenchs
     {
         [Benchmark(Baseline = true)]
