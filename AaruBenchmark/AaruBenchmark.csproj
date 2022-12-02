@@ -6,9 +6,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Aaru.Checksums" Version="5.3.0" />
-    <PackageReference Include="Aaru.Compression" Version="5.3.0" />
-    <PackageReference Include="Aaru.Compression.Native" Version="6.0.0-alpha8" />
+    <PackageReference Include="Aaru.Checksums" Version="5.3.1" />
+    <PackageReference Include="Aaru.Compression" Version="5.3.1" />
+    <PackageReference Include="Aaru.Compression.Native" Version="6.0.0-alpha9" />
     <PackageReference Include="BenchmarkDotNet" Version="0.13.2" />
     <PackageReference Include="DotNetZip" Version="1.16.0" />
     <PackageReference Include="SharpCompress" Version="0.32.2" />

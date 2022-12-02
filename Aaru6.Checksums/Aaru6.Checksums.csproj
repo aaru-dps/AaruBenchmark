@@ -75,9 +75,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Aaru.Checksums.Native" Version="6.0.0-alpha6" />
-    <PackageReference Include="Aaru.CommonTypes" Version="5.3.0" />
-    <PackageReference Include="Unclassified.NetRevisionTask" Version="0.4.1" PrivateAssets="all" />
+    <PackageReference Include="Aaru.Checksums.Native" Version="6.0.0-alpha9" />
+    <PackageReference Include="Aaru.CommonTypes" Version="5.3.1" />
+    <PackageReference Include="Unclassified.NetRevisionTask" Version="0.4.3" PrivateAssets="all" />
   </ItemGroup>
   <ProjectExtensions>
     <MonoDevelop>
