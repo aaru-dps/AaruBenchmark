@@ -5,7 +5,7 @@ using BenchmarkDotNet.Running;
 
 namespace AaruBenchmark;
 
-internal static class Program
+static class Program
 {
     internal static string Folder => Path.Combine(Environment.CurrentDirectory, "data");
 

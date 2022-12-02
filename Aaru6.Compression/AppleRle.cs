@@ -31,94 +31,93 @@
 // Copyright © 2018-2019 David Ryskalczyk
 // ****************************************************************************/
 
-namespace Aaru6.Compression
+namespace Aaru6.Compression;
+
+/// <summary>Implements the Apple version of RLE</summary>
+public class AppleRle
 {
-    /// <summary>Implements the Apple version of RLE</summary>
-    public class AppleRle
+    const uint DART_CHUNK = 20960;
+
+    /// <summary>Decodes a buffer compressed with Apple RLE</summary>
+    /// <param name="source">Encoded buffer</param>
+    /// <param name="destination">Buffer where to write the decoded data</param>
+    /// <returns>The number of decoded bytes</returns>
+    public static int DecodeBuffer(byte[] source, byte[] destination)
     {
-        const uint DART_CHUNK = 20960;
+        int  count         = 0;
+        bool nextA         = true; // true if A, false if B
+        byte repeatedByteA = 0, repeatedByteB = 0;
+        bool repeatMode    = false; // true if we're repeating, false if we're just copying
+        int  inPosition    = 0, outPosition = 0;
 
-        /// <summary>Decodes a buffer compressed with Apple RLE</summary>
-        /// <param name="source">Encoded buffer</param>
-        /// <param name="destination">Buffer where to write the decoded data</param>
-        /// <returns>The number of decoded bytes</returns>
-        public static int DecodeBuffer(byte[] source, byte[] destination)
+        while(inPosition  <= source.Length &&
+              outPosition <= destination.Length)
         {
-            int  count         = 0;
-            bool nextA         = true; // true if A, false if B
-            byte repeatedByteA = 0, repeatedByteB = 0;
-            bool repeatMode    = false; // true if we're repeating, false if we're just copying
-            int  inPosition    = 0, outPosition = 0;
-
-            while(inPosition  <= source.Length &&
-                  outPosition <= destination.Length)
+            switch(repeatMode)
             {
-                switch(repeatMode)
+                case true when count > 0:
                 {
-                    case true when count > 0:
+                    count--;
+
+                    if(nextA)
                     {
-                        count--;
-
-                        if(nextA)
-                        {
-                            nextA = false;
-
-                            destination[outPosition++] = repeatedByteA;
-
-                            continue;
-                        }
-
-                        nextA = true;
-
-                        destination[outPosition++] = repeatedByteB;
-
-                        continue;
-                    }
-                    case false when count > 0:
-                        count--;
-
-                        destination[outPosition++] = source[inPosition++];
-
-                        continue;
-                }
-
-                if(inPosition == source.Length)
-                    break;
-
-                while(true)
-                {
-                    byte  b1 = source[inPosition++];
-                    byte  b2 = source[inPosition++];
-                    short s  = (short)((b1 << 8) | b2);
-
-                    if(s == 0          ||
-                       s >= DART_CHUNK ||
-                       s <= -DART_CHUNK)
-                        continue;
-
-                    if(s < 0)
-                    {
-                        repeatMode    = true;
-                        repeatedByteA = source[inPosition++];
-                        repeatedByteB = source[inPosition++];
-                        count         = (-s * 2) - 1;
-                        nextA         = false;
+                        nextA = false;
 
                         destination[outPosition++] = repeatedByteA;
 
-                        break;
+                        continue;
                     }
 
-                    repeatMode = false;
-                    count      = (s * 2) - 1;
+                    nextA = true;
+
+                    destination[outPosition++] = repeatedByteB;
+
+                    continue;
+                }
+                case false when count > 0:
+                    count--;
 
                     destination[outPosition++] = source[inPosition++];
 
-                    break;
-                }
+                    continue;
             }
 
-            return outPosition;
+            if(inPosition == source.Length)
+                break;
+
+            while(true)
+            {
+                byte  b1 = source[inPosition++];
+                byte  b2 = source[inPosition++];
+                short s  = (short)((b1 << 8) | b2);
+
+                if(s == 0          ||
+                   s >= DART_CHUNK ||
+                   s <= -DART_CHUNK)
+                    continue;
+
+                if(s < 0)
+                {
+                    repeatMode    = true;
+                    repeatedByteA = source[inPosition++];
+                    repeatedByteB = source[inPosition++];
+                    count         = (-s * 2) - 1;
+                    nextA         = false;
+
+                    destination[outPosition++] = repeatedByteA;
+
+                    break;
+                }
+
+                repeatMode = false;
+                count      = (s * 2) - 1;
+
+                destination[outPosition++] = source[inPosition++];
+
+                break;
+            }
         }
+
+        return outPosition;
     }
 }
