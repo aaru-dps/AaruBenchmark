@@ -1,5 +1,3 @@
-root = true
-
 [*]
 charset = utf-8
 next_line = crlf
