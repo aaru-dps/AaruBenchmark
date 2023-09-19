@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>netcoreapp3.1;net7.0</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.1;net8.0</TargetFrameworks>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
@@ -18,7 +18,7 @@
     <PackageReference Include="SharpCompress" Version="0.29.0" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net7.0' ">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
     <PackageReference Include="DotNetZip" Version="1.16.0"/>
     <PackageReference Include="SharpCompress" Version="0.34.0" />
   </ItemGroup>
@@ -70,7 +70,7 @@
     </Content>
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net7.0' ">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
     <ProjectReference Include="..\Aaru6.Checksums\Aaru6.Checksums.csproj"/>
     <ProjectReference Include="..\Aaru6.Compression\Aaru6.Compression.csproj"/>
   </ItemGroup>

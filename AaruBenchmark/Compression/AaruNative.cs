@@ -1,4 +1,4 @@
-#if NET7_0
+#if NET8_0_OR_GREATER
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.InteropServices;

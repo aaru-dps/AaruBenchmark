@@ -1,4 +1,4 @@
-#if NET7_0
+#if NET8_0_OR_GREATER
 using System.IO;
 using Aaru6.Checksums;
 using Aaru6.Compression;

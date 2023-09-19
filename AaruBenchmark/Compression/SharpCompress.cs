@@ -1,5 +1,5 @@
 using System.IO;
-#if NET7_0
+#if NET8_0_OR_GREATER
 using Aaru6.Checksums;
 #else
 using Aaru.Checksums;
