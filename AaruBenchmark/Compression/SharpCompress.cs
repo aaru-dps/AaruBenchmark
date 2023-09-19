@@ -1,5 +1,9 @@
 using System.IO;
+#if NET7_0
 using Aaru6.Checksums;
+#else
+using Aaru.Checksums;
+#endif
 using SharpCompress.Compressors;
 using SharpCompress.Compressors.ADC;
 using SharpCompress.Compressors.BZip2;

@@ -1,3 +1,4 @@
+#if NET7_0
 using System.IO;
 using Aaru6.Checksums;
 using Aaru6.Compression;
@@ -93,3 +94,4 @@ public class Aaru6Compressions
             throw new InvalidDataException("Incorrect decompressed checksum");
     }
 }
+#endif

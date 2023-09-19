@@ -1,253 +1,430 @@
+using System;
 using AaruBenchmark.Checksums;
-using AaruBenchmark.Compression;
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Jobs;
+#if NET7_0
+using AaruBenchmark.Compression;
+#endif
 
 namespace AaruBenchmark;
 
-[SimpleJob(RuntimeMoniker.Net60), SimpleJob(RuntimeMoniker.Net70), SimpleJob(RuntimeMoniker.NativeAot70)]
-public class AppleRleBenchs
-{
-    [Benchmark(Baseline = true)]
-    public void Aaru() => Compression.Aaru.AppleRle();
-
-    [Benchmark]
-    public void Aaru6() => Aaru6Compressions.AppleRle();
-
-    [Benchmark]
-    public void AaruNative() => Compression.AaruNative.AppleRle();
-}
-
-[SimpleJob(RuntimeMoniker.Net60), SimpleJob(RuntimeMoniker.Net70), SimpleJob(RuntimeMoniker.NativeAot70)]
-public class TeleDiskLzhBenchs
-{
-    [Benchmark(Baseline = true)]
-    public void Aaru() => Compression.Aaru.TeleDiskLzh();
-
-    [Benchmark]
-    public void Aaru6() => Aaru6Compressions.TeleDiskLzh();
-}
-
-[SimpleJob(RuntimeMoniker.Net60), SimpleJob(RuntimeMoniker.Net70), SimpleJob(RuntimeMoniker.NativeAot70)]
+[SimpleJob(RuntimeMoniker.NetCoreApp31), SimpleJob(RuntimeMoniker.Net70), SimpleJob(RuntimeMoniker.NativeAot70)]
 public class ADCBenchs
 {
-    [Benchmark(Baseline = true)]
-    public void Aaru() => Compression.SharpCompress.ADC();
-
+#if NET7_0
     [Benchmark]
+    public void Aaru() => throw new NotImplementedException();
+
+    [Benchmark(Baseline = true)]
     public void Aaru6() => Aaru6Compressions.ADC();
 
     [Benchmark]
     public void AaruNative() => Compression.AaruNative.ADC();
+#else
+    [Benchmark(Baseline = true)]
+    public void Aaru() => Compression.SharpCompress.ADC();
+
+    [Benchmark]
+    public void Aaru6() => throw new NotImplementedException();
+
+    [Benchmark]
+    public void AaruNative() => throw new NotImplementedException();
+#endif
 }
 
-[SimpleJob(RuntimeMoniker.Net60), SimpleJob(RuntimeMoniker.Net70), SimpleJob(RuntimeMoniker.NativeAot70)]
-public class GzipBenchs
+[SimpleJob(RuntimeMoniker.NetCoreApp31), SimpleJob(RuntimeMoniker.Net70), SimpleJob(RuntimeMoniker.NativeAot70)]
+public class AppleRleBenchs
 {
+#if NET7_0
     [Benchmark]
-    public void SharpCompress() => Compression.SharpCompress.Gzip();
+    public void Aaru() => throw new NotImplementedException();
 
     [Benchmark(Baseline = true)]
-    public void DotNetRuntime() => NetRuntime.Gzip();
+    public void Aaru6() => Aaru6Compressions.AppleRle();
+
+    [Benchmark]
+    public void AaruNative() => Compression.AaruNative.AppleRle();
+#else
+    [Benchmark(Baseline = true)]
+    public void Aaru() => Compression.Aaru.AppleRle();
+
+    [Benchmark]
+    public void Aaru6() => throw new NotImplementedException();
+
+    [Benchmark]
+    public void AaruNative() => throw new NotImplementedException();
+#endif
+}
+
+[SimpleJob(RuntimeMoniker.NetCoreApp31), SimpleJob(RuntimeMoniker.Net70), SimpleJob(RuntimeMoniker.NativeAot70)]
+public class TeleDiskLzhBenchs
+{
+#if NET7_0
+    [Benchmark]
+    public void Aaru() => throw new NotImplementedException();
+
+    [Benchmark(Baseline = true)]
+    public void Aaru6() => Aaru6Compressions.TeleDiskLzh();
+#else
+    [Benchmark(Baseline = true)]
+    public void Aaru() => Compression.Aaru.TeleDiskLzh();
+
+    [Benchmark]
+    public void Aaru6() => throw new NotImplementedException();
+#endif
+}
+
+[SimpleJob(RuntimeMoniker.NetCoreApp31), SimpleJob(RuntimeMoniker.Net70), SimpleJob(RuntimeMoniker.NativeAot70)]
+public class GzipBenchs
+{
+#if NET7_0
+    [Benchmark]
+    public void Aaru() => throw new NotImplementedException();
+
+    [Benchmark(Baseline = true)]
+    public void Aaru6() => NetRuntime.Gzip();
+#else
+    [Benchmark(Baseline = true)]
+    public void Aaru() => Compression.SharpCompress.Gzip();
+
+    [Benchmark]
+    public void Aaru6() => throw new NotImplementedException();
+#endif
 
     [Benchmark]
     public void DotNetZip() => Compression.DotNetZip.Gzip();
 }
 
-[SimpleJob(RuntimeMoniker.Net60), SimpleJob(RuntimeMoniker.Net70), SimpleJob(RuntimeMoniker.NativeAot70)]
+[SimpleJob(RuntimeMoniker.NetCoreApp31), SimpleJob(RuntimeMoniker.Net70), SimpleJob(RuntimeMoniker.NativeAot70)]
 public class CompressGzipBenchs
 {
+#if NET7_0
+    [Benchmark]
+    public void Aaru() => throw new NotImplementedException();
+
+    [Benchmark(Baseline = true)]
+    public void Aaru6() => NetRuntime.CompressGzip();
+#else
     [Benchmark(Baseline = true)]
     public void Aaru() => Compression.SharpCompress.CompressGzip();
 
     [Benchmark]
-    public void Aaru6() => NetRuntime.CompressGzip();
+    public void Aaru6() => throw new NotImplementedException();
+#endif
 
     [Benchmark]
     public void DotNetZip() => Compression.DotNetZip.CompressGzip();
 }
 
-[SimpleJob(RuntimeMoniker.Net60), SimpleJob(RuntimeMoniker.Net70), SimpleJob(RuntimeMoniker.NativeAot70)]
+[SimpleJob(RuntimeMoniker.NetCoreApp31), SimpleJob(RuntimeMoniker.Net70), SimpleJob(RuntimeMoniker.NativeAot70)]
 public class Bzip2Benchs
 {
-    [Benchmark(Baseline = true)]
-    public void SharpCompress() => Compression.SharpCompress.Bzip2();
-
+#if NET7_0
     [Benchmark]
-    public void DotNetZip() => Compression.DotNetZip.Bzip2();
+    public void Aaru() => throw new NotImplementedException();
+
+    [Benchmark(Baseline = true)]
+    public void Aaru6() => DotNetZip.Bzip2();
 
     [Benchmark]
     public void AaruNative() => Compression.AaruNative.Bzip2();
-}
-
-[SimpleJob(RuntimeMoniker.Net60), SimpleJob(RuntimeMoniker.Net70), SimpleJob(RuntimeMoniker.NativeAot70)]
-public class CompressBzip2Benchs
-{
+#else
     [Benchmark(Baseline = true)]
-    public void Aaru() => Compression.SharpCompress.CompressBzip2();
+    public void Aaru() => Compression.SharpCompress.Bzip2();
 
     [Benchmark]
+    public void Aaru6() => throw new NotImplementedException();
+
+    [Benchmark]
+    public void AaruNative() => throw new NotImplementedException();
+#endif
+}
+
+[SimpleJob(RuntimeMoniker.NetCoreApp31), SimpleJob(RuntimeMoniker.Net70), SimpleJob(RuntimeMoniker.NativeAot70)]
+public class CompressBzip2Benchs
+{
+#if NET7_0
+    [Benchmark]
+    public void Aaru() => throw new NotImplementedException();
+
+    [Benchmark(Baseline = true)]
     public void Aaru6() => DotNetZip.CompressBzip2();
 
     [Benchmark]
     public void AaruNative() => Compression.AaruNative.CompressBzip2();
+#else
+    [Benchmark(Baseline = true)]
+    public void Aaru() => Compression.SharpCompress.CompressBzip2();
+
+    [Benchmark]
+    public void Aaru6() => throw new NotImplementedException();
+
+    [Benchmark]
+    public void AaruNative() => throw new NotImplementedException();
+#endif
 }
 
-[SimpleJob(RuntimeMoniker.Net60), SimpleJob(RuntimeMoniker.Net70), SimpleJob(RuntimeMoniker.NativeAot70)]
+[SimpleJob(RuntimeMoniker.NetCoreApp31), SimpleJob(RuntimeMoniker.Net70), SimpleJob(RuntimeMoniker.NativeAot70)]
 public class LzipBenchs
 {
     [Benchmark(Baseline = true)]
-    public void SharpCompress() => Compression.SharpCompress.Lzip();
+    public void Aaru() => Compression.SharpCompress.Lzip();
 
+#if NET7_0
     [Benchmark]
     public void AaruNative() => Compression.AaruNative.Lzip();
+#else
+    [Benchmark]
+    public void AaruNative() => throw new NotImplementedException();
+#endif
 }
 
-[SimpleJob(RuntimeMoniker.Net60), SimpleJob(RuntimeMoniker.Net70), SimpleJob(RuntimeMoniker.NativeAot70)]
+[SimpleJob(RuntimeMoniker.NetCoreApp31), SimpleJob(RuntimeMoniker.Net70), SimpleJob(RuntimeMoniker.NativeAot70)]
 public class CompressLzipBenchs
 {
     [Benchmark(Baseline = true)]
-    public void SharpCompress() => Compression.SharpCompress.CompressLzip();
+    public void Aaru() => Compression.SharpCompress.CompressLzip();
 
+#if NET7_0
     [Benchmark]
     public void AaruNative() => Compression.AaruNative.CompressLzip();
+#else
+    [Benchmark]
+    public void AaruNative() => throw new NotImplementedException();
+#endif
 }
 
-[SimpleJob(RuntimeMoniker.Net60), SimpleJob(RuntimeMoniker.Net70), SimpleJob(RuntimeMoniker.NativeAot70)]
+[SimpleJob(RuntimeMoniker.NetCoreApp31), SimpleJob(RuntimeMoniker.Net70), SimpleJob(RuntimeMoniker.NativeAot70)]
 public class LzmaBenchs
 {
     [Benchmark(Baseline = true)]
-    public void SharpCompress() => Compression.SharpCompress.Lzma();
-
+    public void Aaru() => Compression.SharpCompress.Lzma();
+#if NET7_0
     [Benchmark]
     public void AaruNative() => Compression.AaruNative.Lzma();
+#else
+    [Benchmark]
+    public void AaruNative() => throw new NotImplementedException();
+#endif
 }
 
-[SimpleJob(RuntimeMoniker.Net60), SimpleJob(RuntimeMoniker.Net70), SimpleJob(RuntimeMoniker.NativeAot70)]
+[SimpleJob(RuntimeMoniker.NetCoreApp31), SimpleJob(RuntimeMoniker.Net70), SimpleJob(RuntimeMoniker.NativeAot70)]
 public class CompressLzmaBenchs
 {
     [Benchmark(Baseline = true)]
-    public void SharpCompress() => Compression.SharpCompress.CompressLzma();
+    public void Aaru() => Compression.SharpCompress.CompressLzma();
 
+#if NET7_0
     [Benchmark]
     public void AaruNative() => Compression.AaruNative.CompressLzma();
+#else
+    [Benchmark]
+    public void AaruNative() => throw new NotImplementedException();
+#endif
 }
 
-[SimpleJob(RuntimeMoniker.Net60), SimpleJob(RuntimeMoniker.Net70), SimpleJob(RuntimeMoniker.NativeAot70)]
+[SimpleJob(RuntimeMoniker.NetCoreApp31), SimpleJob(RuntimeMoniker.Net70), SimpleJob(RuntimeMoniker.NativeAot70)]
 public class FlacBenchs
 {
     [Benchmark(Baseline = true)]
     public void Aaru() => Compression.Aaru.Flac();
 
+#if NET7_0
     [Benchmark]
     public void AaruNative() => Compression.AaruNative.Flac();
+#else
+    [Benchmark]
+    public void AaruNative() => throw new NotImplementedException();
+#endif
 }
 
-[SimpleJob(RuntimeMoniker.Net60), SimpleJob(RuntimeMoniker.Net70), SimpleJob(RuntimeMoniker.NativeAot70)]
+[SimpleJob(RuntimeMoniker.NetCoreApp31), SimpleJob(RuntimeMoniker.Net70), SimpleJob(RuntimeMoniker.NativeAot70)]
 public class CompressFlacBenchs
 {
     [Benchmark(Baseline = true)]
     public void Aaru() => Compression.Aaru.CompressFlac();
 
+#if NET7_0
     [Benchmark]
     public void AaruNative() => Compression.AaruNative.CompressFlac();
+#else
+    [Benchmark]
+    public void AaruNative() => throw new NotImplementedException();
+#endif
 }
 
-[SimpleJob(RuntimeMoniker.Net60), SimpleJob(RuntimeMoniker.Net70), SimpleJob(RuntimeMoniker.NativeAot70)]
+[SimpleJob(RuntimeMoniker.NetCoreApp31), SimpleJob(RuntimeMoniker.Net70), SimpleJob(RuntimeMoniker.NativeAot70)]
 public class Adler32Benchs
 {
-    [Benchmark(Baseline = true)]
-    public void Aaru() => Checksums.Aaru.Adler32();
-
+#if NET7_0
     [Benchmark]
+    public void Aaru() => throw new NotImplementedException();
+
+    [Benchmark(Baseline = true)]
     public void Aaru6() => Checksums.Aaru6.Adler32();
 
     [Benchmark]
     public void AaruNative() => Checksums.AaruNative.Adler32();
-}
-
-[SimpleJob(RuntimeMoniker.Net60), SimpleJob(RuntimeMoniker.Net70), SimpleJob(RuntimeMoniker.NativeAot70)]
-public class Fletcher16Benchs
-{
+#else
     [Benchmark(Baseline = true)]
-    public void Aaru() => Checksums.Aaru.Fletcher16();
+    public void Aaru() => Checksums.Aaru.Adler32();
 
     [Benchmark]
+    public void Aaru6() => throw new NotImplementedException();
+
+    [Benchmark]
+    public void AaruNative() => throw new NotImplementedException();
+#endif
+}
+
+[SimpleJob(RuntimeMoniker.NetCoreApp31), SimpleJob(RuntimeMoniker.Net70), SimpleJob(RuntimeMoniker.NativeAot70)]
+public class Fletcher16Benchs
+{
+#if NET7_0
+    [Benchmark]
+    public void Aaru() => throw new NotImplementedException();
+
+    [Benchmark(Baseline = true)]
     public void Aaru6() => Checksums.Aaru6.Fletcher16();
 
     [Benchmark]
     public void AaruNative() => Checksums.AaruNative.Fletcher16();
-}
-
-[SimpleJob(RuntimeMoniker.Net60), SimpleJob(RuntimeMoniker.Net70), SimpleJob(RuntimeMoniker.NativeAot70)]
-public class Fletcher32Benchs
-{
+#else
     [Benchmark(Baseline = true)]
-    public void Aaru() => Checksums.Aaru.Fletcher32();
+    public void Aaru() => Checksums.Aaru.Fletcher16();
 
     [Benchmark]
+    public void Aaru6() => throw new NotImplementedException();
+
+    [Benchmark]
+    public void AaruNative() => throw new NotImplementedException();
+#endif
+}
+
+[SimpleJob(RuntimeMoniker.NetCoreApp31), SimpleJob(RuntimeMoniker.Net70), SimpleJob(RuntimeMoniker.NativeAot70)]
+public class Fletcher32Benchs
+{
+#if NET7_0
+    [Benchmark]
+    public void Aaru() => throw new NotImplementedException();
+
+    [Benchmark(Baseline = true)]
     public void Aaru6() => Checksums.Aaru6.Fletcher32();
 
     [Benchmark]
     public void AaruNative() => Checksums.AaruNative.Fletcher32();
-}
-
-[SimpleJob(RuntimeMoniker.Net60), SimpleJob(RuntimeMoniker.Net70), SimpleJob(RuntimeMoniker.NativeAot70)]
-public class Crc16CcittBenchs
-{
+#else
     [Benchmark(Baseline = true)]
-    public void Aaru() => Checksums.Aaru.Crc16Ccitt();
+    public void Aaru() => Checksums.Aaru.Fletcher32();
 
     [Benchmark]
+    public void Aaru6() => throw new NotImplementedException();
+
+    [Benchmark]
+    public void AaruNative() => throw new NotImplementedException();
+#endif
+}
+
+[SimpleJob(RuntimeMoniker.NetCoreApp31), SimpleJob(RuntimeMoniker.Net70), SimpleJob(RuntimeMoniker.NativeAot70)]
+public class Crc16CcittBenchs
+{
+#if NET7_0
+    [Benchmark]
+    public void Aaru() => throw new NotImplementedException();
+
+    [Benchmark(Baseline = true)]
     public void Aaru6() => Checksums.Aaru6.Crc16Ccitt();
 
     [Benchmark]
     public void AaruNative() => Checksums.AaruNative.Crc16Ccitt();
-}
-
-[SimpleJob(RuntimeMoniker.Net60), SimpleJob(RuntimeMoniker.Net70), SimpleJob(RuntimeMoniker.NativeAot70)]
-public class Crc16Benchs
-{
+#else
     [Benchmark(Baseline = true)]
-    public void Aaru() => Checksums.Aaru.Crc16();
+    public void Aaru() => Checksums.Aaru.Crc16Ccitt();
 
     [Benchmark]
+    public void Aaru6() => throw new NotImplementedException();
+
+    [Benchmark]
+    public void AaruNative() => throw new NotImplementedException();
+#endif
+}
+
+[SimpleJob(RuntimeMoniker.NetCoreApp31), SimpleJob(RuntimeMoniker.Net70), SimpleJob(RuntimeMoniker.NativeAot70)]
+public class Crc16Benchs
+{
+#if NET7_0
+    [Benchmark]
+    public void Aaru() => throw new NotImplementedException();
+
+    [Benchmark(Baseline = true)]
     public void Aaru6() => Checksums.Aaru6.Crc16();
 
     [Benchmark]
     public void AaruNative() => Checksums.AaruNative.Crc16();
-}
-
-[SimpleJob(RuntimeMoniker.Net60), SimpleJob(RuntimeMoniker.Net70), SimpleJob(RuntimeMoniker.NativeAot70)]
-public class Crc32Benchs
-{
+#else
     [Benchmark(Baseline = true)]
-    public void Aaru() => Checksums.Aaru.Crc32();
+    public void Aaru() => Checksums.Aaru.Crc16();
 
     [Benchmark]
+    public void Aaru6() => throw new NotImplementedException();
+
+    [Benchmark]
+    public void AaruNative() => throw new NotImplementedException();
+#endif
+}
+
+[SimpleJob(RuntimeMoniker.NetCoreApp31), SimpleJob(RuntimeMoniker.Net70), SimpleJob(RuntimeMoniker.NativeAot70)]
+public class Crc32Benchs
+{
+#if NET7_0
+    [Benchmark]
+    public void Aaru() => throw new NotImplementedException();
+
+    [Benchmark(Baseline = true)]
     public void Aaru6() => Checksums.Aaru6.Crc32();
 
     [Benchmark]
     public void AaruNative() => Checksums.AaruNative.Crc32();
+#else
+    [Benchmark(Baseline = true)]
+    public void Aaru() => Checksums.Aaru.Crc32();
+
+    [Benchmark]
+    public void Aaru6() => throw new NotImplementedException();
+
+    [Benchmark]
+    public void AaruNative() => throw new NotImplementedException();
+#endif
 
     [Benchmark]
     public void rhash() => RHash.Crc32();
 }
 
-[SimpleJob(RuntimeMoniker.Net60), SimpleJob(RuntimeMoniker.Net70), SimpleJob(RuntimeMoniker.NativeAot70)]
+[SimpleJob(RuntimeMoniker.NetCoreApp31), SimpleJob(RuntimeMoniker.Net70), SimpleJob(RuntimeMoniker.NativeAot70)]
 public class Crc64Benchs
 {
-    [Benchmark(Baseline = true)]
-    public void Aaru() => Checksums.Aaru.Crc64();
-
+#if NET7_0
     [Benchmark]
+    public void Aaru() => throw new NotImplementedException();
+
+    [Benchmark(Baseline = true)]
     public void Aaru6() => Checksums.Aaru6.Crc64();
 
     [Benchmark]
     public void AaruNative() => Checksums.AaruNative.Crc64();
+#else
+    [Benchmark(Baseline = true)]
+    public void Aaru() => Checksums.Aaru.Crc64();
+
+    [Benchmark]
+    public void Aaru6() => throw new NotImplementedException();
+
+    [Benchmark]
+    public void AaruNative() => throw new NotImplementedException();
+#endif
 }
 
-[SimpleJob(RuntimeMoniker.Net60), SimpleJob(RuntimeMoniker.Net70), SimpleJob(RuntimeMoniker.NativeAot70)]
+[SimpleJob(RuntimeMoniker.NetCoreApp31), SimpleJob(RuntimeMoniker.Net70), SimpleJob(RuntimeMoniker.NativeAot70)]
 public class Md5Benchs
 {
     [Benchmark(Baseline = true)]
@@ -260,7 +437,7 @@ public class Md5Benchs
     public void rhash() => RHash.Md5();
 }
 
-[SimpleJob(RuntimeMoniker.Net60), SimpleJob(RuntimeMoniker.Net70), SimpleJob(RuntimeMoniker.NativeAot70)]
+[SimpleJob(RuntimeMoniker.NetCoreApp31), SimpleJob(RuntimeMoniker.Net70), SimpleJob(RuntimeMoniker.NativeAot70)]
 public class Sha1Benchs
 {
     [Benchmark(Baseline = true)]
@@ -273,7 +450,7 @@ public class Sha1Benchs
     public void rhash() => RHash.Sha1();
 }
 
-[SimpleJob(RuntimeMoniker.Net60), SimpleJob(RuntimeMoniker.Net70), SimpleJob(RuntimeMoniker.NativeAot70)]
+[SimpleJob(RuntimeMoniker.NetCoreApp31), SimpleJob(RuntimeMoniker.Net70), SimpleJob(RuntimeMoniker.NativeAot70)]
 public class Sha256Benchs
 {
     [Benchmark(Baseline = true)]
@@ -286,7 +463,7 @@ public class Sha256Benchs
     public void rhash() => RHash.Sha256();
 }
 
-[SimpleJob(RuntimeMoniker.Net60), SimpleJob(RuntimeMoniker.Net70), SimpleJob(RuntimeMoniker.NativeAot70)]
+[SimpleJob(RuntimeMoniker.NetCoreApp31), SimpleJob(RuntimeMoniker.Net70), SimpleJob(RuntimeMoniker.NativeAot70)]
 public class Sha384Benchs
 {
     [Benchmark(Baseline = true)]
@@ -299,7 +476,7 @@ public class Sha384Benchs
     public void rhash() => RHash.Sha384();
 }
 
-[SimpleJob(RuntimeMoniker.Net60), SimpleJob(RuntimeMoniker.Net70), SimpleJob(RuntimeMoniker.NativeAot70)]
+[SimpleJob(RuntimeMoniker.NetCoreApp31), SimpleJob(RuntimeMoniker.Net70), SimpleJob(RuntimeMoniker.NativeAot70)]
 public class Sha512Benchs
 {
     [Benchmark(Baseline = true)]
@@ -312,17 +489,25 @@ public class Sha512Benchs
     public void rhash() => RHash.Sha512();
 }
 
-[SimpleJob(RuntimeMoniker.Net60), SimpleJob(RuntimeMoniker.Net70), SimpleJob(RuntimeMoniker.NativeAot70)]
+[SimpleJob(RuntimeMoniker.NetCoreApp31), SimpleJob(RuntimeMoniker.Net70), SimpleJob(RuntimeMoniker.NativeAot70)]
 public class SpamSumBenchs
 {
-    [Benchmark(Baseline = true)]
-    public void Aaru() => Checksums.Aaru.SpamSum();
-
+#if NET7_0
     [Benchmark]
+    public void Aaru() => throw new NotImplementedException();
+
+    [Benchmark(Baseline = true)]
     public void Aaru6() => Checksums.Aaru6.SpamSum();
 
     [Benchmark]
     public void AaruNative() => Checksums.AaruNative.SpamSum();
+#else
+    [Benchmark]
+    public void Aaru6() => throw new NotImplementedException();
+
+    [Benchmark]
+    public void AaruNative() => throw new NotImplementedException();
+#endif
 
     [Benchmark]
     public void ssdeep() => Checksums.Aaru.CliSpamSum();

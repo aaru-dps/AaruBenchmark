@@ -1,3 +1,4 @@
+#if NET7_0
 using System;
 using System.IO;
 using System.Linq;
@@ -271,3 +272,4 @@ public class AaruNative
         spamsum_free(ctx);
     }
 }
+#endif

@@ -1,3 +1,4 @@
+#if NET7_0
 using System;
 using System.IO;
 using System.Linq;
@@ -243,3 +244,4 @@ public class Aaru6
         string result = ctx.End();
     }
 }
+#endif

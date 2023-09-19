@@ -1,6 +1,10 @@
 using System.IO;
-using Aaru.Compression;
+#if NET7_0
 using Aaru6.Checksums;
+#else
+using Aaru.Checksums;
+#endif
+using Aaru.Compression;
 using CUETools.Codecs;
 using CUETools.Codecs.Flake;
 

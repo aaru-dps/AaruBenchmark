@@ -2,7 +2,8 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.1;net7.0</TargetFrameworks>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -61,7 +62,7 @@
     </Content>
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net7.0' ">
     <ProjectReference Include="..\Aaru6.Checksums\Aaru6.Checksums.csproj"/>
     <ProjectReference Include="..\Aaru6.Compression\Aaru6.Compression.csproj"/>
   </ItemGroup>

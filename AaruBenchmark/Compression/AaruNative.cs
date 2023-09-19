@@ -1,3 +1,4 @@
+#if NET7_0
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -306,3 +307,4 @@ public class AaruNative
                                         (uint)"Aaru.Compression.Native.Tests".Length);
     }
 }
+#endif
