@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.IO;
 using BenchmarkDotNet.Configs;
 using BenchmarkDotNet.Running;
@@ -12,6 +13,7 @@ static class Program
     static void Main(string[] args)
     {
         var config = ManualConfig.Create(DefaultConfig.Instance);
+        config.CultureInfo = CultureInfo.InvariantCulture;
 
         BenchmarkRunner.Run<ADCBenchs>(config);
         BenchmarkRunner.Run<AppleRleBenchs>(config);
