@@ -30,7 +30,41 @@ namespace AaruBenchmark
         public IConfig Config { get; }
     }
 
-    [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, SimpleJob(RuntimeMoniker.Net80),
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Assembly)]
+    public class Core31WoA : Attribute, IConfigSource
+    {
+        public Core31WoA()
+        {
+            Job job = new Job(".NET Core 3.1 (x64)", RunMode.Default).WithRuntime(CoreRuntime.Core31);
+
+            NetCoreAppSettings dotnetCli32Bit =
+                NetCoreAppSettings.NetCoreApp31.WithCustomDotNetCliPath(@"C:\\Program Files\\dotnet\\x64\\dotnet.exe",
+                                                                        "x64");
+
+            Config = ManualConfig.CreateEmpty().AddJob(job.WithToolchain(CsProjCoreToolchain.From(dotnetCli32Bit)));
+        }
+
+        public IConfig Config { get; }
+    }
+
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Assembly)]
+    public class Core31Arm : Attribute, IConfigSource
+    {
+        public Core31Arm()
+        {
+            Job job = new Job(".NET Core 3.1 (arm)", RunMode.Default).WithRuntime(CoreRuntime.Core31);
+
+            NetCoreAppSettings dotnetCli32Bit =
+                NetCoreAppSettings.NetCoreApp31.WithCustomDotNetCliPath(@"C:\\Program Files (Arm)\\dotnet\\dotnet.exe",
+                                                                        "x64");
+
+            Config = ManualConfig.CreateEmpty().AddJob(job.WithToolchain(CsProjCoreToolchain.From(dotnetCli32Bit)));
+        }
+
+        public IConfig Config { get; }
+    }
+
+    [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, Core31WoA, Core31Arm, SimpleJob(RuntimeMoniker.Net80),
      SimpleJob(RuntimeMoniker.NativeAot80)]
     public class ADCBenchs
     {
@@ -55,7 +89,7 @@ namespace AaruBenchmark
     #endif
     }
 
-    [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, SimpleJob(RuntimeMoniker.Net80),
+    [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, Core31WoA, Core31Arm, SimpleJob(RuntimeMoniker.Net80),
      SimpleJob(RuntimeMoniker.NativeAot80)]
     public class AppleRleBenchs
     {
@@ -80,7 +114,7 @@ namespace AaruBenchmark
     #endif
     }
 
-    [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, SimpleJob(RuntimeMoniker.Net80),
+    [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, Core31WoA, Core31Arm, SimpleJob(RuntimeMoniker.Net80),
      SimpleJob(RuntimeMoniker.NativeAot80)]
     public class TeleDiskLzhBenchs
     {
@@ -99,7 +133,7 @@ namespace AaruBenchmark
     #endif
     }
 
-    [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, SimpleJob(RuntimeMoniker.Net80),
+    [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, Core31WoA, Core31Arm, SimpleJob(RuntimeMoniker.Net80),
      SimpleJob(RuntimeMoniker.NativeAot80)]
     public class GzipBenchs
     {
@@ -121,7 +155,7 @@ namespace AaruBenchmark
         public void DotNetZip() => Compression.DotNetZip.Gzip();
     }
 
-    [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, SimpleJob(RuntimeMoniker.Net80),
+    [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, Core31WoA, Core31Arm, SimpleJob(RuntimeMoniker.Net80),
      SimpleJob(RuntimeMoniker.NativeAot80)]
     public class CompressGzipBenchs
     {
@@ -143,7 +177,7 @@ namespace AaruBenchmark
         public void DotNetZip() => Compression.DotNetZip.CompressGzip();
     }
 
-    [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, SimpleJob(RuntimeMoniker.Net80),
+    [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, Core31WoA, Core31Arm, SimpleJob(RuntimeMoniker.Net80),
      SimpleJob(RuntimeMoniker.NativeAot80)]
     public class Bzip2Benchs
     {
@@ -168,7 +202,7 @@ namespace AaruBenchmark
     #endif
     }
 
-    [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, SimpleJob(RuntimeMoniker.Net80),
+    [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, Core31WoA, Core31Arm, SimpleJob(RuntimeMoniker.Net80),
      SimpleJob(RuntimeMoniker.NativeAot80)]
     public class CompressBzip2Benchs
     {
@@ -193,7 +227,7 @@ namespace AaruBenchmark
     #endif
     }
 
-    [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, SimpleJob(RuntimeMoniker.Net80),
+    [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, Core31WoA, Core31Arm, SimpleJob(RuntimeMoniker.Net80),
      SimpleJob(RuntimeMoniker.NativeAot80)]
     public class LzipBenchs
     {
@@ -209,7 +243,7 @@ namespace AaruBenchmark
     #endif
     }
 
-    [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, SimpleJob(RuntimeMoniker.Net80),
+    [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, Core31WoA, Core31Arm, SimpleJob(RuntimeMoniker.Net80),
      SimpleJob(RuntimeMoniker.NativeAot80)]
     public class CompressLzipBenchs
     {
@@ -225,7 +259,7 @@ namespace AaruBenchmark
     #endif
     }
 
-    [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, SimpleJob(RuntimeMoniker.Net80),
+    [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, Core31WoA, Core31Arm, SimpleJob(RuntimeMoniker.Net80),
      SimpleJob(RuntimeMoniker.NativeAot80)]
     public class LzmaBenchs
     {
@@ -240,7 +274,7 @@ namespace AaruBenchmark
     #endif
     }
 
-    [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, SimpleJob(RuntimeMoniker.Net80),
+    [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, Core31WoA, Core31Arm, SimpleJob(RuntimeMoniker.Net80),
      SimpleJob(RuntimeMoniker.NativeAot80)]
     public class CompressLzmaBenchs
     {
@@ -256,7 +290,7 @@ namespace AaruBenchmark
     #endif
     }
 
-    [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, SimpleJob(RuntimeMoniker.Net80),
+    [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, Core31WoA, Core31Arm, SimpleJob(RuntimeMoniker.Net80),
      SimpleJob(RuntimeMoniker.NativeAot80)]
     public class FlacBenchs
     {
@@ -272,7 +306,7 @@ namespace AaruBenchmark
     #endif
     }
 
-    [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, SimpleJob(RuntimeMoniker.Net80),
+    [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, Core31WoA, Core31Arm, SimpleJob(RuntimeMoniker.Net80),
      SimpleJob(RuntimeMoniker.NativeAot80)]
     public class CompressFlacBenchs
     {
@@ -288,7 +322,7 @@ namespace AaruBenchmark
     #endif
     }
 
-    [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, SimpleJob(RuntimeMoniker.Net80),
+    [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, Core31WoA, Core31Arm, SimpleJob(RuntimeMoniker.Net80),
      SimpleJob(RuntimeMoniker.NativeAot80)]
     public class Adler32Benchs
     {
@@ -313,7 +347,7 @@ namespace AaruBenchmark
     #endif
     }
 
-    [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, SimpleJob(RuntimeMoniker.Net80),
+    [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, Core31WoA, Core31Arm, SimpleJob(RuntimeMoniker.Net80),
      SimpleJob(RuntimeMoniker.NativeAot80)]
     public class Fletcher16Benchs
     {
@@ -338,7 +372,7 @@ namespace AaruBenchmark
     #endif
     }
 
-    [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, SimpleJob(RuntimeMoniker.Net80),
+    [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, Core31WoA, Core31Arm, SimpleJob(RuntimeMoniker.Net80),
      SimpleJob(RuntimeMoniker.NativeAot80)]
     public class Fletcher32Benchs
     {
@@ -363,7 +397,7 @@ namespace AaruBenchmark
     #endif
     }
 
-    [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, SimpleJob(RuntimeMoniker.Net80),
+    [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, Core31WoA, Core31Arm, SimpleJob(RuntimeMoniker.Net80),
      SimpleJob(RuntimeMoniker.NativeAot80)]
     public class Crc16CcittBenchs
     {
@@ -388,7 +422,7 @@ namespace AaruBenchmark
     #endif
     }
 
-    [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, SimpleJob(RuntimeMoniker.Net80),
+    [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, Core31WoA, Core31Arm, SimpleJob(RuntimeMoniker.Net80),
      SimpleJob(RuntimeMoniker.NativeAot80)]
     public class Crc16Benchs
     {
@@ -413,7 +447,7 @@ namespace AaruBenchmark
     #endif
     }
 
-    [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, SimpleJob(RuntimeMoniker.Net80),
+    [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, Core31WoA, Core31Arm, SimpleJob(RuntimeMoniker.Net80),
      SimpleJob(RuntimeMoniker.NativeAot80)]
     public class Crc32Benchs
     {
@@ -441,7 +475,7 @@ namespace AaruBenchmark
         public void rhash() => RHash.Crc32();
     }
 
-    [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, SimpleJob(RuntimeMoniker.Net80),
+    [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, Core31WoA, Core31Arm, SimpleJob(RuntimeMoniker.Net80),
      SimpleJob(RuntimeMoniker.NativeAot80)]
     public class Crc64Benchs
     {
@@ -466,7 +500,7 @@ namespace AaruBenchmark
     #endif
     }
 
-    [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, SimpleJob(RuntimeMoniker.Net80),
+    [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, Core31WoA, Core31Arm, SimpleJob(RuntimeMoniker.Net80),
      SimpleJob(RuntimeMoniker.NativeAot80)]
     public class Md5Benchs
     {
@@ -480,7 +514,7 @@ namespace AaruBenchmark
         public void rhash() => RHash.Md5();
     }
 
-    [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, SimpleJob(RuntimeMoniker.Net80),
+    [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, Core31WoA, Core31Arm, SimpleJob(RuntimeMoniker.Net80),
      SimpleJob(RuntimeMoniker.NativeAot80)]
     public class Sha1Benchs
     {
@@ -494,7 +528,7 @@ namespace AaruBenchmark
         public void rhash() => RHash.Sha1();
     }
 
-    [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, SimpleJob(RuntimeMoniker.Net80),
+    [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, Core31WoA, Core31Arm, SimpleJob(RuntimeMoniker.Net80),
      SimpleJob(RuntimeMoniker.NativeAot80)]
     public class Sha256Benchs
     {
@@ -508,7 +542,7 @@ namespace AaruBenchmark
         public void rhash() => RHash.Sha256();
     }
 
-    [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, SimpleJob(RuntimeMoniker.Net80),
+    [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, Core31WoA, Core31Arm, SimpleJob(RuntimeMoniker.Net80),
      SimpleJob(RuntimeMoniker.NativeAot80)]
     public class Sha384Benchs
     {
@@ -522,7 +556,7 @@ namespace AaruBenchmark
         public void rhash() => RHash.Sha384();
     }
 
-    [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, SimpleJob(RuntimeMoniker.Net80),
+    [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, Core31WoA, Core31Arm, SimpleJob(RuntimeMoniker.Net80),
      SimpleJob(RuntimeMoniker.NativeAot80)]
     public class Sha512Benchs
     {
@@ -536,7 +570,7 @@ namespace AaruBenchmark
         public void rhash() => RHash.Sha512();
     }
 
-    [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, SimpleJob(RuntimeMoniker.Net80),
+    [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, Core31WoA, Core31Arm, SimpleJob(RuntimeMoniker.Net80),
      SimpleJob(RuntimeMoniker.NativeAot80)]
     public class SpamSumBenchs
     {
