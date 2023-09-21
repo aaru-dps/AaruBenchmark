@@ -585,6 +585,9 @@ namespace AaruBenchmark
         public void AaruNative() => Checksums.AaruNative.SpamSum();
     #else
         [Benchmark]
+        public void Aaru() => Checksums.Aaru.SpamSum();
+
+        [Benchmark]
         public void Aaru6() => throw new NotImplementedException();
 
         [Benchmark]
