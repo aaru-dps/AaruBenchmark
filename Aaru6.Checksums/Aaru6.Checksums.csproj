@@ -62,6 +62,7 @@
     <Compile Include="CRC32\vmull.cs"/>
     <Compile Include="CRC64\clmul.cs"/>
     <Compile Include="Fletcher32\neon.cs" />
+    <Compile Include="Fletcher32\ssse3.cs" />
     <Compile Include="Native.cs"/>
     <Compile Include="SpamSumContext.cs"/>
     <Compile Include="Adler32Context.cs"/>

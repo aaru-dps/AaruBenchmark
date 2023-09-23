@@ -36,6 +36,7 @@ using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Runtime.Intrinsics.Arm;
+using System.Runtime.Intrinsics.X86;
 using System.Text;
 using Aaru.CommonTypes.Interfaces;
 using Aaru.Helpers;
@@ -129,6 +130,13 @@ public sealed class Fletcher32Context : IChecksum
         if(useNative)
         {
             fletcher32_update(nativeContext, data, len);
+
+            return;
+        }
+
+        if(Ssse3.IsSupported)
+        {
+            ssse3.Step(ref previousSum1, ref previousSum2, data, len);
 
             return;
         }
