@@ -35,20 +35,22 @@
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Runtime.Intrinsics.Arm;
 using System.Text;
 using Aaru.CommonTypes.Interfaces;
 using Aaru.Helpers;
+using Aaru6.Checksums.Fletcher32;
 
 namespace Aaru6.Checksums;
 
 /// <summary>Implements the Fletcher-32 algorithm</summary>
 public sealed class Fletcher32Context : IChecksum
 {
-    const    ushort FLETCHER_MODULE = 0xFFFF;
-    const    uint   NMAX            = 5552;
-    readonly IntPtr _nativeContext;
-    readonly bool   _useNative;
-    ushort          _sum1, _sum2;
+    internal const ushort FLETCHER_MODULE = 0xFFFF;
+    internal const uint   NMAX            = 5552;
+    readonly       IntPtr _nativeContext;
+    readonly       bool   _useNative;
+    ushort                _sum1, _sum2;
 
     /// <summary>Initializes the Fletcher-32 sums</summary>
     public Fletcher32Context()
@@ -127,6 +129,13 @@ public sealed class Fletcher32Context : IChecksum
         if(useNative)
         {
             fletcher32_update(nativeContext, data, len);
+
+            return;
+        }
+
+        if(AdvSimd.IsSupported)
+        {
+            neon.Step(ref previousSum1, ref previousSum2, data, len);
 
             return;
         }
