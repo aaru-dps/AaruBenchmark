@@ -554,8 +554,5 @@ namespace AaruBenchmark
         [Benchmark]
         public void AaruNative() => throw new NotImplementedException();
     #endif
-
-        [Benchmark]
-        public void ssdeep() => Checksums.Aaru.CliSpamSum();
     }
 }

@@ -252,19 +252,6 @@ namespace AaruBenchmark.Checksums
             string result = ctx.End();
         }
 
-        public static void CliSpamSum()
-        {
-            var proc = new Process();
-            proc.StartInfo.UseShellExecute = false;
-            proc.StartInfo.FileName        = "/usr/bin/ssdeep";
-            proc.StartInfo.CreateNoWindow  = true;
-            proc.StartInfo.ArgumentList.Add(Path.Combine(Program.Folder, "random"));
-            proc.StartInfo.RedirectStandardOutput = true;
-            proc.Start();
-            proc.StandardOutput.ReadToEnd();
-            proc.WaitForExit();
-        }
-
         public static void Sha1()
         {
             byte[] data = new byte[1048576];
