@@ -470,9 +470,6 @@ namespace AaruBenchmark
         [Benchmark]
         public void AaruNative() => throw new NotImplementedException();
     #endif
-
-        [Benchmark]
-        public void rhash() => RHash.Crc32();
     }
 
     [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, Core31WoA, Core31Arm, SimpleJob(RuntimeMoniker.Net80),
@@ -506,12 +503,6 @@ namespace AaruBenchmark
     {
         [Benchmark(Baseline = true)]
         public void Aaru() => Checksums.Aaru.Md5();
-
-        [Benchmark]
-        public void OpenSSL() => OpenSsl.Md5();
-
-        [Benchmark]
-        public void rhash() => RHash.Md5();
     }
 
     [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, Core31WoA, Core31Arm, SimpleJob(RuntimeMoniker.Net80),
@@ -520,12 +511,6 @@ namespace AaruBenchmark
     {
         [Benchmark(Baseline = true)]
         public void Aaru() => Checksums.Aaru.Sha1();
-
-        [Benchmark]
-        public void OpenSSL() => OpenSsl.Sha1();
-
-        [Benchmark]
-        public void rhash() => RHash.Sha1();
     }
 
     [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, Core31WoA, Core31Arm, SimpleJob(RuntimeMoniker.Net80),
@@ -534,12 +519,6 @@ namespace AaruBenchmark
     {
         [Benchmark(Baseline = true)]
         public void Aaru() => Checksums.Aaru.Sha256();
-
-        [Benchmark]
-        public void OpenSSL() => OpenSsl.Sha256();
-
-        [Benchmark]
-        public void rhash() => RHash.Sha256();
     }
 
     [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, Core31WoA, Core31Arm, SimpleJob(RuntimeMoniker.Net80),
@@ -548,12 +527,6 @@ namespace AaruBenchmark
     {
         [Benchmark(Baseline = true)]
         public void Aaru() => Checksums.Aaru.Sha384();
-
-        [Benchmark]
-        public void OpenSSL() => OpenSsl.Sha384();
-
-        [Benchmark]
-        public void rhash() => RHash.Sha384();
     }
 
     [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, Core31WoA, Core31Arm, SimpleJob(RuntimeMoniker.Net80),
@@ -562,12 +535,6 @@ namespace AaruBenchmark
     {
         [Benchmark(Baseline = true)]
         public void Aaru() => Checksums.Aaru.Sha512();
-
-        [Benchmark]
-        public void OpenSSL() => OpenSsl.Sha512();
-
-        [Benchmark]
-        public void rhash() => RHash.Sha512();
     }
 
     [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, Core31WoA, Core31Arm, SimpleJob(RuntimeMoniker.Net80),
