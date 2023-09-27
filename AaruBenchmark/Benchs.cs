@@ -150,9 +150,6 @@ namespace AaruBenchmark
         [Benchmark]
         public void Aaru6() => throw new NotImplementedException();
     #endif
-
-        [Benchmark]
-        public void DotNetZip() => Compression.DotNetZip.Gzip();
     }
 
     [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, Core31WoA, Core31Arm, SimpleJob(RuntimeMoniker.Net80),
@@ -172,9 +169,6 @@ namespace AaruBenchmark
         [Benchmark]
         public void Aaru6() => throw new NotImplementedException();
     #endif
-
-        [Benchmark]
-        public void DotNetZip() => Compression.DotNetZip.CompressGzip();
     }
 
     [SimpleJob(RuntimeMoniker.NetCoreApp31), Core31RosettaJob, Core31WoA, Core31Arm, SimpleJob(RuntimeMoniker.Net80),
