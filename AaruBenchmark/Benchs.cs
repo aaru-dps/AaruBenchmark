@@ -66,7 +66,8 @@ namespace AaruBenchmark
     }
 
     [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true), Core31RosettaJob, Core31WoA, Core31Arm,
-     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80)]
+     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80),
+     HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
     public class ADCBenchs
     {
     #if NET8_0_OR_GREATER
@@ -91,7 +92,8 @@ namespace AaruBenchmark
     }
 
     [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true), Core31RosettaJob, Core31WoA, Core31Arm,
-     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80)]
+     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80),
+     HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
     public class AppleRleBenchs
     {
     #if NET8_0_OR_GREATER
@@ -116,7 +118,8 @@ namespace AaruBenchmark
     }
 
     [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true), Core31RosettaJob, Core31WoA, Core31Arm,
-     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80)]
+     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80),
+     HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
     public class TeleDiskLzhBenchs
     {
     #if NET8_0_OR_GREATER
@@ -135,7 +138,8 @@ namespace AaruBenchmark
     }
 
     [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true), Core31RosettaJob, Core31WoA, Core31Arm,
-     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80)]
+     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80),
+     HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
     public class GzipBenchs
     {
     #if NET8_0_OR_GREATER
@@ -154,7 +158,8 @@ namespace AaruBenchmark
     }
 
     [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true), Core31RosettaJob, Core31WoA, Core31Arm,
-     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80)]
+     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80),
+     HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
     public class CompressGzipBenchs
     {
     #if NET8_0_OR_GREATER
@@ -173,7 +178,8 @@ namespace AaruBenchmark
     }
 
     [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true), Core31RosettaJob, Core31WoA, Core31Arm,
-     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80)]
+     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80),
+     HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
     public class Bzip2Benchs
     {
     #if NET8_0_OR_GREATER
@@ -198,7 +204,8 @@ namespace AaruBenchmark
     }
 
     [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true), Core31RosettaJob, Core31WoA, Core31Arm,
-     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80)]
+     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80),
+     HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
     public class CompressBzip2Benchs
     {
     #if NET8_0_OR_GREATER
@@ -223,7 +230,8 @@ namespace AaruBenchmark
     }
 
     [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true), Core31RosettaJob, Core31WoA, Core31Arm,
-     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80)]
+     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80),
+     HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
     public class LzipBenchs
     {
         [Benchmark]
@@ -239,7 +247,8 @@ namespace AaruBenchmark
     }
 
     [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true), Core31RosettaJob, Core31WoA, Core31Arm,
-     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80)]
+     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80),
+     HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
     public class CompressLzipBenchs
     {
         [Benchmark]
@@ -255,7 +264,8 @@ namespace AaruBenchmark
     }
 
     [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true), Core31RosettaJob, Core31WoA, Core31Arm,
-     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80)]
+     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80),
+     HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
     public class LzmaBenchs
     {
         [Benchmark]
@@ -270,7 +280,8 @@ namespace AaruBenchmark
     }
 
     [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true), Core31RosettaJob, Core31WoA, Core31Arm,
-     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80)]
+     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80),
+     HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
     public class CompressLzmaBenchs
     {
         [Benchmark]
@@ -286,7 +297,8 @@ namespace AaruBenchmark
     }
 
     [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true), Core31RosettaJob, Core31WoA, Core31Arm,
-     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80)]
+     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80),
+     HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
     public class FlacBenchs
     {
         [Benchmark]
@@ -302,7 +314,8 @@ namespace AaruBenchmark
     }
 
     [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true), Core31RosettaJob, Core31WoA, Core31Arm,
-     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80)]
+     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80),
+     HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
     public class CompressFlacBenchs
     {
         [Benchmark]
@@ -318,7 +331,8 @@ namespace AaruBenchmark
     }
 
     [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true), Core31RosettaJob, Core31WoA, Core31Arm,
-     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80)]
+     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80),
+     HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
     public class Adler32Benchs
     {
     #if NET8_0_OR_GREATER
@@ -343,7 +357,8 @@ namespace AaruBenchmark
     }
 
     [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true), Core31RosettaJob, Core31WoA, Core31Arm,
-     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80)]
+     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80),
+     HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
     public class Fletcher16Benchs
     {
     #if NET8_0_OR_GREATER
@@ -368,7 +383,8 @@ namespace AaruBenchmark
     }
 
     [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true), Core31RosettaJob, Core31WoA, Core31Arm,
-     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80)]
+     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80),
+     HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
     public class Fletcher32Benchs
     {
     #if NET8_0_OR_GREATER
@@ -393,7 +409,8 @@ namespace AaruBenchmark
     }
 
     [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true), Core31RosettaJob, Core31WoA, Core31Arm,
-     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80)]
+     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80),
+     HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
     public class Crc16CcittBenchs
     {
     #if NET8_0_OR_GREATER
@@ -418,7 +435,8 @@ namespace AaruBenchmark
     }
 
     [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true), Core31RosettaJob, Core31WoA, Core31Arm,
-     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80)]
+     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80),
+     HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
     public class Crc16Benchs
     {
     #if NET8_0_OR_GREATER
@@ -443,7 +461,8 @@ namespace AaruBenchmark
     }
 
     [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true), Core31RosettaJob, Core31WoA, Core31Arm,
-     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80)]
+     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80),
+     HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
     public class Crc32Benchs
     {
     #if NET8_0_OR_GREATER
@@ -468,7 +487,8 @@ namespace AaruBenchmark
     }
 
     [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true), Core31RosettaJob, Core31WoA, Core31Arm,
-     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80)]
+     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80),
+     HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
     public class Crc64Benchs
     {
     #if NET8_0_OR_GREATER
@@ -493,7 +513,8 @@ namespace AaruBenchmark
     }
 
     [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true), Core31RosettaJob, Core31WoA, Core31Arm,
-     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80)]
+     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80),
+     HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
     public class Md5Benchs
     {
         [Benchmark]
@@ -501,7 +522,8 @@ namespace AaruBenchmark
     }
 
     [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true), Core31RosettaJob, Core31WoA, Core31Arm,
-     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80)]
+     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80),
+     HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
     public class Sha1Benchs
     {
         [Benchmark]
@@ -509,7 +531,8 @@ namespace AaruBenchmark
     }
 
     [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true), Core31RosettaJob, Core31WoA, Core31Arm,
-     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80)]
+     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80),
+     HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
     public class Sha256Benchs
     {
         [Benchmark]
@@ -517,7 +540,8 @@ namespace AaruBenchmark
     }
 
     [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true), Core31RosettaJob, Core31WoA, Core31Arm,
-     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80)]
+     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80),
+     HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
     public class Sha384Benchs
     {
         [Benchmark]
@@ -525,7 +549,8 @@ namespace AaruBenchmark
     }
 
     [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true), Core31RosettaJob, Core31WoA, Core31Arm,
-     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80)]
+     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80),
+     HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
     public class Sha512Benchs
     {
         [Benchmark]
@@ -533,7 +558,8 @@ namespace AaruBenchmark
     }
 
     [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true), Core31RosettaJob, Core31WoA, Core31Arm,
-     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80)]
+     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80),
+     HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
     public class SpamSumBenchs
     {
     #if NET8_0_OR_GREATER
