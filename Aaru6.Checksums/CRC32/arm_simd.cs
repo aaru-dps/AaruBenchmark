@@ -50,13 +50,13 @@ using System.Runtime.Intrinsics.Arm;
 
 namespace Aaru6.Checksums.CRC32;
 
-internal static class ArmSimd
+static class ArmSimd
 {
     internal static uint Step64(byte[] buf, long len, uint crc)
     {
         uint c = crc;
 
-        int bufPos = 0;
+        var bufPos = 0;
 
         while(len >= 64)
         {
@@ -87,9 +87,7 @@ internal static class ArmSimd
         }
 
         while(len-- > 0)
-        {
             c = Crc32.ComputeCrc32(c, buf[bufPos++]);
-        }
 
         return c;
     }
@@ -98,7 +96,7 @@ internal static class ArmSimd
     {
         uint c = crc;
 
-        int bufPos = 0;
+        var bufPos = 0;
 
         while(len >= 32)
         {
@@ -129,9 +127,7 @@ internal static class ArmSimd
         }
 
         while(len-- > 0)
-        {
             c = Crc32.ComputeCrc32(c, buf[bufPos++]);
-        }
 
         return c;
     }

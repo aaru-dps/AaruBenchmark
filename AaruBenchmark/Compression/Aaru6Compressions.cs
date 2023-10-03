@@ -10,7 +10,7 @@ public class Aaru6Compressions
     public static void AppleRle()
     {
         const int bufferSize = 32768;
-        byte[]    input      = new byte[1102];
+        byte[]    input = new byte[1102];
 
         var fs = new FileStream(Path.Combine(Program.Folder, "apple_rle.bin"), FileMode.Open, FileAccess.Read);
 
@@ -45,8 +45,8 @@ public class Aaru6Compressions
 
         int rd;
         int total_rd = 0;
-        var lzh      = new TeleDiskLzh(new MemoryStream(input));
-        var outMs    = new MemoryStream();
+        var lzh = new TeleDiskLzh(new MemoryStream(input));
+        var outMs = new MemoryStream();
 
         do
         {
@@ -73,7 +73,7 @@ public class Aaru6Compressions
     public static void ADC()
     {
         const int bufferSize = 262144;
-        byte[]    input      = new byte[34367];
+        byte[]    input = new byte[34367];
 
         var fs = new FileStream(Path.Combine(Program.Folder, "adc.bin"), FileMode.Open, FileAccess.Read);
 

@@ -27,7 +27,11 @@ namespace AaruBenchmark
                                   AddJob(job.WithToolchain(CsProjCoreToolchain.From(dotnetCli32Bit)).AsBaseline());
         }
 
+    #region IConfigSource Members
+
         public IConfig Config { get; }
+
+    #endregion
     }
 
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Assembly)]
@@ -45,7 +49,11 @@ namespace AaruBenchmark
                                   AddJob(job.WithToolchain(CsProjCoreToolchain.From(dotnetCli32Bit)).AsBaseline());
         }
 
+    #region IConfigSource Members
+
         public IConfig Config { get; }
+
+    #endregion
     }
 
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Assembly)]
@@ -62,12 +70,21 @@ namespace AaruBenchmark
             Config = ManualConfig.CreateEmpty().AddJob(job.WithToolchain(CsProjCoreToolchain.From(dotnetCli32Bit)));
         }
 
+    #region IConfigSource Members
+
         public IConfig Config { get; }
+
+    #endregion
     }
 
-    [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true), Core31RosettaJob, Core31WoA, Core31Arm,
-     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80), MemoryDiagnoser(false),
-     HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
+    [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true)]
+    [Core31RosettaJob]
+    [Core31WoA]
+    [Core31Arm]
+    [SimpleJob(RuntimeMoniker.Net80)]
+    [SimpleJob(RuntimeMoniker.NativeAot80)]
+    [MemoryDiagnoser(false)]
+    [HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
 
     // Windows only
     // [NativeMemoryProfiler]
@@ -94,9 +111,14 @@ namespace AaruBenchmark
     #endif
     }
 
-    [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true), Core31RosettaJob, Core31WoA, Core31Arm,
-     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80), MemoryDiagnoser(false),
-     HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
+    [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true)]
+    [Core31RosettaJob]
+    [Core31WoA]
+    [Core31Arm]
+    [SimpleJob(RuntimeMoniker.Net80)]
+    [SimpleJob(RuntimeMoniker.NativeAot80)]
+    [MemoryDiagnoser(false)]
+    [HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
 
     // Windows only
     // [NativeMemoryProfiler]
@@ -123,9 +145,14 @@ namespace AaruBenchmark
     #endif
     }
 
-    [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true), Core31RosettaJob, Core31WoA, Core31Arm,
-     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80), MemoryDiagnoser(false),
-     HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
+    [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true)]
+    [Core31RosettaJob]
+    [Core31WoA]
+    [Core31Arm]
+    [SimpleJob(RuntimeMoniker.Net80)]
+    [SimpleJob(RuntimeMoniker.NativeAot80)]
+    [MemoryDiagnoser(false)]
+    [HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
 
     // Windows only
     // [NativeMemoryProfiler]
@@ -146,9 +173,14 @@ namespace AaruBenchmark
     #endif
     }
 
-    [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true), Core31RosettaJob, Core31WoA, Core31Arm,
-     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80), MemoryDiagnoser(false),
-     HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
+    [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true)]
+    [Core31RosettaJob]
+    [Core31WoA]
+    [Core31Arm]
+    [SimpleJob(RuntimeMoniker.Net80)]
+    [SimpleJob(RuntimeMoniker.NativeAot80)]
+    [MemoryDiagnoser(false)]
+    [HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
 
     // Windows only
     // [NativeMemoryProfiler]
@@ -169,9 +201,14 @@ namespace AaruBenchmark
     #endif
     }
 
-    [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true), Core31RosettaJob, Core31WoA, Core31Arm,
-     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80), MemoryDiagnoser(false),
-     HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
+    [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true)]
+    [Core31RosettaJob]
+    [Core31WoA]
+    [Core31Arm]
+    [SimpleJob(RuntimeMoniker.Net80)]
+    [SimpleJob(RuntimeMoniker.NativeAot80)]
+    [MemoryDiagnoser(false)]
+    [HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
 
     // Windows only
     // [NativeMemoryProfiler]
@@ -192,9 +229,14 @@ namespace AaruBenchmark
     #endif
     }
 
-    [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true), Core31RosettaJob, Core31WoA, Core31Arm,
-     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80), MemoryDiagnoser(false),
-     HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
+    [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true)]
+    [Core31RosettaJob]
+    [Core31WoA]
+    [Core31Arm]
+    [SimpleJob(RuntimeMoniker.Net80)]
+    [SimpleJob(RuntimeMoniker.NativeAot80)]
+    [MemoryDiagnoser(false)]
+    [HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
 
     // Windows only
     // [NativeMemoryProfiler]
@@ -221,9 +263,14 @@ namespace AaruBenchmark
     #endif
     }
 
-    [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true), Core31RosettaJob, Core31WoA, Core31Arm,
-     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80), MemoryDiagnoser(false),
-     HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
+    [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true)]
+    [Core31RosettaJob]
+    [Core31WoA]
+    [Core31Arm]
+    [SimpleJob(RuntimeMoniker.Net80)]
+    [SimpleJob(RuntimeMoniker.NativeAot80)]
+    [MemoryDiagnoser(false)]
+    [HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
 
     // Windows only
     // [NativeMemoryProfiler]
@@ -250,9 +297,14 @@ namespace AaruBenchmark
     #endif
     }
 
-    [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true), Core31RosettaJob, Core31WoA, Core31Arm,
-     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80), MemoryDiagnoser(false),
-     HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
+    [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true)]
+    [Core31RosettaJob]
+    [Core31WoA]
+    [Core31Arm]
+    [SimpleJob(RuntimeMoniker.Net80)]
+    [SimpleJob(RuntimeMoniker.NativeAot80)]
+    [MemoryDiagnoser(false)]
+    [HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
 
     // Windows only
     // [NativeMemoryProfiler]
@@ -270,9 +322,14 @@ namespace AaruBenchmark
     #endif
     }
 
-    [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true), Core31RosettaJob, Core31WoA, Core31Arm,
-     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80), MemoryDiagnoser(false),
-     HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
+    [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true)]
+    [Core31RosettaJob]
+    [Core31WoA]
+    [Core31Arm]
+    [SimpleJob(RuntimeMoniker.Net80)]
+    [SimpleJob(RuntimeMoniker.NativeAot80)]
+    [MemoryDiagnoser(false)]
+    [HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
 
     // Windows only
     // [NativeMemoryProfiler]
@@ -290,9 +347,14 @@ namespace AaruBenchmark
     #endif
     }
 
-    [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true), Core31RosettaJob, Core31WoA, Core31Arm,
-     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80), MemoryDiagnoser(false),
-     HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
+    [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true)]
+    [Core31RosettaJob]
+    [Core31WoA]
+    [Core31Arm]
+    [SimpleJob(RuntimeMoniker.Net80)]
+    [SimpleJob(RuntimeMoniker.NativeAot80)]
+    [MemoryDiagnoser(false)]
+    [HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
 
     // Windows only
     // [NativeMemoryProfiler]
@@ -309,9 +371,14 @@ namespace AaruBenchmark
     #endif
     }
 
-    [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true), Core31RosettaJob, Core31WoA, Core31Arm,
-     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80), MemoryDiagnoser(false),
-     HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
+    [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true)]
+    [Core31RosettaJob]
+    [Core31WoA]
+    [Core31Arm]
+    [SimpleJob(RuntimeMoniker.Net80)]
+    [SimpleJob(RuntimeMoniker.NativeAot80)]
+    [MemoryDiagnoser(false)]
+    [HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
 
     // Windows only
     // [NativeMemoryProfiler]
@@ -329,9 +396,14 @@ namespace AaruBenchmark
     #endif
     }
 
-    [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true), Core31RosettaJob, Core31WoA, Core31Arm,
-     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80), MemoryDiagnoser(false),
-     HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
+    [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true)]
+    [Core31RosettaJob]
+    [Core31WoA]
+    [Core31Arm]
+    [SimpleJob(RuntimeMoniker.Net80)]
+    [SimpleJob(RuntimeMoniker.NativeAot80)]
+    [MemoryDiagnoser(false)]
+    [HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
 
     // Windows only
     // [NativeMemoryProfiler]
@@ -349,9 +421,14 @@ namespace AaruBenchmark
     #endif
     }
 
-    [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true), Core31RosettaJob, Core31WoA, Core31Arm,
-     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80), MemoryDiagnoser(false),
-     HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
+    [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true)]
+    [Core31RosettaJob]
+    [Core31WoA]
+    [Core31Arm]
+    [SimpleJob(RuntimeMoniker.Net80)]
+    [SimpleJob(RuntimeMoniker.NativeAot80)]
+    [MemoryDiagnoser(false)]
+    [HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
 
     // Windows only
     // [NativeMemoryProfiler]
@@ -369,9 +446,14 @@ namespace AaruBenchmark
     #endif
     }
 
-    [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true), Core31RosettaJob, Core31WoA, Core31Arm,
-     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80), MemoryDiagnoser(false),
-     HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
+    [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true)]
+    [Core31RosettaJob]
+    [Core31WoA]
+    [Core31Arm]
+    [SimpleJob(RuntimeMoniker.Net80)]
+    [SimpleJob(RuntimeMoniker.NativeAot80)]
+    [MemoryDiagnoser(false)]
+    [HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
 
     // Windows only
     // [NativeMemoryProfiler]
@@ -398,9 +480,14 @@ namespace AaruBenchmark
     #endif
     }
 
-    [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true), Core31RosettaJob, Core31WoA, Core31Arm,
-     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80), MemoryDiagnoser(false),
-     HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
+    [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true)]
+    [Core31RosettaJob]
+    [Core31WoA]
+    [Core31Arm]
+    [SimpleJob(RuntimeMoniker.Net80)]
+    [SimpleJob(RuntimeMoniker.NativeAot80)]
+    [MemoryDiagnoser(false)]
+    [HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
 
     // Windows only
     // [NativeMemoryProfiler]
@@ -427,9 +514,14 @@ namespace AaruBenchmark
     #endif
     }
 
-    [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true), Core31RosettaJob, Core31WoA, Core31Arm,
-     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80), MemoryDiagnoser(false),
-     HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
+    [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true)]
+    [Core31RosettaJob]
+    [Core31WoA]
+    [Core31Arm]
+    [SimpleJob(RuntimeMoniker.Net80)]
+    [SimpleJob(RuntimeMoniker.NativeAot80)]
+    [MemoryDiagnoser(false)]
+    [HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
 
     // Windows only
     // [NativeMemoryProfiler]
@@ -456,9 +548,14 @@ namespace AaruBenchmark
     #endif
     }
 
-    [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true), Core31RosettaJob, Core31WoA, Core31Arm,
-     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80), MemoryDiagnoser(false),
-     HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
+    [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true)]
+    [Core31RosettaJob]
+    [Core31WoA]
+    [Core31Arm]
+    [SimpleJob(RuntimeMoniker.Net80)]
+    [SimpleJob(RuntimeMoniker.NativeAot80)]
+    [MemoryDiagnoser(false)]
+    [HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
 
     // Windows only
     // [NativeMemoryProfiler]
@@ -485,9 +582,14 @@ namespace AaruBenchmark
     #endif
     }
 
-    [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true), Core31RosettaJob, Core31WoA, Core31Arm,
-     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80), MemoryDiagnoser(false),
-     HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
+    [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true)]
+    [Core31RosettaJob]
+    [Core31WoA]
+    [Core31Arm]
+    [SimpleJob(RuntimeMoniker.Net80)]
+    [SimpleJob(RuntimeMoniker.NativeAot80)]
+    [MemoryDiagnoser(false)]
+    [HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
 
     // Windows only
     // [NativeMemoryProfiler]
@@ -514,9 +616,14 @@ namespace AaruBenchmark
     #endif
     }
 
-    [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true), Core31RosettaJob, Core31WoA, Core31Arm,
-     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80), MemoryDiagnoser(false),
-     HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
+    [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true)]
+    [Core31RosettaJob]
+    [Core31WoA]
+    [Core31Arm]
+    [SimpleJob(RuntimeMoniker.Net80)]
+    [SimpleJob(RuntimeMoniker.NativeAot80)]
+    [MemoryDiagnoser(false)]
+    [HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
 
     // Windows only
     // [NativeMemoryProfiler]
@@ -543,9 +650,14 @@ namespace AaruBenchmark
     #endif
     }
 
-    [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true), Core31RosettaJob, Core31WoA, Core31Arm,
-     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80), MemoryDiagnoser(false),
-     HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
+    [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true)]
+    [Core31RosettaJob]
+    [Core31WoA]
+    [Core31Arm]
+    [SimpleJob(RuntimeMoniker.Net80)]
+    [SimpleJob(RuntimeMoniker.NativeAot80)]
+    [MemoryDiagnoser(false)]
+    [HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
 
     // Windows only
     // [NativeMemoryProfiler]
@@ -572,9 +684,14 @@ namespace AaruBenchmark
     #endif
     }
 
-    [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true), Core31RosettaJob, Core31WoA, Core31Arm,
-     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80), MemoryDiagnoser(false),
-     HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
+    [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true)]
+    [Core31RosettaJob]
+    [Core31WoA]
+    [Core31Arm]
+    [SimpleJob(RuntimeMoniker.Net80)]
+    [SimpleJob(RuntimeMoniker.NativeAot80)]
+    [MemoryDiagnoser(false)]
+    [HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
 
     // Windows only
     // [NativeMemoryProfiler]
@@ -584,9 +701,14 @@ namespace AaruBenchmark
         public void Aaru() => Checksums.Aaru.Md5();
     }
 
-    [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true), Core31RosettaJob, Core31WoA, Core31Arm,
-     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80), MemoryDiagnoser(false),
-     HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
+    [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true)]
+    [Core31RosettaJob]
+    [Core31WoA]
+    [Core31Arm]
+    [SimpleJob(RuntimeMoniker.Net80)]
+    [SimpleJob(RuntimeMoniker.NativeAot80)]
+    [MemoryDiagnoser(false)]
+    [HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
 
     // Windows only
     // [NativeMemoryProfiler]
@@ -596,9 +718,14 @@ namespace AaruBenchmark
         public void Aaru() => Checksums.Aaru.Sha1();
     }
 
-    [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true), Core31RosettaJob, Core31WoA, Core31Arm,
-     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80), MemoryDiagnoser(false),
-     HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
+    [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true)]
+    [Core31RosettaJob]
+    [Core31WoA]
+    [Core31Arm]
+    [SimpleJob(RuntimeMoniker.Net80)]
+    [SimpleJob(RuntimeMoniker.NativeAot80)]
+    [MemoryDiagnoser(false)]
+    [HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
 
     // Windows only
     // [NativeMemoryProfiler]
@@ -608,9 +735,14 @@ namespace AaruBenchmark
         public void Aaru() => Checksums.Aaru.Sha256();
     }
 
-    [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true), Core31RosettaJob, Core31WoA, Core31Arm,
-     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80), MemoryDiagnoser(false),
-     HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
+    [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true)]
+    [Core31RosettaJob]
+    [Core31WoA]
+    [Core31Arm]
+    [SimpleJob(RuntimeMoniker.Net80)]
+    [SimpleJob(RuntimeMoniker.NativeAot80)]
+    [MemoryDiagnoser(false)]
+    [HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
 
     // Windows only
     // [NativeMemoryProfiler]
@@ -620,9 +752,14 @@ namespace AaruBenchmark
         public void Aaru() => Checksums.Aaru.Sha384();
     }
 
-    [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true), Core31RosettaJob, Core31WoA, Core31Arm,
-     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80), MemoryDiagnoser(false),
-     HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
+    [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true)]
+    [Core31RosettaJob]
+    [Core31WoA]
+    [Core31Arm]
+    [SimpleJob(RuntimeMoniker.Net80)]
+    [SimpleJob(RuntimeMoniker.NativeAot80)]
+    [MemoryDiagnoser(false)]
+    [HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
 
     // Windows only
     // [NativeMemoryProfiler]
@@ -632,9 +769,14 @@ namespace AaruBenchmark
         public void Aaru() => Checksums.Aaru.Sha512();
     }
 
-    [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true), Core31RosettaJob, Core31WoA, Core31Arm,
-     SimpleJob(RuntimeMoniker.Net80), SimpleJob(RuntimeMoniker.NativeAot80), MemoryDiagnoser(false),
-     HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
+    [SimpleJob(RuntimeMoniker.NetCoreApp31, baseline: true)]
+    [Core31RosettaJob]
+    [Core31WoA]
+    [Core31Arm]
+    [SimpleJob(RuntimeMoniker.Net80)]
+    [SimpleJob(RuntimeMoniker.NativeAot80)]
+    [MemoryDiagnoser(false)]
+    [HideColumns("Job", "Error", "StdDev", "Median", "RatioSD", "Alloc Ratio")]
 
     // Windows only
     // [NativeMemoryProfiler]

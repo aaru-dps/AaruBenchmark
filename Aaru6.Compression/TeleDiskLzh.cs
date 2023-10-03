@@ -64,9 +64,10 @@ public class TeleDiskLzh
     /* Huffman coding parameters */
 
     const int N_CHAR = 256 - THRESHOLD + F;
+
     /* character code (= 0..N_CHAR-1) */
-    const int T        = (N_CHAR * 2) - 1; /* Size of table */
-    const int ROOT     = T            - 1; /* root position */
+    const int T        = N_CHAR * 2 - 1; /* Size of table */
+    const int ROOT     = T          - 1; /* root position */
     const int MAX_FREQ = 0x8000;
 
     /*
@@ -112,6 +113,7 @@ public class TeleDiskLzh
         0x07, 0x07, 0x07, 0x07, 0x07, 0x07, 0x08, 0x08, 0x08, 0x08, 0x08, 0x08, 0x08, 0x08, 0x08, 0x08, 0x08, 0x08,
         0x08, 0x08, 0x08, 0x08
     };
+
     readonly ushort[] _freq = new ushort[T + 1]; /* cumulative freq table */
 
     readonly Stream _inStream;
@@ -167,6 +169,7 @@ public class TeleDiskLzh
         int count; // was an unsigned long, seems unnecessary
 
         for(count = 0; count < len;)
+        {
             if(_tdctl.Bufcnt == 0)
             {
                 if((c = DecodeChar()) < 0)
@@ -186,8 +189,8 @@ public class TeleDiskLzh
                     if((pos = DecodePosition()) < 0)
                         return count; // fatal error
 
-                    _tdctl.Bufpos = (ushort)((_tdctl.R - pos - 1) & (N - 1));
-                    _tdctl.Bufcnt = (ushort)(c - 255 + THRESHOLD);
+                    _tdctl.Bufpos = (ushort)(_tdctl.R - pos - 1 & N - 1);
+                    _tdctl.Bufcnt = (ushort)(c        - 255 + THRESHOLD);
                     _tdctl.Bufndx = 0;
                 }
             }
@@ -197,7 +200,7 @@ public class TeleDiskLzh
                 while(_tdctl.Bufndx < _tdctl.Bufcnt &&
                       count         < len)
                 {
-                    c          = _textBuf[(_tdctl.Bufpos + _tdctl.Bufndx) & (N - 1)];
+                    c          = _textBuf[_tdctl.Bufpos + _tdctl.Bufndx & N - 1];
                     buf[count] = (byte)c;
                     _tdctl.Bufndx++;
                     _textBuf[_tdctl.R++] =  (byte)c;
@@ -209,6 +212,7 @@ public class TeleDiskLzh
                 if(_tdctl.Bufndx >= _tdctl.Bufcnt)
                     _tdctl.Bufndx = _tdctl.Bufcnt = 0;
             }
+        }
 
         return count; // count == len, success
     }
@@ -238,7 +242,7 @@ public class TeleDiskLzh
         while(_getlen <= 8)
         {
             // typically reads a word at a time
-            _getbuf |= (ushort)(_tdctl.Inbuf[_tdctl.Ibufndx++] << (8 - _getlen));
+            _getbuf |= (ushort)(_tdctl.Inbuf[_tdctl.Ibufndx++] << 8 - _getlen);
             _getlen += 8;
         }
 
@@ -250,7 +254,7 @@ public class TeleDiskLzh
         if(NextWord() < 0)
             return -1;
 
-        short i = (short)_getbuf;
+        var i = (short)_getbuf;
         _getbuf <<= 1;
         _getlen--;
 
@@ -309,12 +313,14 @@ public class TeleDiskLzh
         short j = 0;
 
         for(i = 0; i < T; i++)
+        {
             if(_son[i] >= T)
             {
                 _freq[j] = (ushort)((_freq[i] + 1) / 2);
                 _son[j]  = _son[i];
                 j++;
             }
+        }
 
         /* make a tree : first, connect children nodes */
         for(i = 0, j = N_CHAR; j < T; i += 2, j++)
@@ -325,7 +331,7 @@ public class TeleDiskLzh
             for(k = (short)(j - 1); f < _freq[k]; k--) {}
 
             k++;
-            ushort l = (ushort)((j - k) * 2);
+            var l = (ushort)((j - k) * 2);
 
             Array.ConstrainedCopy(_freq, k, _freq, k + 1, l);
             _freq[k] = f;
@@ -335,10 +341,12 @@ public class TeleDiskLzh
 
         /* connect parent nodes */
         for(i = 0; i < T; i++)
+        {
             if((k = _son[i]) >= T)
                 _prnt[k] = i;
             else
                 _prnt[k] = _prnt[k + 1] = i;
+        }
     }
 
     /* update freq tree */
@@ -388,7 +396,7 @@ public class TeleDiskLzh
 
     short DecodeChar()
     {
-        ushort c = (ushort)_son[ROOT];
+        var c = (ushort)_son[ROOT];
 
         /*
          * start searching tree from the root to leaves.
@@ -420,8 +428,8 @@ public class TeleDiskLzh
         if((bit = (short)GetByte()) < 0)
             return -1;
 
-        ushort i = (ushort)bit;
-        ushort c = (ushort)(_dCode[i] << 6);
+        var    i = (ushort)bit;
+        var    c = (ushort)(_dCode[i] << 6);
         ushort j = _dLen[i];
 
         /* input lower 6 bits directly */
@@ -435,16 +443,26 @@ public class TeleDiskLzh
             i = (ushort)((i << 1) + bit);
         }
 
-        return (short)(c | (i & 0x3f));
+        return (short)(c | i & 0x3f);
     }
+
+#region Nested type: Tdlzhuf
+
     /* update when cumulative frequency */
     /* reaches to this value */
 
     struct Tdlzhuf
     {
-        public ushort R, Bufcnt, Bufndx, Bufpos, // string buffer
+        public ushort R,
+                      Bufcnt,
+                      Bufndx,
+                      Bufpos, // string buffer
                       // the following to allow block reads from input in next_word()
-                      Ibufcnt, Ibufndx; // input buffer counters
-        public byte[] Inbuf;            // input buffer
+                      Ibufcnt,
+                      Ibufndx; // input buffer counters
+
+        public byte[] Inbuf; // input buffer
     }
+
+#endregion
 }

@@ -1,14 +1,14 @@
+#if NET8_0_OR_GREATER
+using Aaru6.Checksums;
+#else
+using Aaru.Checksums;
+#endif
 using System.IO;
 using SharpCompress.Compressors;
 using SharpCompress.Compressors.ADC;
 using SharpCompress.Compressors.BZip2;
 using SharpCompress.Compressors.Deflate;
 using SharpCompress.Compressors.LZMA;
-#if NET8_0_OR_GREATER
-using Aaru6.Checksums;
-#else
-using Aaru.Checksums;
-#endif
 
 // ReSharper disable ArrangeNamespaceBody
 
@@ -20,10 +20,10 @@ namespace AaruBenchmark.Compression
         {
             var _dataStream = new FileStream(Path.Combine(Program.Folder, "gzip.gz"), FileMode.Open, FileAccess.Read);
             Stream str = new GZipStream(_dataStream, CompressionMode.Decompress);
-            byte[] compressed = new byte[1048576];
-            int pos = 0;
-            int left = 1048576;
-            bool oneZero = false;
+            var compressed = new byte[1048576];
+            var pos = 0;
+            var left = 1048576;
+            var oneZero = false;
 
             while(left > 0)
             {
@@ -47,11 +47,11 @@ namespace AaruBenchmark.Compression
 
         public static void CompressGzip()
         {
-            var dataStream = new FileStream(Path.Combine(Program.Folder, "data.bin"), FileMode.Open, FileAccess.Read);
-            byte[] decompressed = new byte[8388608];
+            var dataStream   = new FileStream(Path.Combine(Program.Folder, "data.bin"), FileMode.Open, FileAccess.Read);
+            var decompressed = new byte[8388608];
             dataStream.Read(decompressed, 0, decompressed.Length);
             dataStream.Close();
-            byte[] backendBuffer = new byte[8388608];
+            var backendBuffer = new byte[8388608];
 
             Stream cmpStream = new GZipStream(new MemoryStream(backendBuffer), CompressionMode.Compress,
                                               CompressionLevel.Level9);
@@ -93,10 +93,10 @@ namespace AaruBenchmark.Compression
         {
             var _dataStream = new FileStream(Path.Combine(Program.Folder, "bzip2.bz2"), FileMode.Open, FileAccess.Read);
             Stream str = new BZip2Stream(_dataStream, CompressionMode.Decompress, true);
-            byte[] compressed = new byte[1048576];
-            int pos = 0;
-            int left = 1048576;
-            bool oneZero = false;
+            var compressed = new byte[1048576];
+            var pos = 0;
+            var left = 1048576;
+            var oneZero = false;
 
             while(left > 0)
             {
@@ -120,11 +120,11 @@ namespace AaruBenchmark.Compression
 
         public static void CompressBzip2()
         {
-            var dataStream = new FileStream(Path.Combine(Program.Folder, "data.bin"), FileMode.Open, FileAccess.Read);
-            byte[] decompressed = new byte[8388608];
+            var dataStream   = new FileStream(Path.Combine(Program.Folder, "data.bin"), FileMode.Open, FileAccess.Read);
+            var decompressed = new byte[8388608];
             dataStream.Read(decompressed, 0, decompressed.Length);
             dataStream.Close();
-            byte[] backendBuffer = new byte[8388608];
+            var backendBuffer = new byte[8388608];
 
             Stream cmpStream = new BZip2Stream(new MemoryStream(backendBuffer), CompressionMode.Compress, true);
             cmpStream.Write(decompressed, 0, decompressed.Length);
@@ -164,10 +164,10 @@ namespace AaruBenchmark.Compression
         {
             var _dataStream = new FileStream(Path.Combine(Program.Folder, "adc.bin"), FileMode.Open, FileAccess.Read);
             Stream str = new ADCStream(_dataStream);
-            byte[] compressed = new byte[262144];
-            int pos = 0;
-            int left = 262144;
-            bool oneZero = false;
+            var compressed = new byte[262144];
+            var pos = 0;
+            var left = 262144;
+            var oneZero = false;
 
             while(left > 0)
             {
@@ -198,10 +198,10 @@ namespace AaruBenchmark.Compression
         {
             var _dataStream = new FileStream(Path.Combine(Program.Folder, "lzip.lz"), FileMode.Open, FileAccess.Read);
             Stream str = new LZipStream(_dataStream, CompressionMode.Decompress);
-            byte[] compressed = new byte[1048576];
-            int pos = 0;
-            int left = 1048576;
-            bool oneZero = false;
+            var compressed = new byte[1048576];
+            var pos = 0;
+            var left = 1048576;
+            var oneZero = false;
 
             while(left > 0)
             {
@@ -230,11 +230,11 @@ namespace AaruBenchmark.Compression
 
         public static void CompressLzip()
         {
-            var dataStream = new FileStream(Path.Combine(Program.Folder, "data.bin"), FileMode.Open, FileAccess.Read);
-            byte[] decompressed = new byte[8388608];
+            var dataStream   = new FileStream(Path.Combine(Program.Folder, "data.bin"), FileMode.Open, FileAccess.Read);
+            var decompressed = new byte[8388608];
             dataStream.Read(decompressed, 0, decompressed.Length);
             dataStream.Close();
-            byte[] backendBuffer = new byte[8388608];
+            var backendBuffer = new byte[8388608];
 
             Stream cmpStream = new LZipStream(new MemoryStream(backendBuffer), CompressionMode.Compress);
             cmpStream.Write(decompressed, 0, decompressed.Length);
@@ -274,15 +274,12 @@ namespace AaruBenchmark.Compression
         {
             var _dataStream = new FileStream(Path.Combine(Program.Folder, "lzma.bin"), FileMode.Open, FileAccess.Read);
 
-            Stream str = new LzmaStream(new byte[]
-            {
-                0x5D, 0x00, 0x00, 0x00, 0x02
-            }, _dataStream);
+            Stream str = new LzmaStream(new byte[] { 0x5D, 0x00, 0x00, 0x00, 0x02 }, _dataStream);
 
-            byte[] compressed = new byte[8388608];
-            int    pos        = 0;
-            int    left       = 8388608;
-            bool   oneZero    = false;
+            var compressed = new byte[8388608];
+            var pos        = 0;
+            var left       = 8388608;
+            var oneZero    = false;
 
             while(left > 0)
             {
@@ -311,16 +308,16 @@ namespace AaruBenchmark.Compression
 
         public static void CompressLzma()
         {
-            var dataStream = new FileStream(Path.Combine(Program.Folder, "data.bin"), FileMode.Open, FileAccess.Read);
-            byte[] decompressed = new byte[8388608];
+            var dataStream   = new FileStream(Path.Combine(Program.Folder, "data.bin"), FileMode.Open, FileAccess.Read);
+            var decompressed = new byte[8388608];
             dataStream.Read(decompressed, 0, decompressed.Length);
             dataStream.Close();
-            byte[] backendBuffer = new byte[8388608];
+            var backendBuffer = new byte[8388608];
 
             var cmpStream = new LzmaStream(new LzmaEncoderProperties(true, 1048576, 273), false,
                                            new MemoryStream(backendBuffer));
 
-            byte[] propertiesArray = new byte[cmpStream.Properties.Length];
+            var propertiesArray = new byte[cmpStream.Properties.Length];
             cmpStream.Properties.CopyTo(propertiesArray, 0);
 
             cmpStream.Write(decompressed, 0, decompressed.Length);

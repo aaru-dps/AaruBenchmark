@@ -70,7 +70,7 @@ public class AaruNative
     public static void AppleRle()
     {
         const int bufferSize = 32768;
-        byte[]    input      = new byte[1102];
+        byte[]    input = new byte[1102];
 
         var fs = new FileStream(Path.Combine(Program.Folder, "apple_rle.bin"), FileMode.Open, FileAccess.Read);
 
@@ -94,7 +94,7 @@ public class AaruNative
     public static void ADC()
     {
         const int bufferSize = 327680;
-        byte[]    input      = new byte[34367];
+        byte[]    input = new byte[34367];
 
         var fs = new FileStream(Path.Combine(Program.Folder, "adc.bin"), FileMode.Open, FileAccess.Read);
 
@@ -118,7 +118,7 @@ public class AaruNative
     public static void Bzip2()
     {
         const int bufferSize = 1048576;
-        byte[]    input      = new byte[1053934];
+        byte[]    input = new byte[1053934];
 
         var fs = new FileStream(Path.Combine(Program.Folder, "bzip2.bz2"), FileMode.Open, FileAccess.Read);
 
@@ -129,7 +129,7 @@ public class AaruNative
         byte[] output = new byte[bufferSize];
 
         uint realSize = (uint)output.Length;
-        int  bzError  = AARU_bzip2_decode_buffer(output, ref realSize, input, (uint)input.Length);
+        int  bzError = AARU_bzip2_decode_buffer(output, ref realSize, input, (uint)input.Length);
 
         if(realSize != 1048576)
             throw new InvalidDataException("Incorrect decompressed size");
@@ -142,12 +142,12 @@ public class AaruNative
 
     public static void CompressBzip2()
     {
-        var    dataStream   = new FileStream(Path.Combine(Program.Folder, "data.bin"), FileMode.Open, FileAccess.Read);
+        var    dataStream = new FileStream(Path.Combine(Program.Folder, "data.bin"), FileMode.Open, FileAccess.Read);
         byte[] decompressed = new byte[8388608];
         dataStream.Read(decompressed, 0, decompressed.Length);
         dataStream.Close();
         byte[] backendBuffer = new byte[8388608];
-        uint   cmpSize       = (uint)backendBuffer.Length;
+        uint   cmpSize = (uint)backendBuffer.Length;
 
         AARU_bzip2_encode_buffer(backendBuffer, ref cmpSize, decompressed, (uint)decompressed.Length, 9);
 
@@ -166,7 +166,7 @@ public class AaruNative
     public static void Lzip()
     {
         const int bufferSize = 1048576;
-        byte[]    input      = new byte[1062874];
+        byte[]    input = new byte[1062874];
 
         var fs = new FileStream(Path.Combine(Program.Folder, "lzip.lz"), FileMode.Open, FileAccess.Read);
 
@@ -189,12 +189,12 @@ public class AaruNative
 
     public static void CompressLzip()
     {
-        var    dataStream   = new FileStream(Path.Combine(Program.Folder, "data.bin"), FileMode.Open, FileAccess.Read);
+        var    dataStream = new FileStream(Path.Combine(Program.Folder, "data.bin"), FileMode.Open, FileAccess.Read);
         byte[] decompressed = new byte[8388608];
         dataStream.Read(decompressed, 0, decompressed.Length);
         dataStream.Close();
         byte[] backendBuffer = new byte[8388608];
-        int    cmpSize       = backendBuffer.Length;
+        int    cmpSize = backendBuffer.Length;
 
         cmpSize = AARU_lzip_encode_buffer(backendBuffer, cmpSize, decompressed, decompressed.Length, 106496, 32);
 
@@ -213,7 +213,7 @@ public class AaruNative
     public static void Lzma()
     {
         const int bufferSize = 8388608;
-        byte[]    input      = new byte[1200275];
+        byte[]    input = new byte[1200275];
 
         var fs = new FileStream(Path.Combine(Program.Folder, "lzma.bin"), FileMode.Open, FileAccess.Read);
 
@@ -224,7 +224,7 @@ public class AaruNative
         byte[] output = new byte[bufferSize];
 
         nuint destLen = bufferSize;
-        nuint srcLen  = 1200275;
+        nuint srcLen = 1200275;
 
         int err = AARU_lzma_decode_buffer(output, ref destLen, input, ref srcLen, new byte[]
         {
@@ -245,14 +245,14 @@ public class AaruNative
 
     public static void CompressLzma()
     {
-        byte[] props        = new byte[5];
-        var    dataStream   = new FileStream(Path.Combine(Program.Folder, "data.bin"), FileMode.Open, FileAccess.Read);
+        byte[] props = new byte[5];
+        var    dataStream = new FileStream(Path.Combine(Program.Folder, "data.bin"), FileMode.Open, FileAccess.Read);
         byte[] decompressed = new byte[8388608];
         dataStream.Read(decompressed, 0, decompressed.Length);
         dataStream.Close();
         byte[] backendBuffer = new byte[8388608];
-        nuint  cmpSize       = (uint)backendBuffer.Length;
-        nuint  propsSize     = (uint)props.Length;
+        nuint  cmpSize = (uint)backendBuffer.Length;
+        nuint  propsSize = (uint)props.Length;
 
         AARU_lzma_encode_buffer(backendBuffer, ref cmpSize, decompressed, (nuint)decompressed.Length, props,
                                 ref propsSize, 9, 1048576, 4, 0, 2, 273, 2);
@@ -272,7 +272,7 @@ public class AaruNative
     public static void Flac()
     {
         const int bufferSize = 9633792;
-        byte[]    input      = new byte[6534197];
+        byte[]    input = new byte[6534197];
 
         var fs = new FileStream(Path.Combine(Program.Folder, "flac.flac"), FileMode.Open, FileAccess.Read);
 
@@ -295,12 +295,12 @@ public class AaruNative
 
     public static void CompressFlac()
     {
-        var    dataStream   = new FileStream(Path.Combine(Program.Folder, "audio.bin"), FileMode.Open, FileAccess.Read);
+        var    dataStream = new FileStream(Path.Combine(Program.Folder, "audio.bin"), FileMode.Open, FileAccess.Read);
         byte[] decompressed = new byte[9633792];
         dataStream.Read(decompressed, 0, decompressed.Length);
         dataStream.Close();
         byte[] backendBuffer = new byte[9633792];
-        nuint  cmpSize       = (uint)backendBuffer.Length;
+        nuint  cmpSize = (uint)backendBuffer.Length;
 
         AARU_flac_encode_redbook_buffer(backendBuffer, cmpSize, decompressed, (nuint)decompressed.Length, 4608, 1, 0,
                                         "hamming", 12, 15, 1, 0, 0, 8, "Aaru.Compression.Native.Tests",

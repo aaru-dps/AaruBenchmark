@@ -47,6 +47,7 @@ public sealed class Crc64Context : IChecksum
 {
     /// <summary>ECMA CRC64 polynomial</summary>
     public const ulong CRC64_ECMA_POLY = 0xC96C5795D7870F42;
+
     /// <summary>ECMA CRC64 seed</summary>
     public const ulong CRC64_ECMA_SEED = 0xFFFFFFFFFFFFFFFF;
 
@@ -312,6 +313,8 @@ public sealed class Crc64Context : IChecksum
             _table = GenerateTable(polynomial);
     }
 
+#region IChecksum Members
+
     /// <inheritdoc />
     /// <summary>Updates the hash with data.</summary>
     /// <param name="data">Data buffer.</param>
@@ -354,11 +357,13 @@ public sealed class Crc64Context : IChecksum
             crc64_free(_nativeContext);
         }
 
-        for(int i = 0; i < BigEndianBitConverter.GetBytes(crc).Length; i++)
+        for(var i = 0; i < BigEndianBitConverter.GetBytes(crc).Length; i++)
             crc64Output.Append(BigEndianBitConverter.GetBytes(crc)[i].ToString("x2"));
 
         return crc64Output.ToString();
     }
+
+#endregion
 
     [DllImport("libAaru.Checksums.Native", SetLastError = true)]
     static extern IntPtr crc64_init();
@@ -374,33 +379,35 @@ public sealed class Crc64Context : IChecksum
 
     static ulong[][] GenerateTable(ulong polynomial)
     {
-        ulong[][] table = new ulong[8][];
+        var table = new ulong[8][];
 
-        for(int i = 0; i < 8; i++)
+        for(var i = 0; i < 8; i++)
             table[i] = new ulong[256];
 
-        for(int i = 0; i < 256; i++)
+        for(var i = 0; i < 256; i++)
         {
-            ulong entry = (ulong)i;
+            var entry = (ulong)i;
 
-            for(int j = 0; j < 8; j++)
+            for(var j = 0; j < 8; j++)
+            {
                 if((entry & 1) == 1)
-                    entry = (entry >> 1) ^ polynomial;
+                    entry = entry >> 1 ^ polynomial;
                 else
                     entry >>= 1;
+            }
 
             table[0][i] = entry;
         }
 
-        for(int slice = 1; slice < 4; slice++)
-            for(int i = 0; i < 256; i++)
-                table[slice][i] = (table[slice - 1][i] >> 8) ^ table[0][table[slice - 1][i] & 0xFF];
+        for(var slice = 1; slice < 4; slice++)
+        for(var i = 0; i < 256; i++)
+            table[slice][i] = table[slice - 1][i] >> 8 ^ table[0][table[slice - 1][i] & 0xFF];
 
         return table;
     }
 
     static void Step(ref ulong previousCrc, ulong[][] table, byte[] data, uint len, bool useEcma, bool useNative,
-                     IntPtr nativeContext)
+                     IntPtr    nativeContext)
     {
         if(useNative && useEcma)
         {
@@ -409,7 +416,7 @@ public sealed class Crc64Context : IChecksum
             return;
         }
 
-        int dataOff = 0;
+        var dataOff = 0;
 
         if(useEcma               &&
            Pclmulqdq.IsSupported &&
@@ -445,16 +452,16 @@ public sealed class Crc64Context : IChecksum
 
             while(dataOff < limit)
             {
-                uint tmp = (uint)(crc ^ BitConverter.ToUInt32(data, dataOff));
+                var tmp = (uint)(crc ^ BitConverter.ToUInt32(data, dataOff));
                 dataOff += 4;
 
-                crc = table[3][tmp & 0xFF] ^ table[2][(tmp >> 8) & 0xFF] ^ (crc >> 32) ^ table[1][(tmp >> 16) & 0xFF] ^
+                crc = table[3][tmp & 0xFF] ^ table[2][tmp >> 8 & 0xFF] ^ crc >> 32 ^ table[1][tmp >> 16 & 0xFF] ^
                       table[0][tmp >> 24];
             }
         }
 
         while(len-- != 0)
-            crc = table[0][data[dataOff++] ^ (crc & 0xFF)] ^ (crc >> 8);
+            crc = table[0][data[dataOff++] ^ crc & 0xFF] ^ crc >> 8;
 
         previousCrc = crc;
     }
@@ -497,8 +504,8 @@ public sealed class Crc64Context : IChecksum
 
         ulong[][] localTable = GenerateTable(polynomial);
 
-        byte[] buffer = new byte[65536];
-        int    read   = fileStream.Read(buffer, 0, 65536);
+        var buffer = new byte[65536];
+        int read   = fileStream.Read(buffer, 0, 65536);
 
         while(read > 0)
         {

@@ -66,6 +66,8 @@ public sealed class Fletcher32Context : IChecksum
         _useNative     = _nativeContext != IntPtr.Zero;
     }
 
+#region IChecksum Members
+
     /// <inheritdoc />
     /// <summary>Updates the hash with data.</summary>
     /// <param name="data">Data buffer.</param>
@@ -81,7 +83,7 @@ public sealed class Fletcher32Context : IChecksum
     /// <summary>Returns a byte array of the hash value.</summary>
     public byte[] Final()
     {
-        uint finalSum = (uint)((_sum2 << 16) | _sum1);
+        var finalSum = (uint)(_sum2 << 16 | _sum1);
 
         if(!_useNative)
             return BigEndianBitConverter.GetBytes(finalSum);
@@ -96,7 +98,7 @@ public sealed class Fletcher32Context : IChecksum
     /// <summary>Returns a hexadecimal representation of the hash value.</summary>
     public string End()
     {
-        uint finalSum = (uint)((_sum2 << 16) | _sum1);
+        var finalSum = (uint)(_sum2 << 16 | _sum1);
 
         if(_useNative)
         {
@@ -106,11 +108,13 @@ public sealed class Fletcher32Context : IChecksum
 
         var fletcherOutput = new StringBuilder();
 
-        for(int i = 0; i < BigEndianBitConverter.GetBytes(finalSum).Length; i++)
+        for(var i = 0; i < BigEndianBitConverter.GetBytes(finalSum).Length; i++)
             fletcherOutput.Append(BigEndianBitConverter.GetBytes(finalSum)[i].ToString("x2"));
 
         return fletcherOutput.ToString();
     }
+
+#endregion
 
     [DllImport("libAaru.Checksums.Native", SetLastError = true)]
     static extern IntPtr fletcher32_init();
@@ -125,7 +129,7 @@ public sealed class Fletcher32Context : IChecksum
     static extern void fletcher32_free(IntPtr ctx);
 
     static void Step(ref ushort previousSum1, ref ushort previousSum2, byte[] data, uint len, bool useNative,
-                     IntPtr nativeContext)
+                     IntPtr     nativeContext)
     {
         if(useNative)
         {
@@ -151,7 +155,7 @@ public sealed class Fletcher32Context : IChecksum
         uint sum1 = previousSum1;
         uint sum2 = previousSum2;
         uint n;
-        int  dataOff = 0;
+        var  dataOff = 0;
 
         /* in case user likes doing a byte at a time, keep it fast */
         if(len == 1)
@@ -327,8 +331,8 @@ public sealed class Fletcher32Context : IChecksum
         ushort localSum1 = 0xFFFF;
         ushort localSum2 = 0xFFFF;
 
-        byte[] buffer = new byte[65536];
-        int    read   = fileStream.Read(buffer, 0, 65536);
+        var buffer = new byte[65536];
+        int read   = fileStream.Read(buffer, 0, 65536);
 
         while(read > 0)
         {
@@ -337,7 +341,7 @@ public sealed class Fletcher32Context : IChecksum
             read = fileStream.Read(buffer, 0, 65536);
         }
 
-        uint finalSum = (uint)((localSum2 << 16) | localSum1);
+        var finalSum = (uint)(localSum2 << 16 | localSum1);
 
         if(useNative)
         {
@@ -379,7 +383,7 @@ public sealed class Fletcher32Context : IChecksum
 
         Step(ref localSum1, ref localSum2, data, len, useNative, nativeContext);
 
-        uint finalSum = (uint)((localSum2 << 16) | localSum1);
+        var finalSum = (uint)(localSum2 << 16 | localSum1);
 
         if(useNative)
         {
@@ -427,6 +431,8 @@ public sealed class Fletcher16Context : IChecksum
         _useNative     = _nativeContext != IntPtr.Zero;
     }
 
+#region IChecksum Members
+
     /// <inheritdoc />
     /// <summary>Updates the hash with data.</summary>
     /// <param name="data">Data buffer.</param>
@@ -442,7 +448,7 @@ public sealed class Fletcher16Context : IChecksum
     /// <summary>Returns a byte array of the hash value.</summary>
     public byte[] Final()
     {
-        ushort finalSum = (ushort)((_sum2 << 8) | _sum1);
+        var finalSum = (ushort)(_sum2 << 8 | _sum1);
 
         if(!_useNative)
             return BigEndianBitConverter.GetBytes(finalSum);
@@ -457,7 +463,7 @@ public sealed class Fletcher16Context : IChecksum
     /// <summary>Returns a hexadecimal representation of the hash value.</summary>
     public string End()
     {
-        ushort finalSum = (ushort)((_sum2 << 8) | _sum1);
+        var finalSum = (ushort)(_sum2 << 8 | _sum1);
 
         if(_useNative)
         {
@@ -467,11 +473,13 @@ public sealed class Fletcher16Context : IChecksum
 
         var fletcherOutput = new StringBuilder();
 
-        for(int i = 0; i < BigEndianBitConverter.GetBytes(finalSum).Length; i++)
+        for(var i = 0; i < BigEndianBitConverter.GetBytes(finalSum).Length; i++)
             fletcherOutput.Append(BigEndianBitConverter.GetBytes(finalSum)[i].ToString("x2"));
 
         return fletcherOutput.ToString();
     }
+
+#endregion
 
     [DllImport("libAaru.Checksums.Native", SetLastError = true)]
     static extern IntPtr fletcher16_init();
@@ -486,7 +494,7 @@ public sealed class Fletcher16Context : IChecksum
     static extern void fletcher16_free(IntPtr ctx);
 
     static void Step(ref byte previousSum1, ref byte previousSum2, byte[] data, uint len, bool useNative,
-                     IntPtr nativeContext)
+                     IntPtr   nativeContext)
     {
         if(useNative)
         {
@@ -498,7 +506,7 @@ public sealed class Fletcher16Context : IChecksum
         uint sum1 = previousSum1;
         uint sum2 = previousSum2;
         uint n;
-        int  dataOff = 0;
+        var  dataOff = 0;
 
         /* in case user likes doing a byte at a time, keep it fast */
         if(len == 1)
@@ -654,8 +662,8 @@ public sealed class Fletcher16Context : IChecksum
         byte localSum1 = 0xFF;
         byte localSum2 = 0xFF;
 
-        byte[] buffer = new byte[65536];
-        int    read   = fileStream.Read(buffer, 0, 65536);
+        var buffer = new byte[65536];
+        int read   = fileStream.Read(buffer, 0, 65536);
 
         while(read > 0)
         {
@@ -664,7 +672,7 @@ public sealed class Fletcher16Context : IChecksum
             read = fileStream.Read(buffer, 0, 65536);
         }
 
-        ushort finalSum = (ushort)((localSum2 << 8) | localSum1);
+        var finalSum = (ushort)(localSum2 << 8 | localSum1);
 
         if(useNative)
         {
@@ -706,7 +714,7 @@ public sealed class Fletcher16Context : IChecksum
 
         Step(ref localSum1, ref localSum2, data, len, useNative, nativeContext);
 
-        ushort finalSum = (ushort)((localSum2 << 8) | localSum1);
+        var finalSum = (ushort)(localSum2 << 8 | localSum1);
 
         if(useNative)
         {

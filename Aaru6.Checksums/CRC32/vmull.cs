@@ -54,7 +54,7 @@ using System.Runtime.Intrinsics.Arm;
 
 namespace Aaru6.Checksums.CRC32;
 
-internal static class Vmull
+static class Vmull
 {
     static readonly uint[] _crcK =
     {
@@ -64,18 +64,18 @@ internal static class Vmull
 
     static readonly Vector128<uint>[] _pshufbShfTable =
     {
-        Vector128.Create(0x84838281, 0x88878685, 0x8c8b8a89, 0x008f8e8d),  /* shl 15 (16 - 1)/shr1 */
-        Vector128.Create(0x85848382, 0x89888786, 0x8d8c8b8a, 0x01008f8e),  /* shl 14 (16 - 3)/shr2 */
-        Vector128.Create(0x86858483, 0x8a898887, 0x8e8d8c8b, 0x0201008f),  /* shl 13 (16 - 4)/shr3 */
-        Vector128.Create(0x87868584, 0x8b8a8988, 0x8f8e8d8c, 0x03020100),  /* shl 12 (16 - 4)/shr4 */
-        Vector128.Create(0x88878685, 0x8c8b8a89, 0x008f8e8d, 0x04030201),  /* shl 11 (16 - 5)/shr5 */
-        Vector128.Create(0x89888786, 0x8d8c8b8a, 0x01008f8e, 0x05040302),  /* shl 10 (16 - 6)/shr6 */
-        Vector128.Create(0x8a898887, 0x8e8d8c8b, 0x0201008f, 0x06050403),  /* shl  9 (16 - 7)/shr7 */
-        Vector128.Create(0x8b8a8988, 0x8f8e8d8c, 0x03020100, 0x07060504),  /* shl  8 (16 - 8)/shr8 */
-        Vector128.Create(0x8c8b8a89, 0x008f8e8d, 0x04030201, 0x08070605),  /* shl  7 (16 - 9)/shr9 */
-        Vector128.Create(0x8d8c8b8a, 0x01008f8e, 0x05040302, 0x09080706),  /* shl  6 (16 -10)/shr10*/
-        Vector128.Create(0x8e8d8c8b, 0x0201008f, 0x06050403, 0x0a090807),  /* shl  5 (16 -11)/shr11*/
-        Vector128.Create(0x8f8e8d8c, 0x03020100, 0x07060504, 0x0b0a0908),  /* shl  4 (16 -12)/shr12*/
+        Vector128.Create(0x84838281,  0x88878685, 0x8c8b8a89, 0x008f8e8d), /* shl 15 (16 - 1)/shr1 */
+        Vector128.Create(0x85848382,  0x89888786, 0x8d8c8b8a, 0x01008f8e), /* shl 14 (16 - 3)/shr2 */
+        Vector128.Create(0x86858483,  0x8a898887, 0x8e8d8c8b, 0x0201008f), /* shl 13 (16 - 4)/shr3 */
+        Vector128.Create(0x87868584,  0x8b8a8988, 0x8f8e8d8c, 0x03020100), /* shl 12 (16 - 4)/shr4 */
+        Vector128.Create(0x88878685,  0x8c8b8a89, 0x008f8e8d, 0x04030201), /* shl 11 (16 - 5)/shr5 */
+        Vector128.Create(0x89888786,  0x8d8c8b8a, 0x01008f8e, 0x05040302), /* shl 10 (16 - 6)/shr6 */
+        Vector128.Create(0x8a898887,  0x8e8d8c8b, 0x0201008f, 0x06050403), /* shl  9 (16 - 7)/shr7 */
+        Vector128.Create(0x8b8a8988,  0x8f8e8d8c, 0x03020100, 0x07060504), /* shl  8 (16 - 8)/shr8 */
+        Vector128.Create(0x8c8b8a89,  0x008f8e8d, 0x04030201, 0x08070605), /* shl  7 (16 - 9)/shr9 */
+        Vector128.Create(0x8d8c8b8a,  0x01008f8e, 0x05040302, 0x09080706), /* shl  6 (16 -10)/shr10*/
+        Vector128.Create(0x8e8d8c8b,  0x0201008f, 0x06050403, 0x0a090807), /* shl  5 (16 -11)/shr11*/
+        Vector128.Create(0x8f8e8d8c,  0x03020100, 0x07060504, 0x0b0a0908), /* shl  4 (16 -12)/shr12*/
         Vector128.Create(0x008f8e8du, 0x04030201, 0x08070605, 0x0c0b0a09), /* shl  3 (16 -13)/shr13*/
         Vector128.Create(0x01008f8eu, 0x05040302, 0x09080706, 0x0d0c0b0a), /* shl  2 (16 -14)/shr14*/
         Vector128.Create(0x0201008fu, 0x06050403, 0x0a090807, 0x0e0d0c0b)  /* shl  1 (16 -15)/shr15*/
@@ -84,9 +84,7 @@ internal static class Vmull
     static Vector128<ulong> vmull_p64(Vector64<ulong> a, Vector64<ulong> b)
     {
         if(Aes.IsSupported)
-        {
             return Aes.PolynomialMultiplyWideningLower(a, b);
-        }
 
         // Masks
         Vector128<byte> k4832 = Vector128.Create(Vector64.Create(0x0000fffffffffffful),
@@ -199,8 +197,8 @@ internal static class Vmull
         // Accumulate the products
         Vector128<byte> cross1 = AdvSimd.Xor(t0Shift, t1Shift);
         Vector128<byte> cross2 = AdvSimd.Xor(t2Shift, t3Shift);
-        Vector128<byte> mix    = AdvSimd.Xor(d, cross1);
-        Vector128<byte> r      = AdvSimd.Xor(mix, cross2);
+        Vector128<byte> mix    = AdvSimd.Xor(d,       cross1);
+        Vector128<byte> r      = AdvSimd.Xor(mix,     cross2);
 
         return r.AsUInt64();
     }
@@ -269,13 +267,13 @@ internal static class Vmull
         Vector128<ulong> qCRC1    = Vector128<ulong>.Zero;
         Vector128<ulong> qCRC2    = Vector128<ulong>.Zero;
         Vector128<ulong> qCRC3    = Vector128<ulong>.Zero;
-        int              bufPos   = 0;
+        var              bufPos   = 0;
 
-        bool first = true;
+        var first = true;
 
         /* fold 512 to 32 step variable declarations for ISO-C90 compat. */
-        Vector128<uint> qMask  = Vector128.Create(0xFFFFFFFF, 0xFFFFFFFF, 0x00000000, 0x00000000);
-        Vector128<uint> qMask2 = Vector128.Create(0x00000000, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF);
+        var qMask  = Vector128.Create(0xFFFFFFFF, 0xFFFFFFFF, 0x00000000, 0x00000000);
+        var qMask2 = Vector128.Create(0x00000000, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF);
 
         uint             crc;
         Vector128<ulong> xTmp0;
@@ -356,7 +354,7 @@ internal static class Vmull
 
         Vector128<byte> qCRC0B = qCRC0.AsByte();
 
-        qCRC0 = Vector128.Create(AdvSimd.Extract(qCRC0B, 8), AdvSimd.Extract(qCRC0B, 9), AdvSimd.Extract(qCRC0B, 10),
+        qCRC0 = Vector128.Create(AdvSimd.Extract(qCRC0B, 8), AdvSimd.Extract(qCRC0B,  9), AdvSimd.Extract(qCRC0B,  10),
                                  AdvSimd.Extract(qCRC0B, 11), AdvSimd.Extract(qCRC0B, 12), AdvSimd.Extract(qCRC0B, 13),
                                  AdvSimd.Extract(qCRC0B, 14), AdvSimd.Extract(qCRC0B, 15), 0, 0, 0, 0, 0, 0, 0, 0).
                           AsUInt64();

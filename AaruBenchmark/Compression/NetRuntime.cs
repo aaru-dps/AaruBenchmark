@@ -11,10 +11,10 @@ namespace AaruBenchmark.Compression
         {
             var _dataStream = new FileStream(Path.Combine(Program.Folder, "gzip.gz"), FileMode.Open, FileAccess.Read);
             Stream str = new GZipStream(_dataStream, CompressionMode.Decompress, true);
-            byte[] compressed = new byte[1048576];
-            int pos = 0;
-            int left = 1048576;
-            bool oneZero = false;
+            var compressed = new byte[1048576];
+            var pos = 0;
+            var left = 1048576;
+            var oneZero = false;
 
             while(left > 0)
             {
@@ -38,8 +38,8 @@ namespace AaruBenchmark.Compression
 
         public static void CompressGzip()
         {
-            var dataStream = new FileStream(Path.Combine(Program.Folder, "data.bin"), FileMode.Open, FileAccess.Read);
-            byte[] decompressed = new byte[8388608];
+            var dataStream   = new FileStream(Path.Combine(Program.Folder, "data.bin"), FileMode.Open, FileAccess.Read);
+            var decompressed = new byte[8388608];
             dataStream.Read(decompressed, 0, decompressed.Length);
             dataStream.Close();
 

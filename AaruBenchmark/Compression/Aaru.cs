@@ -18,7 +18,7 @@ namespace AaruBenchmark.Compression
         {
             const int bufferSize = 20960;
 
-            byte[] input = new byte[1102];
+            var input = new byte[1102];
 
             var fs = new FileStream(Path.Combine(Program.Folder, "apple_rle.bin"), FileMode.Open, FileAccess.Read);
 
@@ -26,11 +26,11 @@ namespace AaruBenchmark.Compression
             fs.Close();
             fs.Dispose();
 
-            byte[] output = new byte[bufferSize];
+            var output = new byte[bufferSize];
 
             var rle = new AppleRle(new MemoryStream(input));
 
-            for(int i = 0; i < bufferSize; i++)
+            for(var i = 0; i < bufferSize; i++)
                 output[i] = (byte)rle.ProduceByte();
 
             string crc = Crc32Context.Data(output, out _);
@@ -43,7 +43,7 @@ namespace AaruBenchmark.Compression
         {
             const int bufsz = 512;
 
-            byte[] input = new byte[9040];
+            var input = new byte[9040];
 
             var fs = new FileStream(Path.Combine(Program.Folder, "teledisk_lzh.bin"), FileMode.Open, FileAccess.Read);
 
@@ -52,7 +52,7 @@ namespace AaruBenchmark.Compression
             fs.Dispose();
 
             int rd;
-            int total_rd = 0;
+            var total_rd = 0;
             var lzh      = new TeleDiskLzh(new MemoryStream(input));
             var outMs    = new MemoryStream();
 
@@ -80,11 +80,11 @@ namespace AaruBenchmark.Compression
 
         public static void Flac()
         {
-            var    flacMs = new FileStream(Path.Combine(Program.Folder, "flac.flac"), FileMode.Open, FileAccess.Read);
-            var    flakeReader = new AudioDecoder(new DecoderSettings(), "", flacMs);
-            byte[] block = new byte[9633792];
-            int    samples = block.Length / 2352 * 588;
-            var    audioBuffer = new AudioBuffer(AudioPCMConfig.RedBook, block, samples);
+            var flacMs      = new FileStream(Path.Combine(Program.Folder, "flac.flac"), FileMode.Open, FileAccess.Read);
+            var flakeReader = new AudioDecoder(new DecoderSettings(), "", flacMs);
+            var block       = new byte[9633792];
+            int samples     = block.Length / 2352 * 588;
+            var audioBuffer = new AudioBuffer(AudioPCMConfig.RedBook, block, samples);
             flakeReader.Read(audioBuffer, samples);
             flakeReader.Close();
             flacMs.Close();
@@ -98,10 +98,10 @@ namespace AaruBenchmark.Compression
         public static void CompressFlac()
         {
             var dataStream = new FileStream(Path.Combine(Program.Folder, "audio.bin"), FileMode.Open, FileAccess.Read);
-            byte[] decompressed = new byte[9633792];
+            var decompressed = new byte[9633792];
             dataStream.Read(decompressed, 0, decompressed.Length);
             dataStream.Close();
-            byte[] backendBuffer = new byte[9633792];
+            var backendBuffer = new byte[9633792];
 
             var flakeWriterSettings = new EncoderSettings
             {
